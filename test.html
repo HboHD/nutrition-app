@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pl"><head>
+<meta charset="UTF-8">
+<title>QA Tests — Plan żywieniowy</title>
+<style>
+body{font-family:monospace;background:#1a1a2e;color:#e0e0e0;padding:20px;max-width:700px;margin:0 auto}
+h1{font-size:1.2em;margin-bottom:16px}
+.pass{color:#2d6a4f}.fail{color:#e76f51;font-weight:bold}
+.group{margin:16px 0;border-left:2px solid #333;padding-left:12px}
+.group-name{font-weight:bold;margin-bottom:6px;color:#f4a261}
+.result{padding:2px 0;font-size:.9em}
+.summary{margin-top:20px;padding:12px;border-radius:8px;font-size:1.1em}
+.summary.ok{background:#1a3a2a}.summary.bad{background:#3a1a1a}
+</style></head><body>
+<h1>🧪 QA Tests — Plan żywieniowy</h1>
+<div id="out"></div>
+<script>
+// === Test harness ===
+var pass=0,fail=0,out='';
+var currentGroup='';
+function group(name){currentGroup=name;out+='<div class="group"><div class="group-name">'+name+'</div>'}
+function endGroup(){out+='</div>'}
+function assert(name,cond){
+if(cond){pass++;out+='<div class="result pass">✓ '+name+'</div>'}
+else{fail++;out+='<div class="result fail">✗ '+name+'</div>'}
+}
+function eq(name,a,b){assert(name+' ('+JSON.stringify(a)+' === '+JSON.stringify(b)+')',JSON.stringify(a)===JSON.stringify(b))}
+
+// === Minimal app state (copied from index.html) ===
+var DAYS=[
+{hdr:'Wt 14.04',meals:[
+{name:'Shakshuka',m:[470,27,16,33],ing:'jajka 3 szt'},
+{name:'Pieczona owsianka',m:[480,32,54,14],tag:'🍳 2d',tagClass:'cook',ing:'płatki 60g'},
+{name:'Pieczone udka',m:[460,36,30,22],tag:'🍳 2d',tagClass:'cook',ing:'udo 1000g'},
+{name:'Kanapki ser',m:[400,24,30,20],ing:'ser 40g'}
+]},
+{hdr:'Śr 15.04',meals:[
+{name:'Serek wiejski',m:[350,26,32,12],ing:'serek 200g'},
+{name:'Pieczona owsianka',m:[480,32,54,14],tag:'🔄 2/2',tagClass:'left',ing:'Resztki'},
+{name:'Pieczone udka',m:[460,36,30,22],tag:'🔄 2/2',tagClass:'left',ing:'Resztki'},
+{name:'Serek śmietankowy',m:[350,22,10,26],ing:'serek 100g'}
+]},
+{hdr:'Czw 16.04',meals:[
+{name:'Pasta jajeczna',m:[360,30,8,24],ing:'jajka 2 szt'},
+{name:'Placuszki',m:[440,30,42,16],ing:'banan 1 szt'},
+{name:'Wątróbka',m:[440,34,38,16],tag:'🍳 2d',tagClass:'cook',ing:'wątróbka 500g'},
+{name:'Kanapki pasztet',m:[380,18,32,20],ing:'pasztet 60g'}
+]},
+{hdr:'Pt 17.04',meals:[
+{name:'Serek wiejski',m:[350,26,32,12],ing:'serek 200g'},
+{name:'Shake',m:[250,30,22,4],ing:'białko 30g'},
+{name:'Wątróbka',m:[440,34,38,16],tag:'🔄 2/2',tagClass:'left',ing:'Resztki'},
+{name:'Sałatka halloumi',m:[390,18,36,20],ing:'kasza 80g'}
+]}
+];
+
+var SHOP=[
+["Pieczywo",["chleb żytni — 1 × 500g"]],
+["Warzywa",["szpinak — 1 × 100g","pomidory — 1 × 500g"]],
+["Puszki",["pomidory krojone — 1 × 400g","tuńczyk — 1 × 170g"]],
+["Suche",["płatki owsiane — 1 × 500g","kasza jaglana — 1 × 400g"]],
+["Jajka/mleko",["jajka — 1 × 10 szt","mleko — 1 × 1L"]],
+["Mięso",["udo kurczaka — 1 × 1kg"]],
+["Nabiał",["feta — 1 × 200g","serek wiejski — 2 × 200g","serek śmietankowy — 1 opak","jogurt grecki — 1 × 180g","ser żółty — 1 × 150g","halloumi — 1 opak","masło — 1 × 200g"]],
+["Wędliny",["wędlina — 1 opak"]],
+["Mrożonki",["maliny — 1 × 125g"]],
+["Inne",["masło orzechowe — 1 × 350g","oliwa — 1 × 500ml"]]
+];
+
+var RECIPES=[
+['jajka-na-masle','Jajka na maśle','b',440,26,16,31],
+['shakshuka','Shakshuka','b',432,26,14,30],
+['pieczona-owsianka','Pieczona owsianka','sb',593,32,69,23],
+['watrobka-ziemniaki','Wątróbka','d',745,52,78,25],
+['salatka-jaglana-halloumi','Sałatka halloumi','s',733,37,63,38],
+['placki-ziemniaczane','Placki ziemniaczane','s',439,11,58,18]
+];
+
+var SLOTS=['b','sb','d','s'];
+var LONG_TERM={2:1,3:1,4:1,8:1,9:1};
+var LONG_TERM_ITEMS={'6_6':1};
+
+var dayOrder,shopChecked,pantry,mealOverrides,selected;
+
+function reset(){
+dayOrder=[0,1,2,3];shopChecked={};pantry=[];mealOverrides={};selected=null;
+}
+
+// === Core functions under test ===
+function getMeal(pos,slot){
+var k=dayOrder[pos]+'_'+slot;
+if(mealOverrides[k]){
+var o=mealOverrides[k];
+if(Array.isArray(o))return DAYS[o[0]].meals[o[1]];
+return o;
+}
+return DAYS[dayOrder[pos]].meals[slot];
+}
+
+function pantryHas(shopItem){
+var name=shopItem.split(' — ')[0].toLowerCase();
+return pantry.some(function(p){return name.indexOf(p.item.toLowerCase())>=0||p.item.toLowerCase().indexOf(name)>=0});
+}
+
+function calcDayTotals(pos){
+var dt=[0,0,0,0];
+for(var s=0;s<DAYS[dayOrder[pos]].meals.length;s++){
+var ml=getMeal(pos,s);
+for(var mi=0;mi<4;mi++)dt[mi]+=ml.m[mi];
+}
+return dt;
+}
+
+// =====================
+// TESTS
+// =====================
+
+// --- getMeal ---
+group('getMeal — bez overrides');
+reset();
+eq('dzień 0 slot 0 = Shakshuka',getMeal(0,0).name,'Shakshuka');
+eq('dzień 2 slot 2 = Wątróbka',getMeal(2,2).name,'Wątróbka');
+eq('dzień 3 slot 3 = Sałatka halloumi',getMeal(3,3).name,'Sałatka halloumi');
+endGroup();
+
+group('getMeal — z override array');
+reset();
+mealOverrides['0_0']=[2,0];// dzień 0 slot 0 → oryg. dzień 2 slot 0
+eq('override [2,0] → Pasta jajeczna',getMeal(0,0).name,'Pasta jajeczna');
+assert('oryginał dzień 0 slot 1 nietknięty',getMeal(0,1).name==='Pieczona owsianka');
+endGroup();
+
+group('getMeal — z override object (recipe replacement)');
+reset();
+mealOverrides['1_2']={name:'Curry',m:[642,46,69,19],ing:''};
+eq('override object → Curry',getMeal(1,2).name,'Curry');
+eq('makra z override',getMeal(1,2).m,[642,46,69,19]);
+endGroup();
+
+group('getMeal — override keys stabilne po reorder');
+reset();
+// Zamień posiłek na dzień 0 (oryginalny indeks 0)
+mealOverrides['0_0']={name:'Replaced',m:[100,10,10,10],ing:''};
+eq('przed reorder: pos 0 = Replaced',getMeal(0,0).name,'Replaced');
+// Reorder: dzień 2 idzie na pozycję 0
+dayOrder=[2,0,1,3];
+assert('po reorder: pos 0 (dzień 2) = Pasta jajeczna (brak override)',getMeal(0,0).name==='Pasta jajeczna');
+assert('po reorder: pos 1 (dzień 0) = Replaced (override podąża za dniem)',getMeal(1,0).name==='Replaced');
+endGroup();
+
+// --- calcDayTotals ---
+group('Dynamiczne kalorie');
+reset();
+var t0=calcDayTotals(0);
+eq('dzień 0 baza kcal = 470+480+460+400 = 1810',t0[0],1810);
+eq('dzień 0 baza białko = 27+32+36+24 = 119',t0[1],119);
+
+// Po zamianie posiłku
+mealOverrides['0_0']={name:'Test',m:[100,10,5,5],ing:''};
+var t0b=calcDayTotals(0);
+eq('po zamianie: kcal = 100+480+460+400 = 1440',t0b[0],1440);
+eq('po zamianie: białko = 10+32+36+24 = 102',t0b[1],102);
+endGroup();
+
+// --- Meal swap ---
+group('Zamiana posiłków między dniami');
+reset();
+// Symulacja: swap dzień 0 slot 2 ↔ dzień 2 slot 2
+var kA=dayOrder[0]+'_'+2, kB=dayOrder[2]+'_'+2;
+var origA=[dayOrder[0],2], origB=[dayOrder[2],2];
+mealOverrides[kA]=origB;
+mealOverrides[kB]=origA;
+eq('dzień 0 slot 2 → Wątróbka',getMeal(0,2).name,'Wątróbka');
+eq('dzień 2 slot 2 → Pieczone udka',getMeal(2,2).name,'Pieczone udka');
+// Kalorie przeliczone
+var t0c=calcDayTotals(0);
+assert('dzień 0 kcal zmienione po swap (440 zamiast 460)',t0c[0]===470+480+440+400);
+endGroup();
+
+// --- pantryHas ---
+group('pantryHas — dopasowanie');
+reset();
+pantry=[{item:'masło orzechowe',qty:'350g',exp:''}];
+assert('masło orzechowe → match',pantryHas('masło orzechowe — 1 × 350g'));
+assert('masło (inne) → no match',!pantryHas('masło — 1 × 200g'));
+pantry.push({item:'jajka',qty:'10 szt',exp:''});
+assert('jajka → match',pantryHas('jajka — 1 × 10 szt'));
+assert('mleko → no match',!pantryHas('mleko — 1 × 1L'));
+endGroup();
+
+// --- Pantry duplicate handling ---
+group('Spiżarnia — duplikaty');
+reset();
+pantry=[{item:'jajka',qty:'1 × 10 szt',exp:'2026-04-20'}];
+// Symulacja zakupu jajek (dział 4, item 0)
+var itemName=SHOP[4][1][0].split(' — ')[0];
+var qty=SHOP[4][1][0].split(' — ')[1]||'';
+var existing=pantry.find(function(p){return p.item===itemName});
+if(existing){existing.qty=qty;existing.exp=''}
+else{pantry.push({item:itemName,qty:qty,exp:''})}
+eq('pantry length nadal 1',pantry.length,1);
+eq('qty zaktualizowane',pantry[0].qty,'1 × 10 szt');
+eq('exp wyczyszczone',pantry[0].exp,'');
+endGroup();
+
+// --- Long-term departments ---
+group('Długoterminowe działy');
+assert('puszki (2) = long-term',!!LONG_TERM[2]);
+assert('suche (3) = long-term',!!LONG_TERM[3]);
+assert('jajka/mleko (4) = long-term',!!LONG_TERM[4]);
+assert('mrożonki (8) = long-term',!!LONG_TERM[8]);
+assert('inne (9) = long-term',!!LONG_TERM[9]);
+assert('pieczywo (0) ≠ long-term',!LONG_TERM[0]);
+assert('warzywa (1) ≠ long-term',!LONG_TERM[1]);
+assert('mięso (5) ≠ long-term',!LONG_TERM[5]);
+assert('nabiał (6) ≠ long-term',!LONG_TERM[6]);
+assert('masło (6_6) = long-term item',!!LONG_TERM_ITEMS['6_6']);
+endGroup();
+
+// --- Recipe database ---
+group('Baza przepisów');
+assert('każdy przepis ma 7 elementów',RECIPES.every(function(r){return r.length===7}));
+assert('każdy przepis ma slot b/sb/d/s',RECIPES.every(function(r){return['b','sb','d','s'].indexOf(r[2])>=0}));
+assert('kcal > 0',RECIPES.every(function(r){return r[3]>0}));
+assert('białko > 0',RECIPES.every(function(r){return r[4]>0}));
+var slots={b:0,sb:0,d:0,s:0};
+RECIPES.forEach(function(r){slots[r[2]]++});
+assert('śniadania w bazie ≥ 2',slots.b>=2);
+assert('drugie śniadania ≥ 2',slots.sb>=2);
+assert('obiady ≥ 2',slots.d>=2);
+assert('kolacje ≥ 2',slots.s>=2);
+endGroup();
+
+// --- SHOP structure ---
+group('Lista zakupów — struktura');
+assert('SHOP ma 10 działów',SHOP.length===10);
+SHOP.forEach(function(d,i){
+assert('dział '+i+' ma nazwę i produkty',typeof d[0]==='string'&&Array.isArray(d[1])&&d[1].length>0);
+d[1].forEach(function(it,j){
+assert('produkt '+i+'_'+j+' ma separator " — "',it.indexOf(' — ')>0);
+});
+});
+endGroup();
+
+// --- DAYS structure ---
+group('Plan — struktura danych');
+assert('4 dni',DAYS.length===4);
+DAYS.forEach(function(d,i){
+assert('dzień '+i+' ma 4 posiłki',d.meals.length===4);
+d.meals.forEach(function(ml,j){
+assert('dzień '+i+' posiłek '+j+' ma name',typeof ml.name==='string'&&ml.name.length>0);
+assert('dzień '+i+' posiłek '+j+' ma m[4]',Array.isArray(ml.m)&&ml.m.length===4);
+assert('dzień '+i+' posiłek '+j+' kcal > 0',ml.m[0]>0);
+});
+});
+endGroup();
+
+// --- Pantry sort stability ---
+group('Spiżarnia — sort nie mutuje');
+reset();
+pantry=[
+{item:'B',qty:'',exp:'2026-05-01'},
+{item:'A',qty:'',exp:'2026-04-01'},
+{item:'C',qty:'',exp:''}
+];
+var original=pantry.map(function(p){return p.item});
+var sorted=pantry.slice().sort(function(a,b){return(a.exp||'9').localeCompare(b.exp||'9')});
+eq('oryginał niezmieniony',pantry.map(function(p){return p.item}),original);
+eq('sorted[0] = A (najwcześniejszy)',sorted[0].item,'A');
+eq('sorted[2] = C (brak daty na końcu)',sorted[2].item,'C');
+endGroup();
+
+// === Output ===
+var el=document.getElementById('out');
+el.innerHTML=out+'<div class="summary '+(fail?'bad':'ok')+'">'+(fail?'❌ '+fail+' FAILED':'✅ ALL PASSED')+' — '+pass+' passed, '+fail+' failed</div>';
+</script>
+</body></html>
