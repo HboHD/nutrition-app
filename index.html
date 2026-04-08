@@ -70,7 +70,7 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 <input name="item" placeholder="Dodaj produkt..." required>
 <button type="submit">+</button>
 </form>
-<div class="shop-progress" id="prog"></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><div class="shop-progress" id="prog"></div><button onclick="clearShop()" style="background:none;border:none;color:#e76f51;font-size:.75em;cursor:pointer">🗑️ wyczyść</button></div>
 <div id="shopList"></div>
 <div class="sync" id="syncStatus"></div>
 </div>
@@ -120,6 +120,8 @@ var SHOP=[
 ["❄️ Mrożonki",["maliny — 1 × 125g"]],
 ["📦 Inne",["olej rzepakowy — 1 × 1L","białko w proszku — 1 opak","orzechy włoskie — 1 × 100g","miód — 1 × 350g"]]
 ];
+
+var shopCleared=false;
 
 // --- State ---
 var dayOrder=DAYS.map((_,i)=>i);
@@ -273,6 +275,7 @@ return pantry.some(function(p){return name.indexOf(p.item.toLowerCase())>=0||p.i
 }
 function renderShop(){
 var h='',total=0,done=0;
+if(!shopCleared){
 SHOP.forEach(function(d,di){
 h+='<div class="dept"><div class="dept-name">'+d[0]+'</div>';
 d[1].forEach(function(it,ii){
@@ -280,6 +283,7 @@ var k=di+'_'+ii,inP=pantryHas(it);total++;if(shopChecked[k])done++;
 h+='<div class="item'+(shopChecked[k]?' done':'')+(inP?' in-pantry':'')+'"><input type="checkbox" id="c'+k+'"'+(shopChecked[k]?' checked':'')+' onchange="ck(\''+k+'\',this)"><label for="c'+k+'">'+it+'</label>'+(inP?'<span class="pantry-badge">masz ✓</span>':'')+'</div>';
 });h+='</div>';
 });
+}
 if(customShopItems.length){
 h+='<div class="dept"><div class="dept-name">✏️ Dodane ręcznie</div>';
 customShopItems.forEach(function(ci,i){
@@ -287,8 +291,9 @@ total++;if(ci.checked)done++;
 h+='<div class="item'+(ci.checked?' done':'')+'"><input type="checkbox"'+(ci.checked?' checked':'')+' onchange="ckCustom('+i+',this)"><label>'+ci.item+'</label><button class="p-del" onclick="delShopItem('+i+')">✕</button></div>';
 });h+='</div>';
 }
+if(!h)h='<div style="color:#666;text-align:center;padding:20px">Lista pusta</div>';
 document.getElementById('shopList').innerHTML=h;
-document.getElementById('prog').textContent=done+' / '+total+' ✓';
+document.getElementById('prog').textContent=total?done+' / '+total+' ✓':'';
 }
 function addShopItem(form){
 var d=new FormData(form);
@@ -300,6 +305,7 @@ customShopItems[i].checked=el.checked;
 renderShop();saveState('custom_shop',customShopItems);
 }
 function delShopItem(i){customShopItems.splice(i,1);renderShop();saveState('custom_shop',customShopItems)}
+function clearShop(){if(!confirm('Wyczyścić całą listę zakupów?'))return;shopCleared=true;shopChecked={};customShopItems=[];saveState('shopping',shopChecked);saveState('custom_shop',customShopItems);saveState('shop_cleared',{cleared:true});renderShop()}
 function ck(k,el){
 if(el.checked){
 shopChecked[k]=1;
@@ -425,6 +431,7 @@ if(r.key==='shopping'&&r.value)shopChecked=r.value;
 if(r.key==='pantry'&&Array.isArray(r.value))pantry=r.value;
 if(r.key==='meal_overrides'&&r.value)mealOverrides=r.value;
 if(r.key==='custom_shop'&&Array.isArray(r.value))customShopItems=r.value;
+if(r.key==='shop_cleared'&&r.value)shopCleared=!!r.value.cleared;
 });
 renderDays();
 }
@@ -437,6 +444,7 @@ if(r.key==='shopping'&&r.value){shopChecked=r.value;if(document.getElementById('
 if(r.key==='pantry'&&Array.isArray(r.value)){pantry=r.value;if(document.getElementById('pantry').classList.contains('open'))renderPantry();if(document.getElementById('shop').classList.contains('open'))renderShop()}
 if(r.key==='meal_overrides'&&r.value){mealOverrides=r.value;renderDays()}
 if(r.key==='custom_shop'&&Array.isArray(r.value)){customShopItems=r.value;if(document.getElementById('shop').classList.contains('open'))renderShop()}
+if(r.key==='shop_cleared'&&r.value){shopCleared=!!r.value.cleared;if(document.getElementById('shop').classList.contains('open'))renderShop()}
 }).subscribe();
 
 // --- Init ---
