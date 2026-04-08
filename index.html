@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pl"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plan żywieniowy</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1a2e">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Plan%20%C5%BCywieniowy%22%2C%22short_name%22%3A%22Plan%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1a2e%22%2C%22theme_color%22%3A%22%231a1a2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Ctext%20y%3D'.9em'%20font-size%3D'90'%3E%F0%9F%8D%BD%EF%B8%8F%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,system-ui,sans-serif;background:#1a1a2e;color:#e0e0e0;padding:12px;max-width:480px;margin:0 auto}
+h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align:center;font-size:.8em;color:#888;padding:4px 0 12px;border-bottom:1px solid #333}.target span{display:block;margin:2px 0}
+.day{margin:16px 0;background:#16213e;border-radius:12px;overflow:hidden;transition:transform .2s}.day-header{background:#0f3460;padding:10px 14px;font-weight:700;font-size:1em;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.drag-handle{cursor:grab;padding:0 6px;font-size:1.1em;color:#666;user-select:none;touch-action:none}.drag-handle:active{cursor:grabbing;color:#e76f51}
+.day.dragging{opacity:.3}.day.drag-over{border-top:3px solid #e76f51}
+.meal{padding:10px 14px;border-bottom:1px solid #1a1a2e}.meal:last-child{border:none}.meal-name{font-weight:600;font-size:.95em;margin-bottom:2px}.ingredients{font-size:.75em;color:#aaa;margin-bottom:6px;line-height:1.4}
+.macros{display:flex;gap:6px;font-size:.8em}.macro{background:#0f3460;border-radius:6px;padding:3px 8px;text-align:center;flex:1}.macro .val{font-weight:700;font-size:1.1em;display:block}.macro .lbl{font-size:.7em;color:#888}
+.tag{font-size:.7em;color:#fff;border-radius:4px;padding:1px 5px;margin-left:4px}.tag.cook{background:#e76f51}.tag.left{background:#555}
+.summary{padding:8px 14px;font-size:.8em}.sum-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #0f3460}.sum-row:last-child{border:none}.sum-label{color:#888;width:60px}.sum-vals{display:flex;gap:12px;flex:1;justify-content:space-around}.sum-vals span{min-width:40px;text-align:center}
+.treat{font-size:.8em;color:#f4a261;padding:6px 14px;background:#1a1a2e}.day-content{display:none}.day-content.open{display:block}
+.shop{position:fixed;inset:0;background:#1a1a2e;z-index:100;overflow-y:auto;padding:12px;display:none;max-width:480px;margin:0 auto}
+.shop.open{display:block}.shop-head{display:flex;justify-content:space-between;align-items:center;padding:8px 0 12px}.shop-head h2,.shop-head h3{font-size:1.1em;margin:0}.shop-close{background:none;border:none;color:#e0e0e0;font-size:1.5em;cursor:pointer;padding:4px 8px}
+.dept{margin:12px 0}.dept-name{font-size:.85em;color:#e76f51;font-weight:700;padding:4px 0;border-bottom:1px solid #333;margin-bottom:6px}
+.item{display:flex;align-items:center;padding:6px 0;gap:10px;font-size:.9em}.item input{width:20px;height:20px;accent-color:#2d6a4f;flex-shrink:0}.item.done label{text-decoration:line-through;color:#666}
+.shop-progress{font-size:.8em;color:#888;text-align:center;padding:4px 0}
+.sync{font-size:.7em;color:#555;text-align:center;padding:4px 0}
+.fab-group{position:fixed;bottom:16px;right:16px;display:flex;flex-direction:column;gap:10px;z-index:110}
+.fab{width:52px;height:52px;border-radius:50%;border:none;font-size:1.6em;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+.fab-shop{background:#e76f51}.fab-pantry{background:#2d6a4f}
+.pantry{position:fixed;inset:0;background:#1a1a2e;z-index:100;overflow-y:auto;padding:12px;display:none;max-width:480px;margin:0 auto}
+.pantry.open{display:block}
+.p-form{display:flex;gap:6px;padding:8px 0;flex-wrap:wrap}.p-form input{background:#16213e;border:1px solid #333;color:#e0e0e0;border-radius:6px;padding:8px;font-size:.85em}.p-form input[name=item]{flex:2;min-width:120px}.p-form input[name=qty]{flex:1;min-width:60px}.p-form input[name=exp]{flex:1;min-width:100px}
+.p-form button{background:#2d6a4f;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:.85em;cursor:pointer}
+.p-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #222;font-size:.9em}
+.p-item .p-info{flex:1}.p-item .p-name{font-weight:600}.p-item .p-meta{font-size:.75em;color:#888}.p-item .p-exp{color:#e76f51}
+.p-item .p-del{background:none;border:none;color:#666;font-size:1.2em;cursor:pointer;padding:4px 8px}.p-item .p-del:hover{color:#e76f51}
+.item.in-pantry label{color:#2d6a4f}.item.in-pantry .pantry-badge{font-size:.7em;color:#2d6a4f;margin-left:6px}
+.meal{cursor:pointer;transition:border .15s}.meal.selected{border-left:3px solid #e76f51;background:#1a2744}
+.swap-bar{position:fixed;bottom:140px;left:0;right:0;max-width:480px;margin:0 auto;background:#0f3460;padding:10px;border-radius:12px 12px 0 0;display:none;text-align:center;z-index:105;font-size:.85em}
+.swap-bar.show{display:block}.swap-bar button{background:#e76f51;color:#fff;border:none;border-radius:6px;padding:6px 14px;margin:0 4px;font-size:.85em;cursor:pointer}.swap-bar .cancel{background:#555}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:120;display:none;overflow-y:auto;padding:12px;max-width:480px;margin:0 auto}
+.modal.open{display:block}.modal h3{font-size:1em;padding:8px 0;color:#fff}
+.recipe-opt{background:#16213e;border-radius:8px;padding:10px;margin:8px 0;cursor:pointer}.recipe-opt:active{background:#1a2744}
+.recipe-opt .ro-name{font-weight:600;font-size:.9em}.recipe-opt .ro-macros{display:flex;gap:8px;font-size:.8em;color:#888;margin-top:4px}
+.recipe-opt .ro-diff{font-size:.75em;margin-top:2px}.ro-plus{color:#2d6a4f}.ro-minus{color:#e76f51}
+</style></head><body>
+
+<h1>🍽️ Plan 14.04–17.04</h1>
+<div class="target"><span>🧔 On: ~2000 kcal | B 150g</span><span>👩 Ona: ~2000 kcal | B 150g</span></div>
+<div id="days"></div>
+<div class="fab-group">
+<button class="fab fab-pantry" onclick="pantryToggle()">📦</button>
+<button class="fab fab-shop" onclick="shopToggle()">🛒</button>
+</div>
+<div class="swap-bar" id="swapBar">
+<span id="swapMsg">Wybierz drugi posiłek do zamiany</span><br>
+<button onclick="openRecipePicker()">📋 Z bazy</button>
+<button class="cancel" onclick="cancelSwap()">✕ Anuluj</button>
+</div>
+<div class="modal" id="recipePicker">
+<div class="shop-head"><h3 id="pickerTitle">Zamień na:</h3><button class="shop-close" onclick="closeRecipePicker()">✕</button></div>
+<div id="recipeList"></div>
+</div>
+<div class="shop" id="shop">
+<div class="shop-head"><h2>🛒 Lista zakupów</h2><button class="shop-close" onclick="shopClose()">✕</button></div>
+<form class="p-form" onsubmit="return addShopItem(this)">
+<input name="item" placeholder="Dodaj produkt..." required>
+<button type="submit">+</button>
+</form>
+<div class="shop-progress" id="prog"></div>
+<div id="shopList"></div>
+<div class="sync" id="syncStatus"></div>
+</div>
+<div class="pantry" id="pantry">
+<div class="shop-head"><h2>📦 Spiżarnia</h2><button class="shop-close" onclick="pantryClose()">✕</button></div>
+<form class="p-form" onsubmit="return addPantryItem(this)">
+<input name="item" placeholder="Produkt" required>
+<input name="qty" placeholder="Ilość">
+<input name="exp" type="date" placeholder="Ważność">
+<button type="submit">+</button>
+</form>
+<div id="pantryList"></div>
+<div class="sync" id="syncStatus2"></div>
+</div>
+
+<script>
+// --- Supabase ---
+var sb=supabase.createClient('https://tkfxjkleaeuwqqaeiigt.supabase.co','sb_publishable_lECu6yNlYFf_QPMgmzXW5g_R41cyMXo');
+
+// --- Plan data (generated) ---
+var DAYS=[
+{hdr:'🗓️ Wt 14.04 — biuro',meals:[
+{name:'🥣 Shakshuka ze szpinakiem i fetą',tag:'🌿',tagClass:'cook',ing:'jajka 3 szt · szpinak 50g · feta 50g · pomidory krojone puszka 200g · cebula 0.5 szt',m:[470,27,16,33]},
+{name:'🥞 Pieczona owsianka z jogurtem greckim',tag:'🍳 2d',tagClass:'cook',ing:'płatki owsiane 60g · mleko 150ml · jajko 1 szt · banan 1 szt · masło orzechowe 15g',m:[480,32,54,14]},
+{name:'🍲 Pieczone udka z dodatkami',tag:'🍳 2d',tagClass:'cook',ing:'udo kurczaka 1000g · ziemniaki 600g · marchew 2 szt · oliwa 20ml',m:[460,36,30,22]},
+{name:'🥗 Kanapki z żółtym serem i wędliną',ing:'ser żółty 40g · wędlina 40g · chleb żytni 2 kromki · pomidor 0.5 szt · ogórek 0.5 szt',m:[400,24,30,20]},
+{name:'🥜 Shake białkowy',ing:'białko w proszku 30g · mleko 200ml · banan 0.5 szt',m:[273,32,30,4]}
+]},
+{hdr:'🗓️ Śr 15.04 — biuro',meals:[
+{name:'🥣 Serek wiejski z warzywami i chlebem',ing:'serek wiejski 200g · chleb żytni 2 kromki · pomidor 0.5 szt · ogórek 0.5 szt · papryka 0.5 szt',m:[350,26,32,12]},
+{name:'🥞 Pieczona owsianka z jogurtem greckim',tag:'🔄 2/2',tagClass:'left',ing:'Resztki',m:[480,32,54,14]},
+{name:'🍲 Pieczone udka z dodatkami',tag:'🔄 2/2',tagClass:'left',ing:'Resztki',m:[460,36,30,22]},
+{name:'🥗 Serek śmietankowy z łososiem wędzonym',ing:'serek śmietankowy 100g · łosoś wędzony 80g · chleb żytni 2 kromki · kapary 10g',m:[350,22,10,26]},
+{name:'🥜 Jogurt grecki z orzechami',ing:'jogurt grecki 200g · orzechy włoskie 20g · miód 10g',m:[250,14,20,14]}
+]},
+{hdr:'🗓️ Czw 16.04 — biuro',meals:[
+{name:'🥣 Pasta jajeczna z tuńczykiem',ing:'jajka 2 szt · tuńczyk puszka 85g · majonez 15g · chleb żytni 2 kromki',m:[360,30,8,24]},
+{name:'🥞 Placuszki bananowe z jogurtem greckim',ing:'banan 1 szt · jajka 2 szt · płatki owsiane 30g · jogurt grecki 150g · olej rzepakowy 10ml',m:[440,30,42,16]},
+{name:'🍲 Wątróbka z ziemniakami',tag:'🍳 2d',tagClass:'cook',ing:'wątróbka drobiowa 500g · ziemniaki 800g · cebula 2 szt · masło 30g',m:[440,34,38,16]},
+{name:'🥗 Kanapki z pasztetem i warzywami',ing:'pasztet 60g · chleb żytni 2 kromki · pomidor 0.5 szt · ogórek 0.5 szt',m:[380,18,32,20]},
+{name:'🥜 Jogurt grecki z orzechami',ing:'jogurt grecki 150g · orzechy włoskie 15g · miód 5g',m:[200,12,16,11]}
+]},
+{hdr:'🗓️ Pt 17.04 — biuro',meals:[
+{name:'🥣 Serek wiejski z warzywami i chlebem',ing:'serek wiejski 200g · chleb żytni 2 kromki · pomidor 0.5 szt · ogórek 0.5 szt · papryka 0.5 szt',m:[350,26,32,12]},
+{name:'🥞 Shake białkowy z owocami',ing:'białko w proszku 30g · mleko 200ml · banan 0.5 szt · maliny mrożone 30g',m:[250,30,22,4]},
+{name:'🍲 Wątróbka z ziemniakami',tag:'🔄 2/2',tagClass:'left',ing:'Resztki',m:[440,34,38,16]},
+{name:'🥗 Sałatka jaglana z halloumi',ing:'kasza jaglana 80g · halloumi 100g · pomidory koktajlowe 100g · ogórek 0.5 szt · oliwa 15ml',m:[390,18,36,20]},
+{name:'🥜 Serek wiejski z warzywami',ing:'serek wiejski 100g · pomidor 0.5 szt · ogórek 0.5 szt',m:[180,15,10,8]}
+]}
+];
+
+var SHOP=[
+["🥖 Pieczywo",["chleb żytni — 1 × 500g"]],
+["🥬 Owoce / warzywa",["szpinak — 1 × 100g","pomidory — 1 × 500g","ogórki — 3 szt","papryka — 1 × 3 szt","marchew — 1 × 1kg","ziemniaki — 1 × 2kg","cebula — 1 × 1kg","banany — 1 × 1kg (~5 szt)","pomidory koktajlowe — 1 × 250g"]],
+["🥫 Puszki",["pomidory krojone — 1 × 400g","tuńczyk — 1 × 170g"]],
+["🌾 Suche / kasze",["płatki owsiane — 1 × 500g","kasza jaglana — 1 × 400g"]],
+["🥚 Jajka / mleko",["jajka — 1 × 10 szt","mleko — 1 × 1L"]],
+["🥩 Mięso",["udo kurczaka — 1 × 1kg","wątróbka drobiowa — 1 × 500g"]],
+["🧀 Nabiał",["feta — 1 × 200g","serek wiejski — 2 × 200g","serek śmietankowy — 1 opak","jogurt grecki — 1 × 180g","ser żółty — 1 × 150g","halloumi — 1 opak","masło — 1 × 200g"]],
+["🐟 Wędliny / ryby",["wędlina — 1 opak","łosoś wędzony — 1 opak","pasztet — 1 opak"]],
+["❄️ Mrożonki",["maliny — 1 × 125g"]],
+["📦 Inne",["masło orzechowe — 1 × 350g","oliwa — 1 × 500ml","olej rzepakowy — 1 × 1L","majonez — 1 opak","kapary — 1 słoiczek","białko w proszku — 1 opak"]]
+];
+
+// --- State ---
+var dayOrder=DAYS.map((_,i)=>i);
+var shopChecked={};
+var pantry=[];
+var mealOverrides={};// key:"pos_slot" → [origDay,origMeal] or {id,name,m}
+var selected=null;// {pos,slot} or null
+var customShopItems=[];// [{item:'...',checked:false}]
+
+// Slot→meal_type map: 0=b, 1=sb, 2=d, 3=s
+var SLOTS=['b','sb','d','s','p'];
+
+// Recipe database: [id, name, slot, kcal, protein, carbs, fat]
+var RECIPES=[
+['jajka-na-masle','Jajka na maśle','b',440,26,16,31],
+['shakshuka','Shakshuka ze szpinakiem i fetą','b',432,26,14,30],
+['pasta-jajeczna-tunczyk','Pasta jajeczna z tuńczykiem','b',522,43,30,26],
+['twarozek-szczypiorek','Twarożek z jogurtem i szczypiorkiem','b',361,31,38,10],
+['kanapki-camembert-parma','Kanapki z camembertem i parmeńską','b',472,27,48,20],
+['jajka-sadzone-boczek','Jajka sadzone z boczkiem','b',602,30,16,47],
+['jajka-po-turecku','Jajka po turecku','b',451,24,24,30],
+['kanapki-pasztet','Kanapki z pasztetem','b',366,13,38,19],
+['kanapki-hummus','Kanapki z hummusem','b',286,11,45,8],
+['kanapki-ser-wedlina','Kanapki z serem i wędliną','b',379,23,36,16],
+['serek-wiejski-sniadanie','Serek wiejski z warzywami','b',394,29,45,10],
+['pieczona-owsianka','Pieczona owsianka z jogurtem','sb',593,32,69,23],
+['budyn-jaglany','Budyń jaglany z białkiem','sb',470,31,75,6],
+['placuszki-bananowe','Placuszki bananowe z jogurtem','sb',649,35,61,32],
+['nalesniki','Naleśniki z twarożkiem','sb',619,46,60,22],
+['shake-bialkowy','Shake białkowy z owocami','sb',273,32,30,4],
+['watrobka-ziemniaki','Wątróbka z ziemniakami','d',745,52,78,25],
+['curry','Curry z kurczakiem i batatami','d',642,46,69,19],
+['tofu-bulgogi','Tofu bulgogi','d',327,13,48,10],
+['spaghetti-bolognese','Spaghetti bolońskie','d',544,26,68,18],
+['ryz-kurczak-warzywa','Ryż z kurczakiem i warzywami','d',484,46,58,5],
+['gulasz-wolowy','Gulasz wołowy z kaszą','d',681,52,51,33],
+['ryba-frytki','Ryba z frytkami','d',617,34,60,27],
+['pieczone-udka','Pieczone udka z dodatkami','d',703,68,30,33],
+['mielone-por','Mielone z porem i marchewką','d',467,30,11,33],
+['kotlety-udka','Kotlety z udek z ziemniakami','d',604,59,35,24],
+['kaszotto-buraczane','Kaszotto buraczane z kurczakiem','d',411,38,45,8],
+['quesadilla-kurczak','Quesadilla z kurczakiem','d',464,44,34,16],
+['tortilla-kurczak','Tortilla z kurczakiem','d',400,38,39,10],
+['makaron-ryzowy-tajski','Makaron ryżowy po tajsku','d',555,36,82,7],
+['salatka-jaglana-halloumi','Sałatka jaglana z halloumi','s',733,37,63,38],
+['placki-ziemniaczane','Placki ziemniaczane','s',439,11,58,18],
+['salatka-ciecierzyca','Sałatka z ciecierzycą','s',246,11,22,13],
+['salatka-sliwki-parmezan','Sałatka ze śliwkami i parmezanem','s',370,15,30,23],
+['salatka-gruszka-blue','Sałatka z gruszką i blue','s',396,13,30,26],
+['pieczony-camembert','Pieczony camembert z miodem','s',451,19,37,26],
+['serek-losos','Serek śmietankowy z łososiem','s',414,17,31,25],
+['pizzerinki-wiejski','Pizzerinki z serka wiejskiego','s',434,26,51,13],
+['kanapki-pasztet-s','Kanapki z pasztetem','s',366,13,38,19],
+['kanapki-hummus-s','Kanapki z hummusem','s',286,11,45,8],
+['kanapki-ser-wedlina-s','Kanapki z serem i wędliną','s',379,23,36,16],
+['shake-przekaska','Shake białkowy','p',273,32,30,4],
+['jogurt-orzechy','Jogurt grecki z orzechami','p',200,12,16,11],
+['owoc','Jabłko / banan','p',90,1,22,0],
+['serek-wiejski-przekaska','Serek wiejski z warzywami','p',180,15,10,8],
+['orzeszki-mix','Mix orzechów 40g','p',240,8,6,20]
+];
+
+// Long-term departments (auto-add to pantry on purchase): puszki,suche,mrożonki,inne
+var LONG_TERM={2:1,3:1,4:1,8:1,9:1};
+var LONG_TERM_ITEMS={'6_6':1};// masło
+
+// --- Get meal (with overrides) ---
+function getMeal(pos,slot){
+var k=dayOrder[pos]+'_'+slot;
+if(mealOverrides[k]){
+var o=mealOverrides[k];
+if(Array.isArray(o))return DAYS[o[0]].meals[o[1]];
+return o;
+}
+return DAYS[dayOrder[pos]].meals[slot];
+}
+
+// --- Render days ---
+function renderDays(){
+var c=document.getElementById('days');
+// preserve open state
+var openSet={};
+c.querySelectorAll('.day-content.open').forEach(function(el){
+var day=el.parentElement;if(day&&day.dataset.pos!=null)openSet[day.dataset.pos]=1;
+});
+if(!Object.keys(openSet).length)openSet[0]=1;// default: first day open
+c.innerHTML='';
+dayOrder.forEach(function(di,pos){
+var d=DAYS[di],el=document.createElement('div');
+el.className='day';el.dataset.pos=pos;
+var meals='',dt=[0,0,0,0];
+for(var s=0;s<d.meals.length;s++){
+var ml=getMeal(pos,s);
+for(var mi=0;mi<4;mi++)dt[mi]+=ml.m[mi];
+var tg=ml.tag?(' <span class="tag '+ml.tagClass+'">'+ml.tag+'</span>'):'';
+var sel=(selected&&selected.pos===pos&&selected.slot===s)?' selected':'';
+meals+='<div class="meal'+sel+'" onclick="selectMeal('+pos+','+s+')"><div class="meal-name">'+ml.name+tg+'</div><div class="ingredients">'+(ml.ing||'')+'</div><div class="macros">'+
+['kcal','białko','węgle','tłuszcz'].map(function(l,i){return'<div class="macro"><span class="val">'+ml.m[i]+'</span><span class="lbl">'+l+'</span></div>'}).join('')+'</div></div>';
+}
+var isOpen=openSet[pos]?' open':'';
+var target=2000;
+var treatMax=Math.min(Math.floor(target*0.15),Math.max(0,target-dt[0]));
+var treatTxt=treatMax>0?'🍬 ~'+treatMax+' kcal (~'+Math.floor(treatMax/160*30)+'g czipsów / '+Math.floor(treatMax/135)+' rządków czekolady / '+Math.floor(treatMax/25)+' cukierków)':'🍬 brak budżetu';
+el.innerHTML='<div class="day-header" onclick="toggle(this)"><span class="drag-handle">⠿</span><span>'+d.hdr+'</span><span>▼</span></div>'+
+'<div class="day-content'+isOpen+'">'+meals+
+'<div class="summary">'+
+'<div class="sum-row"><span class="sum-label"></span><div class="sum-vals"><span>kcal</span><span>B</span><span>W</span><span>T</span></div></div>'+
+'<div class="sum-row"><span class="sum-label">Baza</span><div class="sum-vals">'+dt.map(function(n,j){return'<span><b>'+n+'</b>'+(j>0?'g':'')+'</span>'}).join('')+'</div></div>'+
+'</div><div class="treat">'+treatTxt+'</div></div>';
+initDrag(el);c.appendChild(el);
+});
+}
+
+function toggle(hdr){hdr.nextElementSibling.classList.toggle('open')}
+
+// --- Drag & drop ---
+var dragged=null;
+function initDrag(el){
+var h=el.querySelector('.drag-handle');
+h.addEventListener('pointerdown',function(e){
+e.preventDefault();e.stopPropagation();dragged=el;el.classList.add('dragging');
+var moveHandler=function(ev){
+var tgt=document.elementFromPoint(ev.clientX,ev.clientY);
+if(tgt){var day=tgt.closest('.day');
+document.querySelectorAll('.day').forEach(function(d){d.classList.remove('drag-over')});
+if(day&&day!==dragged)day.classList.add('drag-over');}
+};
+var upHandler=function(ev){
+document.removeEventListener('pointermove',moveHandler);
+document.removeEventListener('pointerup',upHandler);
+el.classList.remove('dragging');
+var tgt=document.elementFromPoint(ev.clientX,ev.clientY);
+if(tgt){var day=tgt.closest('.day');
+if(day&&day!==dragged){
+var from=+dragged.dataset.pos,to=+day.dataset.pos;
+var item=dayOrder.splice(from,1)[0];dayOrder.splice(to,0,item);
+renderDays();saveState('day_order',dayOrder);
+}}
+document.querySelectorAll('.day').forEach(function(d){d.classList.remove('drag-over')});
+dragged=null;
+};
+document.addEventListener('pointermove',moveHandler);
+document.addEventListener('pointerup',upHandler);
+});
+}
+
+// --- Shopping ---
+function pantryHas(shopItem){
+var name=shopItem.split(' — ')[0].toLowerCase();
+return pantry.some(function(p){return name.indexOf(p.item.toLowerCase())>=0||p.item.toLowerCase().indexOf(name)>=0});
+}
+function renderShop(){
+var h='',total=0,done=0;
+SHOP.forEach(function(d,di){
+h+='<div class="dept"><div class="dept-name">'+d[0]+'</div>';
+d[1].forEach(function(it,ii){
+var k=di+'_'+ii,inP=pantryHas(it);total++;if(shopChecked[k])done++;
+h+='<div class="item'+(shopChecked[k]?' done':'')+(inP?' in-pantry':'')+'"><input type="checkbox" id="c'+k+'"'+(shopChecked[k]?' checked':'')+' onchange="ck(\''+k+'\',this)"><label for="c'+k+'">'+it+'</label>'+(inP?'<span class="pantry-badge">masz ✓</span>':'')+'</div>';
+});h+='</div>';
+});
+if(customShopItems.length){
+h+='<div class="dept"><div class="dept-name">✏️ Dodane ręcznie</div>';
+customShopItems.forEach(function(ci,i){
+total++;if(ci.checked)done++;
+h+='<div class="item'+(ci.checked?' done':'')+'"><input type="checkbox"'+(ci.checked?' checked':'')+' onchange="ckCustom('+i+',this)"><label>'+ci.item+'</label><button class="p-del" onclick="delShopItem('+i+')">✕</button></div>';
+});h+='</div>';
+}
+document.getElementById('shopList').innerHTML=h;
+document.getElementById('prog').textContent=done+' / '+total+' ✓';
+}
+function addShopItem(form){
+var d=new FormData(form);
+customShopItems.push({item:d.get('item'),checked:false});
+form.reset();renderShop();saveState('custom_shop',customShopItems);return false;
+}
+function ckCustom(i,el){
+customShopItems[i].checked=el.checked;
+renderShop();saveState('custom_shop',customShopItems);
+}
+function delShopItem(i){customShopItems.splice(i,1);renderShop();saveState('custom_shop',customShopItems)}
+function ck(k,el){
+if(el.checked){
+shopChecked[k]=1;
+// Auto-add long-term items to pantry
+var parts=k.split('_'),di=+parts[0],ii=+parts[1];
+if(LONG_TERM[di]||LONG_TERM_ITEMS[k]){
+var itemName=SHOP[di][1][ii].split(' — ')[0];
+var qty=SHOP[di][1][ii].split(' — ')[1]||'';
+var existing=pantry.find(function(p){return p.item===itemName});
+if(existing){existing.qty=qty;existing.exp=''}
+else{pantry.push({item:itemName,qty:qty,exp:''})}
+saveState('pantry',pantry);
+}
+}else{delete shopChecked[k]}
+el.parentElement.classList.toggle('done',el.checked);
+renderShop();saveState('shopping',shopChecked);
+}
+function shopToggle(){
+if(document.getElementById('shop').classList.contains('open')){shopClose();return}
+pantryClose();document.getElementById('shop').classList.add('open');renderShop()
+}
+function shopClose(){document.getElementById('shop').classList.remove('open')}
+
+// --- Meal selection & swap ---
+function selectMeal(pos,slot){
+if(!selected){
+selected={pos:pos,slot:slot};
+document.getElementById('swapBar').classList.add('show');
+document.getElementById('swapMsg').textContent=getMeal(pos,slot).name;
+renderDays();return;
+}
+if(selected.pos===pos&&selected.slot===slot){cancelSwap();return}
+// Swap meals
+var kA=dayOrder[selected.pos]+'_'+selected.slot,kB=dayOrder[pos]+'_'+slot;
+var mA=getMeal(selected.pos,selected.slot),mB=getMeal(pos,slot);
+var origA=mealOverrides[kA]||[dayOrder[selected.pos],selected.slot];
+var origB=mealOverrides[kB]||[dayOrder[pos],slot];
+mealOverrides[kA]=Array.isArray(origB)?origB:{name:mB.name,m:mB.m,ing:mB.ing||''};
+mealOverrides[kB]=Array.isArray(origA)?origA:{name:mA.name,m:mA.m,ing:mA.ing||''};
+selected=null;document.getElementById('swapBar').classList.remove('show');
+renderDays();saveState('meal_overrides',mealOverrides);
+}
+function cancelSwap(){selected=null;document.getElementById('swapBar').classList.remove('show');renderDays()}
+
+// --- Recipe picker ---
+function openRecipePicker(){
+if(!selected)return;
+var slot=SLOTS[selected.slot];
+var current=getMeal(selected.pos,selected.slot);
+var h='';
+RECIPES.filter(function(r){return r[2]===slot}).forEach(function(r){
+var diff=['kcal','B','W','T'].map(function(l,i){
+var d=r[3+i]-current.m[i];
+return'<span class="'+(d>=0?'ro-plus':'ro-minus')+'">'+(d>=0?'+':'')+d+' '+l+'</span>';
+}).join(' ');
+h+='<div class="recipe-opt" onclick="pickRecipe(\''+r[0]+'\')"><div class="ro-name">'+r[1]+'</div><div class="ro-macros"><span>'+r[3]+' kcal</span><span>B:'+r[4]+'</span><span>W:'+r[5]+'</span><span>T:'+r[6]+'</span></div><div class="ro-diff">vs obecny: '+diff+'</div></div>';
+});
+document.getElementById('recipeList').innerHTML=h;
+document.getElementById('recipePicker').classList.add('open');
+}
+function pickRecipe(id){
+var r=RECIPES.find(function(x){return x[0]===id});
+if(!r||!selected)return;
+var k=dayOrder[selected.pos]+'_'+selected.slot;
+mealOverrides[k]={name:r[1],m:[r[3],r[4],r[5],r[6]],ing:''};
+closeRecipePicker();cancelSwap();
+renderDays();saveState('meal_overrides',mealOverrides);
+}
+function closeRecipePicker(){document.getElementById('recipePicker').classList.remove('open')}
+
+// --- Pantry ---
+function renderPantry(){
+var h='';
+var sorted=pantry.slice().sort(function(a,b){return(a.exp||'9').localeCompare(b.exp||'9')});
+sorted.forEach(function(p,i){
+var idx=pantry.indexOf(p);
+var expStr='',expClass='';
+if(p.exp){
+var diff=Math.ceil((new Date(p.exp)-new Date())/(1000*60*60*24));
+expStr=diff<=0?'przeterminowane!':diff<=2?'za '+diff+'d!':'do '+p.exp;
+expClass=diff<=2?' p-exp':'';
+}
+h+='<div class="p-item"><div class="p-info"><span class="p-name">'+p.item+'</span>'+(p.qty?' · '+p.qty:'')+'<br><span class="p-meta'+expClass+'">'+(expStr||'brak daty')+'</span></div><button class="p-del" onclick="delPantry('+idx+')">✕</button></div>';
+});
+document.getElementById('pantryList').innerHTML=h||'<div style="color:#666;text-align:center;padding:20px">Spiżarnia pusta</div>';
+}
+function addPantryItem(form){
+var d=new FormData(form);
+pantry.push({item:d.get('item'),qty:d.get('qty')||'',exp:d.get('exp')||''});
+form.reset();renderPantry();saveState('pantry',pantry);return false;
+}
+function delPantry(i){pantry.splice(i,1);renderPantry();saveState('pantry',pantry)}
+function pantryToggle(){
+if(document.getElementById('pantry').classList.contains('open')){pantryClose();return}
+shopClose();document.getElementById('pantry').classList.add('open');renderPantry()
+}
+function pantryClose(){document.getElementById('pantry').classList.remove('open')}
+
+// --- Supabase sync ---
+var saveTimer={};
+function showSync(msg){
+['syncStatus','syncStatus2'].forEach(function(id){
+var el=document.getElementById(id);if(el)el.textContent=msg;
+});
+setTimeout(function(){['syncStatus','syncStatus2'].forEach(function(id){
+var el=document.getElementById(id);if(el)el.textContent='';
+})},2000);
+}
+function saveState(key,val){
+clearTimeout(saveTimer[key]);
+saveTimer[key]=setTimeout(function(){
+sb.from('app_state').upsert({key:key,value:val,updated_at:new Date().toISOString()})
+.then(function(res){if(res.error)showSync('⚠ błąd zapisu');else showSync('✓ zsynchronizowano')})
+.catch(function(){showSync('⚠ brak sieci')});
+},300);
+}
+
+async function loadState(){
+var{data}=await sb.from('app_state').select('*');
+if(data)data.forEach(function(r){
+if(r.key==='day_order'&&r.value&&r.value.length)dayOrder=r.value;
+if(r.key==='shopping'&&r.value)shopChecked=r.value;
+if(r.key==='pantry'&&Array.isArray(r.value))pantry=r.value;
+if(r.key==='meal_overrides'&&r.value)mealOverrides=r.value;
+if(r.key==='custom_shop'&&Array.isArray(r.value))customShopItems=r.value;
+});
+renderDays();
+}
+
+// Realtime
+sb.channel('sync').on('postgres_changes',{event:'*',schema:'public',table:'app_state'},function(p){
+var r=p.new;
+if(r.key==='day_order'&&r.value&&r.value.length){dayOrder=r.value;renderDays()}
+if(r.key==='shopping'&&r.value){shopChecked=r.value;if(document.getElementById('shop').classList.contains('open'))renderShop()}
+if(r.key==='pantry'&&Array.isArray(r.value)){pantry=r.value;if(document.getElementById('pantry').classList.contains('open'))renderPantry();if(document.getElementById('shop').classList.contains('open'))renderShop()}
+if(r.key==='meal_overrides'&&r.value){mealOverrides=r.value;renderDays()}
+if(r.key==='custom_shop'&&Array.isArray(r.value)){customShopItems=r.value;if(document.getElementById('shop').classList.contains('open'))renderShop()}
+}).subscribe();
+
+// --- Init ---
+loadState();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+</script>
+</body></html>
