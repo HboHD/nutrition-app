@@ -4,8 +4,10 @@
 <title>Plan żywieniowy</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Plan">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231a1a2e'/%3E%3Ccircle cx='50' cy='50' r='24' fill='none' stroke='%23e0e0e0' stroke-width='2.5'/%3E%3Cpath d='M20 32v36M16 32v12a4 4 0 008 0V32' fill='none' stroke='%23e0e0e0' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M80 32c4 0 6 4 6 10s-2 10-6 10v16' fill='none' stroke='%23e0e0e0' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#1a1a2e">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='24' fill='none' stroke='%23e0e0e0' stroke-width='2.5'/%3E%3Cpath d='M20 32v36M16 32v12a4 4 0 008 0V32' fill='none' stroke='%23e0e0e0' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M80 32c4 0 6 4 6 10s-2 10-6 10v16' fill='none' stroke='%23e0e0e0' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Plan%20%C5%BCywieniowy%22%2C%22short_name%22%3A%22Plan%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1a2e%22%2C%22theme_color%22%3A%22%231a1a2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Ctext%20y%3D'.9em'%20font-size%3D'90'%3E%F0%9F%8D%BD%EF%B8%8F%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
@@ -26,8 +28,8 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 .shop-progress{font-size:.8em;color:#888;text-align:center;padding:4px 0}
 .sync{font-size:.7em;color:#555;text-align:center;padding:4px 0}
 .fab-group{position:fixed;bottom:16px;right:16px;display:flex;flex-direction:column;gap:10px;z-index:110}
-.fab{width:52px;height:52px;border-radius:50%;border:none;font-size:1.6em;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
-.fab-shop{background:#e76f51}.fab-pantry{background:#2d6a4f}
+.fab{width:64px;height:48px;border-radius:14px;border:none;font-size:1.7em;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+.fab-shop{background:#2d6a4f}.fab-pantry{background:#5c3a1e}
 .pantry{position:fixed;inset:0;background:#1a1a2e;z-index:100;overflow-y:auto;padding:12px;display:none;max-width:480px;margin:0 auto}
 .pantry.open{display:block}
 .p-form{display:flex;gap:6px;padding:8px 0;flex-wrap:wrap}.p-form input{background:#16213e;border:1px solid #333;color:#e0e0e0;border-radius:6px;padding:8px;font-size:.85em}.p-form input[name=item]{flex:2;min-width:120px}.p-form input[name=qty]{flex:1;min-width:60px}.p-form input[name=exp]{flex:1;min-width:100px}
@@ -46,12 +48,12 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 .recipe-opt .ro-diff{font-size:.75em;margin-top:2px}.ro-plus{color:#2d6a4f}.ro-minus{color:#e76f51}
 </style></head><body>
 
-<h1>🍽️ Plan 14.04–17.04</h1>
-<div class="target"><span>🧔 On: ~2000 kcal | B 150g</span><span>👩 Ona: ~2000 kcal | B 150g</span></div>
+<h1>🍽️ Plan 09–10.04</h1>
+<div class="target"><span>🧔 On: ~2000 kcal | B 150g</span><span>👩 Ona: ~2000 kcal | B 120g</span></div>
 <div id="days"></div>
 <div class="fab-group">
-<button class="fab fab-pantry" onclick="pantryToggle()">📦</button>
 <button class="fab fab-shop" onclick="shopToggle()">🛒</button>
+<button class="fab fab-pantry" onclick="pantryToggle()">📦</button>
 </div>
 <div class="swap-bar" id="swapBar">
 <span id="swapMsg">Wybierz drugi posiłek do zamiany</span><br>
@@ -90,47 +92,33 @@ var sb=supabase.createClient('https://tkfxjkleaeuwqqaeiigt.supabase.co','sb_publ
 
 // --- Plan data (generated) ---
 var DAYS=[
-{hdr:'🗓️ Wt 14.04 — biuro',meals:[
-{name:'🥣 Shakshuka ze szpinakiem i fetą',tag:'🌿',tagClass:'cook',ing:'jajka 3 szt · szpinak 50g · feta 50g · pomidory krojone puszka 200g · cebula 0.5 szt',m:[470,27,16,33]},
-{name:'🥞 Pieczona owsianka z jogurtem greckim',tag:'🍳 2d',tagClass:'cook',ing:'płatki owsiane 60g · mleko 150ml · jajko 1 szt · banan 1 szt · masło orzechowe 15g',m:[480,32,54,14]},
-{name:'🍲 Pieczone udka z dodatkami',tag:'🍳 2d',tagClass:'cook',ing:'udo kurczaka 1000g · ziemniaki 600g · marchew 2 szt · oliwa 20ml',m:[460,36,30,22]},
-{name:'🥗 Kanapki z żółtym serem i wędliną',ing:'ser żółty 40g · wędlina 40g · chleb żytni 2 kromki · pomidor 0.5 szt · ogórek 0.5 szt',m:[400,24,30,20]},
-{name:'🥜 Shake białkowy',ing:'białko w proszku 30g · mleko 200ml · banan 0.5 szt',m:[273,32,30,4]}
+{hdr:'🗓️ Czw 09.04 — biuro',meals:[
+{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2 kromki · pomidor 75g · ogórek 75g · papryka 75g',m:[394,29,45,10]},
+{name:'🥞 Placuszki bananowe + jogurt grecki',ing:'banan 120g · 2 jajka · płatki 30g · olej 10ml · jogurt grecki 150g · maliny 50g',m:[649,35,61,32]},
+{name:'🍲 Spaghetti bolońskie',tag:'🍳 2d',tagClass:'cook',ing:'mielone 500g · makaron 500g · passata 700g · cebula · marchew · czosnek',m:[544,26,68,18]},
+{name:'🥗 Serek śmietankowy z łososiem + 2 jajka',tag:'🌿',tagClass:'cook',ing:'serek śmietankowy 60g · łosoś wędzony 50g · 2 jajka na twardo · chleb 2 kromki',m:[594,31,32,37]},
+{name:'🥜 Jabłko',ing:'jabłko 1 szt',m:[90,1,22,0]}
 ]},
-{hdr:'🗓️ Śr 15.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami i chlebem',ing:'serek wiejski 200g · chleb żytni 2 kromki · pomidor 0.5 szt · ogórek 0.5 szt · papryka 0.5 szt',m:[350,26,32,12]},
-{name:'🥞 Pieczona owsianka z jogurtem greckim',tag:'🔄 2/2',tagClass:'left',ing:'Resztki',m:[480,32,54,14]},
-{name:'🍲 Pieczone udka z dodatkami',tag:'🔄 2/2',tagClass:'left',ing:'Resztki',m:[460,36,30,22]},
-{name:'🥗 Serek śmietankowy z łososiem wędzonym',ing:'serek śmietankowy 100g · łosoś wędzony 80g · chleb żytni 2 kromki · kapary 10g',m:[350,22,10,26]},
-{name:'🥜 Jogurt grecki z orzechami',ing:'jogurt grecki 200g · orzechy włoskie 20g · miód 10g',m:[250,14,20,14]}
-]},
-{hdr:'🗓️ Czw 16.04 — biuro',meals:[
-{name:'🥣 Pasta jajeczna z tuńczykiem',ing:'jajka 2 szt · tuńczyk puszka 85g · majonez 15g · chleb żytni 2 kromki',m:[360,30,8,24]},
-{name:'🥞 Placuszki bananowe z jogurtem greckim',ing:'banan 1 szt · jajka 2 szt · płatki owsiane 30g · jogurt grecki 150g · olej rzepakowy 10ml',m:[440,30,42,16]},
-{name:'🍲 Wątróbka z ziemniakami',tag:'🍳 2d',tagClass:'cook',ing:'wątróbka drobiowa 500g · ziemniaki 800g · cebula 2 szt · masło 30g',m:[440,34,38,16]},
-{name:'🥗 Kanapki z pasztetem i warzywami',ing:'pasztet 60g · chleb żytni 2 kromki · pomidor 0.5 szt · ogórek 0.5 szt',m:[380,18,32,20]},
+{hdr:'🗓️ Pt 10.04 — biuro',meals:[
+{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2 kromki · pomidor 75g · ogórek 75g · papryka 75g',m:[394,29,45,10]},
+{name:'🥤 Shake białkowy z owocami',ing:'WPC 30g · mleko 200ml · ½ banana 60g · maliny 30g',m:[273,32,30,4]},
+{name:'🍲 Spaghetti bolońskie',tag:'🔄 2/2',tagClass:'left',ing:'Resztki',m:[544,26,68,18]},
+{name:'🍳 Jajka na maśle z chlebem',ing:'3 jajka · masło 15g · chleb 1 kromka',m:[440,26,16,31]},
 {name:'🥜 Jogurt grecki z orzechami',ing:'jogurt grecki 150g · orzechy włoskie 15g · miód 5g',m:[200,12,16,11]}
-]},
-{hdr:'🗓️ Pt 17.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami i chlebem',ing:'serek wiejski 200g · chleb żytni 2 kromki · pomidor 0.5 szt · ogórek 0.5 szt · papryka 0.5 szt',m:[350,26,32,12]},
-{name:'🥞 Shake białkowy z owocami',ing:'białko w proszku 30g · mleko 200ml · banan 0.5 szt · maliny mrożone 30g',m:[250,30,22,4]},
-{name:'🍲 Wątróbka z ziemniakami',tag:'🔄 2/2',tagClass:'left',ing:'Resztki',m:[440,34,38,16]},
-{name:'🥗 Sałatka jaglana z halloumi',ing:'kasza jaglana 80g · halloumi 100g · pomidory koktajlowe 100g · ogórek 0.5 szt · oliwa 15ml',m:[390,18,36,20]},
-{name:'🥜 Serek wiejski z warzywami',ing:'serek wiejski 100g · pomidor 0.5 szt · ogórek 0.5 szt',m:[180,15,10,8]}
 ]}
 ];
 
 var SHOP=[
 ["🥖 Pieczywo",["chleb żytni — 1 × 500g"]],
-["🥬 Owoce / warzywa",["szpinak — 1 × 100g","pomidory — 1 × 500g","ogórki — 3 szt","papryka — 1 × 3 szt","marchew — 1 × 1kg","ziemniaki — 1 × 2kg","cebula — 1 × 1kg","banany — 1 × 1kg (~5 szt)","pomidory koktajlowe — 1 × 250g"]],
-["🥫 Puszki",["pomidory krojone — 1 × 400g","tuńczyk — 1 × 170g"]],
-["🌾 Suche / kasze",["płatki owsiane — 1 × 500g","kasza jaglana — 1 × 400g"]],
+["🥬 Owoce / warzywa",["pomidory — 1 × 500g","ogórki — 2 szt","papryka — 1 × 3 szt","cebula — 1 × 1kg","marchew — 1 × 1kg","banany — 1 × 1kg (~5 szt)","jabłka — 1 × 1kg"]],
+["🥫 Puszki",["passata pomidorowa — 2 × 400g"]],
+["🌾 Suche / kasze",["makaron — 1 × 500g","płatki owsiane — 1 × 500g"]],
 ["🥚 Jajka / mleko",["jajka — 1 × 10 szt","mleko — 1 × 1L"]],
-["🥩 Mięso",["udo kurczaka — 1 × 1kg","wątróbka drobiowa — 1 × 500g"]],
-["🧀 Nabiał",["feta — 1 × 200g","serek wiejski — 2 × 200g","serek śmietankowy — 1 opak","jogurt grecki — 1 × 180g","ser żółty — 1 × 150g","halloumi — 1 opak","masło — 1 × 200g"]],
-["🐟 Wędliny / ryby",["wędlina — 1 opak","łosoś wędzony — 1 opak","pasztet — 1 opak"]],
+["🥩 Mięso",["mięso mielone — 1 × 500g"]],
+["🧀 Nabiał",["serek wiejski — 2 × 200g","serek śmietankowy — 1 × 150g","jogurt grecki — 1 × 400g","masło — 1 × 200g"]],
+["🐟 Wędliny / ryby",["łosoś wędzony — 1 × 100g"]],
 ["❄️ Mrożonki",["maliny — 1 × 125g"]],
-["📦 Inne",["masło orzechowe — 1 × 350g","oliwa — 1 × 500ml","olej rzepakowy — 1 × 1L","majonez — 1 opak","kapary — 1 słoiczek","białko w proszku — 1 opak"]]
+["📦 Inne",["olej rzepakowy — 1 × 1L","białko w proszku — 1 opak","orzechy włoskie — 1 × 100g","miód — 1 × 350g"]]
 ];
 
 // --- State ---
@@ -196,7 +184,7 @@ var RECIPES=[
 
 // Long-term departments (auto-add to pantry on purchase): puszki,suche,mrożonki,inne
 var LONG_TERM={2:1,3:1,4:1,8:1,9:1};
-var LONG_TERM_ITEMS={'6_6':1};// masło
+var LONG_TERM_ITEMS={'6_3':1};// masło
 
 // --- Get meal (with overrides) ---
 function getMeal(pos,slot){

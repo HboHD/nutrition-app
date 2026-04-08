@@ -101,14 +101,16 @@ for fn in fns:
 # =====================
 group("DAYS data")
 days_match = re.findall(r"hdr:'([^']+)'", js)
-ok(f"4 days found ({len(days_match)})", len(days_match) == 4)
+num_days = len(days_match)
+ok(f"{num_days} days found", num_days >= 2)
 
 meals_count = js.count("name:'")
-ok(f"20 meals total (4 days × 5 slots) ({meals_count})", meals_count == 20)
+expected_meals = num_days * 5
+ok(f"{expected_meals} meals total ({num_days} days × 5 slots) ({meals_count})", meals_count == expected_meals)
 
 # All meals have m:[4 numbers]
 m_arrays = re.findall(r'm:\[(\d+),(\d+),(\d+),(\d+)\]', js)
-ok(f"all meals have m[4] arrays ({len(m_arrays)} found)", len(m_arrays) >= 20)
+ok(f"all meals have m[4] arrays ({len(m_arrays)} found)", len(m_arrays) >= expected_meals)
 for i, (kcal, p, c, f_) in enumerate(m_arrays[:16]):
     ok(f"meal {i} kcal>0", int(kcal) > 0)
 
