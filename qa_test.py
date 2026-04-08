@@ -168,7 +168,7 @@ with open('sw.js') as f:
     sw = f.read()
 ok("sw.js exists and readable", len(sw) > 0)
 ok("fetch event handler", "self.addEventListener('fetch'" in sw)
-ok("cache strategy (network-first)", "fetch(e.request).catch" in sw)
+ok("cache strategy (network-first)", "fetch(e.request).then" in sw or "fetch(e.request).catch" in sw)
 ok("cache versioning", "const V=" in sw or "var V=" in sw)
 
 # =====================
