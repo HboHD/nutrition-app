@@ -46,11 +46,40 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 .recipe-opt{background:#16213e;border-radius:8px;padding:10px;margin:8px 0;cursor:pointer}.recipe-opt:active{background:#1a2744}
 .recipe-opt .ro-name{font-weight:600;font-size:.9em}.recipe-opt .ro-macros{display:flex;gap:8px;font-size:.8em;color:#888;margin-top:4px}
 .recipe-opt .ro-diff{font-size:.75em;margin-top:2px}.ro-plus{color:#2d6a4f}.ro-minus{color:#e76f51}
+.tabs{display:flex;gap:0;margin:8px 0;border-radius:10px;overflow:hidden;background:#0f3460}.tab{flex:1;padding:10px;text-align:center;font-size:.9em;font-weight:600;cursor:pointer;border:none;background:transparent;color:#888}.tab.active{background:#16213e;color:#fff}
+.view{display:none}.view.active{display:block}
+.r-list{margin:8px 0}.r-filter{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.r-filter button{background:#16213e;border:1px solid #333;color:#888;border-radius:6px;padding:5px 12px;font-size:.8em;cursor:pointer}.r-filter button.active{border-color:#e76f51;color:#e76f51}
+.r-card{background:#16213e;border-radius:10px;padding:10px 14px;margin:8px 0;cursor:pointer}.r-card:active{background:#1a2744}.r-card .r-name{font-weight:600;font-size:.9em}.r-card .r-meta{font-size:.75em;color:#888;margin-top:2px}.r-card .r-tags{margin-top:4px}.r-card .r-tag{font-size:.65em;background:#0f3460;color:#888;border-radius:4px;padding:1px 6px;margin-right:4px}
+.r-detail{position:fixed;inset:0;background:#1a1a2e;z-index:130;overflow-y:auto;padding:12px;display:none;max-width:480px;margin:0 auto}.r-detail.open{display:block}
+.r-detail h3{font-size:1.1em;color:#fff;margin:4px 0}.r-detail .r-macros{display:flex;gap:6px;margin:8px 0}
+.r-section{margin:12px 0}.r-section-title{font-size:.8em;color:#e76f51;font-weight:700;margin-bottom:6px}
+.r-ing-item{font-size:.85em;padding:3px 0;border-bottom:1px solid #222}.r-notes{font-size:.85em;color:#aaa;font-style:italic;padding:8px 0}
+.r-edit-form input,.r-edit-form select,.r-edit-form textarea{background:#16213e;border:1px solid #333;color:#e0e0e0;border-radius:6px;padding:8px;font-size:.85em;width:100%;box-sizing:border-box;margin:3px 0}
+.r-edit-form textarea{min-height:60px;resize:vertical}
+.r-row{display:flex;gap:6px;margin:4px 0}.r-row input{flex:1}
+.r-btn{background:#2d6a4f;color:#fff;border:none;border-radius:8px;padding:10px;font-size:.9em;cursor:pointer;width:100%;margin:6px 0}.r-btn.danger{background:#e76f51}.r-btn.secondary{background:#333}
+.r-calc{background:#0f3460;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:.8em}.r-calc b{color:#e76f51}
+.r-add-ing{display:flex;gap:6px;margin:4px 0;flex-wrap:wrap}.r-add-ing input,.r-add-ing select{background:#16213e;border:1px solid #333;color:#e0e0e0;border-radius:6px;padding:6px;font-size:.8em}.r-add-ing input[name=ri_item]{flex:2;min-width:100px}.r-add-ing input[name=ri_amt]{flex:1;min-width:60px}
+.fab-add{position:fixed;bottom:16px;left:16px;width:48px;height:48px;border-radius:14px;border:none;background:#2d6a4f;color:#fff;font-size:1.5em;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);z-index:110;display:none}.fab-add.show{display:flex;align-items:center;justify-content:center}
 </style></head><body>
 
 <h1>🍽️ Plan 14–18.04</h1>
+<div class="tabs"><button class="tab active" onclick="switchTab('plan')">📅 Plan</button><button class="tab" onclick="switchTab('recipes')">📖 Przepisy</button></div>
 <div class="target"><span>🎯 2000 kcal | B 150g | W 182g | T 70g</span><span>🌱 fertility mode</span></div>
+<div id="planView" class="view active">
 <div id="days"></div>
+</div>
+<div id="recipesView" class="view">
+<div class="r-filter" id="rFilter">
+<button class="active" onclick="filterRecipes('all')">Wszystkie</button>
+<button onclick="filterRecipes('b')">🥣 Śniadania</button>
+<button onclick="filterRecipes('sb')">🥞 II śniad.</button>
+<button onclick="filterRecipes('d')">🍲 Obiady</button>
+<button onclick="filterRecipes('s')">🥗 Kolacje</button>
+</div>
+<div class="r-list" id="rList"></div>
+</div>
+<button class="fab-add" id="fabAdd" onclick="openAddRecipe()">+</button>
 <div class="fab-group">
 <button class="fab fab-shop" onclick="shopToggle()">🛒</button>
 <button class="fab fab-pantry" onclick="pantryToggle()">📦</button>
@@ -86,6 +115,8 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 <div id="pantryList"></div>
 <div class="sync" id="syncStatus2"></div>
 </div>
+
+<div class="r-detail" id="rDetail"></div>
 
 <script>
 // --- Supabase ---
@@ -156,57 +187,91 @@ var customShopItems=[];// [{item:'...',checked:false}]
 // Slot→meal_type map: 0=b, 1=sb, 2=d, 3=s
 var SLOTS=['b','sb','d','s','p'];
 
-// Recipe database: [id, name, slot, kcal, protein, carbs, fat]
+// Recipe database: [id, name, slot, kcal, protein, carbs, fat, ingredients[], notes, tags[]]
 var RECIPES=[
-['jajka-na-masle','Jajka na maśle','b',440,26,16,31],
-['shakshuka','Shakshuka ze szpinakiem i fetą','b',432,26,14,30],
-['pasta-jajeczna-tunczyk','Pasta jajeczna z tuńczykiem','b',522,43,30,26],
-['twarozek-szczypiorek','Twarożek z jogurtem i szczypiorkiem','b',361,31,38,10],
-['kanapki-camembert-parma','Kanapki z camembertem i parmeńską','b',472,27,48,20],
-['jajka-sadzone-boczek','Jajka sadzone z boczkiem','b',602,30,16,47],
-['jajka-po-turecku','Jajka po turecku','b',451,24,24,30],
-['kanapki-pasztet','Kanapki z pasztetem','b',366,13,38,19],
-['kanapki-hummus','Kanapki z hummusem','b',286,11,45,8],
-['kanapki-ser-wedlina','Kanapki z serem i wędliną','b',379,23,36,16],
-['serek-wiejski-sniadanie','Serek wiejski z warzywami','b',394,29,45,10],
-['pieczona-owsianka','Pieczona owsianka z jogurtem','sb',593,32,69,23],
-['budyn-jaglany','Budyń jaglany z białkiem','sb',470,31,75,6],
-['placuszki-bananowe','Placuszki bananowe z jogurtem','sb',649,35,61,32],
-['nalesniki','Naleśniki z twarożkiem','sb',619,46,60,22],
-['shake-bialkowy','Shake białkowy z owocami','sb',273,32,30,4],
-['watrobka-ziemniaki','Wątróbka z ziemniakami','d',745,52,78,25],
-['curry','Curry z kurczakiem i batatami','d',642,46,69,19],
-['tofu-bulgogi','Tofu bulgogi','d',327,13,48,10],
-['spaghetti-bolognese','Spaghetti bolońskie','d',544,26,68,18],
-['ryz-kurczak-warzywa','Ryż z kurczakiem i warzywami','d',484,46,58,5],
-['gulasz-wolowy','Gulasz wołowy z kaszą','d',681,52,51,33],
-['ryba-frytki','Ryba z frytkami','d',617,34,60,27],
-['pieczone-udka','Pieczone udka z dodatkami','d',703,68,30,33],
-['mielone-por','Mielone z porem i marchewką','d',467,30,11,33],
-['kotlety-udka','Kotlety z udek z ziemniakami','d',604,59,35,24],
-['kaszotto-buraczane','Kaszotto buraczane z kurczakiem','d',411,38,45,8],
-['quesadilla-kurczak','Quesadilla z kurczakiem','d',464,44,34,16],
-['tortilla-kurczak','Tortilla z kurczakiem','d',400,38,39,10],
-['makaron-ryzowy-tajski','Makaron ryżowy po tajsku','d',555,36,82,7],
-['makaron-soczewica-cukinia','Makaron z soczewicy z cukinią','d',568,36,49,22],
-['salatka-jaglana-halloumi','Sałatka jaglana z halloumi','s',733,37,63,38],
-['placki-ziemniaczane','Placki ziemniaczane','s',439,11,58,18],
-['salatka-ciecierzyca','Sałatka z ciecierzycą','s',246,11,22,13],
-['salatka-sliwki-parmezan','Sałatka ze śliwkami i parmezanem','s',370,15,30,23],
-['salatka-gruszka-blue','Sałatka z gruszką i blue','s',396,13,30,26],
-['pieczony-camembert','Pieczony camembert z miodem','s',451,19,37,26],
-['serek-losos','Serek śmietankowy z łososiem','s',414,17,31,25],
-['pizzerinki-wiejski','Pizzerinki z serka wiejskiego','s',434,26,51,13],
-['salatka-jaglana-ciecierzyca','Sałatka jaglana z ciecierzycą','s',448,20,55,13],
-['kanapki-pasztet-s','Kanapki z pasztetem','s',366,13,38,19],
-['kanapki-hummus-s','Kanapki z hummusem','s',286,11,45,8],
-['kanapki-ser-wedlina-s','Kanapki z serem i wędliną','s',379,23,36,16],
-['shake-przekaska','Shake białkowy','p',273,32,30,4],
-['jogurt-orzechy','Jogurt grecki z orzechami','p',200,12,16,11],
-['owoc','Jabłko / banan','p',90,1,22,0],
-['serek-wiejski-przekaska','Serek wiejski z warzywami','p',180,15,10,8],
-['orzeszki-mix','Mix orzechów 40g','p',240,8,6,20]
+['jajka-na-masle','Jajka na maśle','b',440,26,16,31,[{item:'jajka',amount:'3 szt'},{item:'masło',amount_g:'15'},{item:'chleb żytni',amount:'1 kromka'}],'',['polish','quick']],
+['shakshuka','Shakshuka ze szpinakiem i fetą','b',432,26,14,30,[{item:'jajka',amount:'4 szt'},{item:'szpinak',amount_g:'50'},{item:'feta',amount_g:'100'},{item:'pomidory krojone puszka',amount_g:'400'},{item:'cebula',amount:'0.5 szt'},{item:'oliwa',amount_g:'15'}],'',['mediterranean','fertility']],
+['pasta-jajeczna-tunczyk','Pasta jajeczna z tuńczykiem','b',522,43,30,26,[{item:'jajka',amount:'2 szt'},{item:'tuńczyk puszka',amount_g:'85'},{item:'majonez',amount_g:'15'},{item:'chleb żytni',amount:'2 kromki'}],'',['quick','high_protein']],
+['twarozek-szczypiorek','Twarożek z jogurtem i szczypiorkiem','b',361,31,38,10,[{item:'twaróg',amount_g:'250'},{item:'jogurt naturalny',amount_g:'200'},{item:'chleb żytni',amount:'4 kromki'}],'',['polish','vegetarian']],
+['kanapki-camembert-parma','Kanapki z camembertem i parmeńską','b',472,27,48,20,[{item:'camembert',amount_g:'60'},{item:'szynka parmeńska',amount_g:'30'},{item:'chleb żytni',amount:'2 kromki'}],'',['mediterranean']],
+['jajka-sadzone-boczek','Jajka sadzone z boczkiem','b',602,30,16,47,[{item:'jajka',amount:'3 szt'},{item:'boczek wędzony',amount_g:'50'},{item:'chleb żytni',amount:'1 kromka'}],'',['polish','keto_friendly']],
+['jajka-po-turecku','Jajka po turecku','b',451,24,24,30,[{item:'jajka',amount:'2 szt'},{item:'jogurt naturalny',amount_g:'150'},{item:'masło',amount_g:'15'},{item:'chleb żytni',amount:'1 kromka'}],'',['mediterranean']],
+['kanapki-pasztet','Kanapki z pasztetem','b',366,13,38,19,[{item:'pasztet',amount_g:'60'},{item:'chleb żytni',amount:'2 kromki'},{item:'pomidory',amount_g:'75'},{item:'ogórek',amount_g:'75'}],'',['polish','quick']],
+['kanapki-hummus','Kanapki z hummusem','b',286,11,45,8,[{item:'hummus',amount_g:'60'},{item:'chleb żytni',amount:'2 kromki'},{item:'pomidory',amount_g:'75'},{item:'papryka',amount_g:'75'}],'',['mediterranean','vegetarian']],
+['kanapki-ser-wedlina','Kanapki z serem i wędliną','b',379,23,36,16,[{item:'ser żółty',amount_g:'40'},{item:'wędlina',amount_g:'40'},{item:'chleb żytni',amount:'2 kromki'},{item:'pomidory',amount_g:'75'}],'',['polish','quick']],
+['serek-wiejski-sniadanie','Serek wiejski z warzywami','b',394,29,45,10,[{item:'serek wiejski',amount_g:'200'},{item:'chleb żytni',amount:'2 kromki'},{item:'pomidory',amount_g:'75'},{item:'ogórek',amount_g:'75'},{item:'papryka',amount_g:'75'}],'Śniadanie biurowe ~3x/tyg',['polish','quick','high_protein']],
+['pieczona-owsianka','Pieczona owsianka z jogurtem','sb',593,32,69,23,[{item:'płatki owsiane',amount_g:'120'},{item:'mleko',amount_g:'300'},{item:'jajka',amount:'2 szt'},{item:'banan',amount:'1 szt'},{item:'masło orzechowe',amount_g:'30'},{item:'jogurt grecki',amount_g:'150'},{item:'maliny',amount_g:'30'}],'',['vegetarian','meal_prep']],
+['budyn-jaglany','Budyń jaglany z białkiem','sb',470,31,75,6,[{item:'kasza jaglana',amount_g:'120'},{item:'mleko',amount_g:'400'},{item:'banan',amount:'1 szt'},{item:'białko w proszku',amount_g:'40'},{item:'maliny',amount_g:'100'}],'Z resztek kaszy jaglanej',['vegetarian','high_protein']],
+['placuszki-bananowe','Placuszki bananowe z jogurtem','sb',649,35,61,32,[{item:'banan',amount:'1 szt'},{item:'jajka',amount:'2 szt'},{item:'płatki owsiane',amount_g:'30'},{item:'olej rzepakowy',amount_g:'10'},{item:'jogurt grecki',amount_g:'150'},{item:'maliny',amount_g:'50'}],'',['vegetarian','quick']],
+['nalesniki','Naleśniki z twarożkiem','sb',619,46,60,22,[{item:'mąka',amount_g:'60'},{item:'mleko',amount_g:'150'},{item:'jajka',amount:'1 szt'},{item:'twaróg',amount_g:'150'},{item:'masło',amount_g:'10'}],'',['polish','vegetarian']],
+['shake-bialkowy','Shake białkowy z owocami','sb',273,32,30,4,[{item:'białko w proszku',amount_g:'30'},{item:'mleko',amount_g:'200'},{item:'banan',amount:'0.5 szt'},{item:'maliny',amount_g:'30'}],'',['quick','high_protein']],
+['watrobka-ziemniaki','Wątróbka z ziemniakami','d',745,52,78,25,[{item:'wątróbka drobiowa',amount_g:'500'},{item:'ziemniaki',amount_g:'800'},{item:'cebula',amount:'2 szt'},{item:'masło',amount_g:'30'}],'',['polish','fertility']],
+['curry','Curry z kurczakiem i batatami','d',642,46,69,19,[{item:'pierś kurczaka',amount_g:'750'},{item:'mleko kokosowe',amount_g:'400'},{item:'pasta curry',amount_g:'35'},{item:'ryż',amount_g:'360'},{item:'papryka',amount:'1 szt'}],'',['asian','slow_cook','fertility']],
+['tofu-bulgogi','Tofu bulgogi','d',327,13,48,10,[{item:'tofu',amount_g:'400'},{item:'sos sojowy',amount_g:'30'},{item:'ryż',amount_g:'200'},{item:'cebula',amount:'1 szt'}],'',['asian','vegetarian']],
+['spaghetti-bolognese','Spaghetti bolońskie','d',544,26,68,18,[{item:'mięso mielone wieprzowo wołowe',amount_g:'500'},{item:'makaron',amount_g:'500'},{item:'pomidory krojone puszka',amount_g:'700'},{item:'cebula',amount:'1 szt'},{item:'marchew',amount:'1 szt'}],'',['mediterranean','comfort']],
+['ryz-kurczak-warzywa','Ryż z kurczakiem i warzywami','d',484,46,58,5,[{item:'pierś kurczaka',amount_g:'500'},{item:'ryż',amount_g:'250'},{item:'sos sojowy',amount_g:'20'}],'',['asian','quick','high_protein']],
+['gulasz-wolowy','Gulasz wołowy z kaszą','d',681,52,51,33,[{item:'wołowina gulaszowa',amount_g:'1000'},{item:'kasza gryczana',amount_g:'360'},{item:'marchew',amount:'2 szt'},{item:'cebula',amount:'2 szt'}],'',['polish','slow_cook','fertility']],
+['ryba-frytki','Ryba z frytkami','d',617,34,60,27,[{item:'filet rybny',amount_g:'300'},{item:'ziemniaki',amount_g:'500'},{item:'mąka',amount_g:'40'},{item:'olej rzepakowy',amount_g:'50'}],'',['polish','comfort']],
+['pieczone-udka','Pieczone udka z dodatkami','d',703,68,30,33,[{item:'udo kurczaka',amount_g:'1000'},{item:'ziemniaki',amount_g:'600'},{item:'marchew',amount:'2 szt'},{item:'oliwa',amount_g:'20'}],'',['polish','high_protein']],
+['mielone-por','Mielone z porem i marchewką','d',467,30,11,33,[{item:'mięso mielone wieprzowo wołowe',amount_g:'600'},{item:'marchew',amount:'2 szt'},{item:'jajka',amount:'2 szt'}],'',['polish','comfort']],
+['kotlety-udka','Kotlety z udek z ziemniakami','d',604,59,35,24,[{item:'udo kurczaka',amount_g:'800'},{item:'bułka tarta',amount_g:'50'},{item:'jajka',amount:'1 szt'},{item:'ziemniaki',amount_g:'600'}],'',['polish','high_protein']],
+['kaszotto-buraczane','Kaszotto buraczane z kurczakiem','d',411,38,45,8,[{item:'kasza jęczmienna',amount_g:'200'},{item:'pierś kurczaka',amount_g:'400'},{item:'buraki gotowane',amount_g:'250'},{item:'cebula',amount:'1 szt'},{item:'oliwa',amount_g:'15'}],'',['polish','fertility']],
+['quesadilla-kurczak','Quesadilla z kurczakiem','d',464,44,34,16,[{item:'pierś kurczaka',amount_g:'400'},{item:'tortilla',amount:'4 szt'},{item:'cukinia',amount:'1 szt'},{item:'ser żółty',amount_g:'100'},{item:'jogurt naturalny',amount_g:'100'}],'',['mexican','quick']],
+['tortilla-kurczak','Tortilla z kurczakiem','d',400,38,39,10,[{item:'pierś kurczaka',amount_g:'400'},{item:'tortilla',amount:'4 szt'},{item:'papryka',amount:'2 szt'},{item:'jogurt naturalny',amount_g:'150'}],'',['mexican','mediterranean']],
+['makaron-ryzowy-tajski','Makaron ryżowy po tajsku','d',555,36,82,7,[{item:'makaron ryżowy',amount_g:'350'},{item:'pierś kurczaka',amount_g:'400'},{item:'sos sojowy',amount_g:'30'}],'',['asian','quick']],
+['makaron-soczewica-cukinia','Makaron z soczewicy z cukinią','d',568,36,49,22,[{item:'makaron z soczewicy',amount_g:'350'},{item:'cukinia',amount:'2 szt'},{item:'mozzarella',amount_g:'250'},{item:'suszone pomidory w oleju',amount_g:'100'},{item:'oliwa',amount_g:'20'}],'Suszone pomidory w oleju zamiast puszki',['mediterranean','vegetarian']],
+['salatka-jaglana-halloumi','Sałatka jaglana z halloumi','s',733,37,63,38,[{item:'kasza jaglana',amount_g:'120'},{item:'halloumi',amount_g:'225'},{item:'papryka',amount:'1 szt'},{item:'kukurydza puszka',amount_g:'100'},{item:'oliwa',amount_g:'15'}],'',['mediterranean','vegetarian']],
+['placki-ziemniaczane','Placki ziemniaczane','s',439,11,58,18,[{item:'ziemniaki',amount_g:'500'},{item:'cebula',amount:'1 szt'},{item:'jajka',amount:'1 szt'},{item:'mąka',amount_g:'30'},{item:'olej rzepakowy',amount_g:'30'}],'',['polish','vegetarian']],
+['salatka-ciecierzyca','Sałatka z ciecierzycą','s',246,11,22,13,[{item:'ciecierzyca puszka',amount_g:'200'},{item:'sałata mix',amount_g:'75'},{item:'pomidory koktajlowe',amount_g:'80'},{item:'feta',amount_g:'50'},{item:'oliwa',amount_g:'10'}],'',['mediterranean','vegetarian','fertility']],
+['salatka-sliwki-parmezan','Sałatka ze śliwkami i parmezanem','s',370,15,30,23,[{item:'rukola',amount_g:'100'},{item:'śliwki suszone',amount_g:'80'},{item:'parmezan',amount_g:'60'},{item:'orzechy włoskie',amount_g:'20'},{item:'oliwa',amount_g:'15'}],'',['mediterranean','vegetarian']],
+['salatka-gruszka-blue','Sałatka z gruszką i blue','s',396,13,30,26,[{item:'sałata mix',amount_g:'100'},{item:'gruszka',amount:'2 szt'},{item:'ser blue',amount_g:'100'},{item:'orzechy włoskie',amount_g:'20'},{item:'oliwa',amount_g:'10'}],'',['mediterranean','vegetarian']],
+['pieczony-camembert','Pieczony camembert z miodem','s',451,19,37,26,[{item:'camembert',amount_g:'120'},{item:'miód',amount_g:'15'},{item:'orzechy włoskie',amount_g:'30'},{item:'chleb żytni',amount:'4 kromki'}],'',['comfort','vegetarian']],
+['serek-losos','Serek śmietankowy z łososiem','s',414,17,31,25,[{item:'serek śmietankowy',amount_g:'60'},{item:'łosoś wędzony',amount_g:'50'},{item:'chleb żytni',amount:'2 kromki'}],'',['quick','fertility']],
+['pizzerinki-wiejski','Pizzerinki z serka wiejskiego','s',434,26,51,13,[{item:'serek wiejski',amount_g:'200'},{item:'mąka',amount_g:'110'},{item:'ser żółty',amount_g:'50'},{item:'wędlina',amount_g:'30'},{item:'kukurydza puszka',amount_g:'50'}],'',['polish','vegetarian']],
+['salatka-jaglana-ciecierzyca','Sałatka jaglana z ciecierzycą','s',448,20,55,13,[{item:'kasza jaglana',amount_g:'100'},{item:'ciecierzyca puszka',amount_g:'200'},{item:'jajka',amount:'2 szt'},{item:'pomidory koktajlowe',amount_g:'80'},{item:'papryka',amount_g:'75'},{item:'sałata mix',amount_g:'75'},{item:'oliwa',amount_g:'10'}],'Gotuj extra kaszę na budyń',['mediterranean','fertility']],
+['kanapki-pasztet-s','Kanapki z pasztetem','s',366,13,38,19,[{item:'pasztet',amount_g:'60'},{item:'chleb żytni',amount:'2 kromki'},{item:'pomidory',amount_g:'75'}],'',['polish','quick']],
+['kanapki-hummus-s','Kanapki z hummusem','s',286,11,45,8,[{item:'hummus',amount_g:'60'},{item:'chleb żytni',amount:'2 kromki'},{item:'papryka',amount_g:'75'}],'',['mediterranean','vegetarian']],
+['kanapki-ser-wedlina-s','Kanapki z serem i wędliną','s',379,23,36,16,[{item:'ser żółty',amount_g:'40'},{item:'wędlina',amount_g:'40'},{item:'chleb żytni',amount:'2 kromki'}],'',['polish','quick']],
+['shake-przekaska','Shake białkowy','p',273,32,30,4,[{item:'białko w proszku',amount_g:'30'},{item:'mleko',amount_g:'200'}],'',['quick','high_protein']],
+['jogurt-orzechy','Jogurt grecki z orzechami','p',200,12,16,11,[{item:'jogurt grecki',amount_g:'150'},{item:'orzechy włoskie',amount_g:'15'},{item:'miód',amount_g:'5'}],'',['quick']],
+['owoc','Jabłko / banan','p',90,1,22,0,[],'',['quick']],
+['serek-wiejski-przekaska','Serek wiejski z warzywami','p',180,15,10,8,[{item:'serek wiejski',amount_g:'100'},{item:'pomidory',amount_g:'50'}],'',['quick']],
+['orzeszki-mix','Mix orzechów 40g','p',240,8,6,20,[{item:'orzechy włoskie',amount_g:'40'}],'',['quick']]
 ];
+
+// Ingredient nutrition DB: per 100g [kcal, protein, carbs, fat]
+var NUT={
+'jajka':[155,13,1,11],'masło':[735,1,0,81],'chleb żytni':[220,7,46,1],'szpinak':[23,3,4,0],
+'feta':[264,14,2,21],'pomidory krojone puszka':[25,1,4,0],'cebula':[40,1,9,0],'oliwa':[884,0,0,100],
+'tuńczyk puszka':[130,28,0,2],'majonez':[680,1,1,75],'twaróg':[120,18,4,4],'jogurt naturalny':[60,4,5,2],
+'pierś kurczaka':[165,31,0,4],'mleko kokosowe':[180,2,3,18],'pasta curry':[150,3,10,11],
+'ryż':[360,7,78,1],'makaron':[350,12,72,2],'mięso mielone drobiowe':[143,17,0,8],
+'mięso mielone wieprzowo wołowe':[250,17,0,20],'wołowina gulaszowa':[250,26,0,16],
+'kasza gryczana':[340,13,72,3],'kasza jaglana':[360,11,70,3],'kasza jęczmienna':[350,10,73,2],
+'płatki owsiane':[370,13,66,7],'masło orzechowe':[588,25,20,50],'jogurt grecki':[97,9,4,5],
+'białko w proszku':[400,80,10,5],'mleko':[42,3,5,1],'banan':[89,1,23,0],'maliny':[52,1,12,1],
+'serek wiejski':[98,11,3,4],'ser żółty':[350,25,1,28],'wędlina':[180,18,2,11],
+'pomidory':[18,1,4,0],'ogórek':[15,1,4,0],'papryka':[31,1,6,0],'cukinia':[17,1,3,0],
+'marchew':[41,1,10,0],'ziemniaki':[77,2,17,0],'pieczarki':[22,3,3,0],'brokuł':[34,3,7,0],
+'halloumi':[320,22,2,25],'mozzarella':[280,22,2,22],'camembert':[300,20,1,24],
+'parmezan':[431,38,4,29],'ser blue':[350,21,2,29],'serek śmietankowy':[250,6,4,24],
+'łosoś wędzony':[180,22,0,10],'wątróbka drobiowa':[140,20,1,6],'udo kurczaka':[180,18,0,12],
+'filet rybny':[82,18,0,1],'tofu':[76,8,2,5],'tortilla':[300,8,50,8],
+'ciecierzyca puszka':[120,7,16,3],'kukurydza puszka':[80,3,16,1],
+'sałata mix':[15,1,2,0],'rukola':[25,3,4,1],'pomidory koktajlowe':[18,1,4,0],
+'śliwki suszone':[240,2,63,0],'orzechy włoskie':[654,15,14,65],'miód':[304,0,82,0],
+'sos sojowy':[53,8,5,0],'suszone pomidory w oleju':[213,6,12,15],
+'szynka parmeńska':[270,26,0,18],'boczek wędzony':[500,10,0,50],
+'pasztet':[320,10,5,29],'hummus':[166,8,14,10],'mąka':[340,10,72,1],
+'olej rzepakowy':[884,0,0,100],'makaron z soczewicy':[340,24,48,2],
+'bułka tarta':[395,11,74,5],'buraki gotowane':[44,2,10,0],
+'makaron ryżowy':[360,4,83,0],'gruszka':[57,0,15,0]
+};
+
+// Recipe edits & user recipes (synced via Supabase)
+var recipeEdits={};// id → {field:value}
+var userRecipes=[];// [{id,name,slot,...}]
+var rFilter='all';
 
 // Long-term departments (auto-add to pantry on purchase): puszki,suche,mrożonki,inne
 var LONG_TERM={2:1,3:1,4:1,8:1,9:1};
@@ -379,22 +444,23 @@ function openRecipePicker(){
 if(!selected)return;
 var slot=SLOTS[selected.slot];
 var current=getMeal(selected.pos,selected.slot);
+var all=getAllRecipes().filter(function(r){return r.slot===slot});
 var h='';
-RECIPES.filter(function(r){return r[2]===slot}).forEach(function(r){
+all.forEach(function(r){
 var diff=['kcal','B','W','T'].map(function(l,i){
-var d=r[3+i]-current.m[i];
+var d=r.m[i]-current.m[i];
 return'<span class="'+(d>=0?'ro-plus':'ro-minus')+'">'+(d>=0?'+':'')+d+' '+l+'</span>';
 }).join(' ');
-h+='<div class="recipe-opt" onclick="pickRecipe(\''+r[0]+'\')"><div class="ro-name">'+r[1]+'</div><div class="ro-macros"><span>'+r[3]+' kcal</span><span>B:'+r[4]+'</span><span>W:'+r[5]+'</span><span>T:'+r[6]+'</span></div><div class="ro-diff">vs obecny: '+diff+'</div></div>';
+h+='<div class="recipe-opt" onclick="pickRecipe(\''+r.id+'\')"><div class="ro-name">'+r.name+'</div><div class="ro-macros"><span>'+r.m[0]+' kcal</span><span>B:'+r.m[1]+'</span><span>W:'+r.m[2]+'</span><span>T:'+r.m[3]+'</span></div><div class="ro-diff">vs obecny: '+diff+'</div></div>';
 });
 document.getElementById('recipeList').innerHTML=h;
 document.getElementById('recipePicker').classList.add('open');
 }
 function pickRecipe(id){
-var r=RECIPES.find(function(x){return x[0]===id});
+var r=getAllRecipes().find(function(x){return x.id===id});
 if(!r||!selected)return;
 var k=dayOrder[selected.pos]+'_'+selected.slot;
-mealOverrides[k]={name:r[1],m:[r[3],r[4],r[5],r[6]],ing:''};
+mealOverrides[k]={name:r.name,m:r.m,ing:''};
 closeRecipePicker();cancelSwap();
 renderDays();saveState('meal_overrides',mealOverrides);
 }
@@ -456,6 +522,8 @@ if(r.key==='pantry'&&Array.isArray(r.value))pantry=r.value;
 if(r.key==='meal_overrides'&&r.value)mealOverrides=r.value;
 if(r.key==='custom_shop'&&Array.isArray(r.value))customShopItems=r.value;
 if(r.key==='shop_cleared'&&r.value)shopCleared=!!r.value.cleared;
+if(r.key==='recipe_edits'&&r.value)recipeEdits=r.value;
+if(r.key==='user_recipes'&&Array.isArray(r.value))userRecipes=r.value;
 });
 renderDays();
 }
@@ -469,7 +537,187 @@ if(r.key==='pantry'&&Array.isArray(r.value)){pantry=r.value;if(document.getEleme
 if(r.key==='meal_overrides'&&r.value){mealOverrides=r.value;renderDays()}
 if(r.key==='custom_shop'&&Array.isArray(r.value)){customShopItems=r.value;if(document.getElementById('shop').classList.contains('open'))renderShop()}
 if(r.key==='shop_cleared'&&r.value){shopCleared=!!r.value.cleared;if(document.getElementById('shop').classList.contains('open'))renderShop()}
+if(r.key==='recipe_edits'&&r.value){recipeEdits=r.value;renderRecipes()}
+if(r.key==='user_recipes'&&Array.isArray(r.value)){userRecipes=r.value;renderRecipes()}
 }).subscribe();
+
+// --- Tabs ---
+function switchTab(t){
+document.querySelectorAll('.tab').forEach(function(el){el.classList.toggle('active',el.textContent.indexOf(t==='plan'?'Plan':'Przepisy')>=0)});
+document.getElementById('planView').classList.toggle('active',t==='plan');
+document.getElementById('recipesView').classList.toggle('active',t==='recipes');
+document.getElementById('fabAdd').classList.toggle('show',t==='recipes');
+document.querySelector('.fab-group').style.display=t==='plan'?'flex':'none';
+document.querySelector('.target').style.display=t==='plan'?'block':'none';
+if(t==='recipes')renderRecipes();
+}
+
+// --- Recipe helpers ---
+function getAllRecipes(){
+var all=RECIPES.map(function(r){
+var e=recipeEdits[r[0]]||{};
+return{id:r[0],name:e.name||r[1],slot:r[2],m:[e.kcal||r[3],e.protein||r[4],e.carbs||r[5],e.fat||r[6]],
+ing:e.ing||r[7]||[],notes:e.notes!=null?e.notes:(r[8]||''),tags:e.tags||r[9]||[],src:'base'};
+});
+userRecipes.forEach(function(r){all.push(Object.assign({src:'user'},r))});
+return all;
+}
+function slotLabel(s){return{b:'🥣 Śniadanie',sb:'🥞 II śniadanie',d:'🍲 Obiad',s:'🥗 Kolacja',p:'🥜 Przekąska'}[s]||s}
+
+// --- Recipe list ---
+function filterRecipes(f){
+rFilter=f;
+document.querySelectorAll('.r-filter button').forEach(function(b,i){
+b.classList.toggle('active',['all','b','sb','d','s'][i]===f);
+});
+renderRecipes();
+}
+function renderRecipes(){
+var all=getAllRecipes().filter(function(r){return rFilter==='all'||r.slot===rFilter});
+all.sort(function(a,b){return a.name.localeCompare(b.name,'pl')});
+var h='';
+all.forEach(function(r){
+var tags=(r.tags||[]).map(function(t){return'<span class="r-tag">'+t+'</span>'}).join('');
+h+='<div class="r-card" onclick="openRecipeDetail(\''+r.id+'\')"><div class="r-name">'+(r.src==='user'?'✏️ ':'')+r.name+'</div><div class="r-meta">'+slotLabel(r.slot)+' · '+r.m[0]+' kcal · B:'+r.m[1]+'g W:'+r.m[2]+'g T:'+r.m[3]+'g</div>'+(tags?'<div class="r-tags">'+tags+'</div>':'')+'</div>';
+});
+if(!h)h='<div style="color:#666;text-align:center;padding:20px">Brak przepisów</div>';
+document.getElementById('rList').innerHTML=h;
+}
+
+// --- Recipe detail ---
+function openRecipeDetail(id){
+var r=getAllRecipes().find(function(x){return x.id===id});
+if(!r)return;
+var ingH='';
+(r.ing||[]).forEach(function(i){
+ingH+='<div class="r-ing-item">'+i.item+(i.amount_g?' — '+i.amount_g+'g':'')+(i.amount?' — '+i.amount:'')+(i.lidl_package?' <span style="color:#555">('+i.lidl_package+')</span>':'')+'</div>';
+});
+var el=document.getElementById('rDetail');
+el.innerHTML='<div class="shop-head"><h3>'+r.name+'</h3><button class="shop-close" onclick="closeRecipeDetail()">✕</button></div>'+
+'<div class="r-meta" style="margin:4px 0">'+slotLabel(r.slot)+(r.src==='user'?' · ✏️ własny':'')+'</div>'+
+'<div class="r-macros">'+['kcal','białko','węgle','tłuszcz'].map(function(l,i){return'<div class="macro"><span class="val">'+r.m[i]+'</span><span class="lbl">'+l+'</span></div>'}).join('')+'</div>'+
+(ingH?'<div class="r-section"><div class="r-section-title">Składniki</div>'+ingH+'</div>':'')+
+(r.notes?'<div class="r-notes">'+r.notes+'</div>':'')+
+(r.tags&&r.tags.length?'<div class="r-section"><div class="r-section-title">Tagi</div><div class="r-tags">'+r.tags.map(function(t){return'<span class="r-tag">'+t+'</span>'}).join('')+'</div></div>':'')+
+'<button class="r-btn" onclick="openEditRecipe(\''+r.id+'\')">✏️ Edytuj</button>'+
+(r.src==='user'?'<button class="r-btn danger" onclick="deleteRecipe(\''+r.id+'\')">🗑️ Usuń</button>':'');
+el.classList.add('open');
+}
+function closeRecipeDetail(){document.getElementById('rDetail').classList.remove('open')}
+
+// --- Edit recipe ---
+function openEditRecipe(id){
+var r=getAllRecipes().find(function(x){return x.id===id});
+if(!r)return;
+var ingRows='';
+(r.ing||[]).forEach(function(ig,i){
+ingRows+='<div class="r-row"><input name="ei_item_'+i+'" value="'+ig.item+'"><input name="ei_amt_'+i+'" value="'+(ig.amount_g||ig.amount||'')+'" placeholder="ilość" style="max-width:80px"><button type="button" class="p-del" onclick="this.parentElement.remove();calcEditMacros()">✕</button></div>';
+});
+var el=document.getElementById('rDetail');
+el.innerHTML='<div class="shop-head"><h3>Edytuj: '+r.name+'</h3><button class="shop-close" onclick="closeRecipeDetail()">✕</button></div>'+
+'<form class="r-edit-form" onsubmit="return saveEditRecipe(\''+r.id+'\',this)">'+
+'<input name="name" value="'+r.name+'" placeholder="Nazwa">'+
+'<div class="r-row"><select name="slot"><option value="b"'+(r.slot==='b'?' selected':'')+'>Śniadanie</option><option value="sb"'+(r.slot==='sb'?' selected':'')+'>II śniadanie</option><option value="d"'+(r.slot==='d'?' selected':'')+'>Obiad</option><option value="s"'+(r.slot==='s'?' selected':'')+'>Kolacja</option><option value="p"'+(r.slot==='p'?' selected':'')+'>Przekąska</option></select></div>'+
+'<div class="r-section"><div class="r-section-title">Składniki <button type="button" style="background:#2d6a4f;color:#fff;border:none;border-radius:4px;padding:2px 8px;font-size:.8em;cursor:pointer" onclick="addIngRow(this)">+ dodaj</button></div>'+
+'<div id="editIngs">'+ingRows+'</div></div>'+
+'<div class="r-calc" id="editCalc">Przelicz makra z składników ↓</div>'+
+'<button type="button" class="r-btn secondary" onclick="calcEditMacros()">🔄 Przelicz makra</button>'+
+'<div class="r-section"><div class="r-section-title">Makra per serving (lub ręcznie)</div>'+
+'<div class="r-row"><input name="kcal" value="'+r.m[0]+'" placeholder="kcal" type="number"><input name="protein" value="'+r.m[1]+'" placeholder="białko" type="number"><input name="carbs" value="'+r.m[2]+'" placeholder="węgle" type="number"><input name="fat" value="'+r.m[3]+'" placeholder="tłuszcz" type="number"></div>'+
+'<input name="servings" value="'+(r.servings||2)+'" placeholder="porcje" type="number" style="max-width:120px"></div>'+
+'<textarea name="notes" placeholder="Notatki">'+(r.notes||'')+'</textarea>'+
+'<input name="tags" value="'+(r.tags||[]).join(', ')+'" placeholder="Tagi (po przecinku)">'+
+'<button type="submit" class="r-btn">💾 Zapisz</button></form>';
+el.classList.add('open');
+}
+function addIngRow(btn){
+var c=document.getElementById('editIngs'),i=c.children.length;
+c.insertAdjacentHTML('beforeend','<div class="r-row"><input name="ei_item_'+i+'" placeholder="składnik"><input name="ei_amt_'+i+'" placeholder="ilość (g)" style="max-width:80px"><button type="button" class="p-del" onclick="this.parentElement.remove();calcEditMacros()">✕</button></div>');
+}
+function calcEditMacros(){
+var rows=document.querySelectorAll('#editIngs .r-row'),tot=[0,0,0,0];
+rows.forEach(function(row){
+var inputs=row.querySelectorAll('input');
+var item=(inputs[0].value||'').toLowerCase().trim();
+var amt=parseFloat(inputs[1].value)||0;
+var n=NUT[item];
+if(n&&amt>0){
+var f=amt/100;
+tot[0]+=Math.round(n[0]*f);tot[1]+=Math.round(n[1]*f);
+tot[2]+=Math.round(n[2]*f);tot[3]+=Math.round(n[3]*f);
+}
+});
+var serv=parseInt(document.querySelector('input[name=servings]').value)||2;
+var ps=[Math.round(tot[0]/serv),Math.round(tot[1]/serv),Math.round(tot[2]/serv),Math.round(tot[3]/serv)];
+document.getElementById('editCalc').innerHTML='Suma: <b>'+tot[0]+'</b> kcal · B:'+tot[1]+'g · W:'+tot[2]+'g · T:'+tot[3]+'g<br>Per serving (÷'+serv+'): <b>'+ps[0]+'</b> kcal · B:'+ps[1]+'g · W:'+ps[2]+'g · T:'+ps[3]+'g';
+document.querySelector('input[name=kcal]').value=ps[0];
+document.querySelector('input[name=protein]').value=ps[1];
+document.querySelector('input[name=carbs]').value=ps[2];
+document.querySelector('input[name=fat]').value=ps[3];
+}
+function saveEditRecipe(id,form){
+var d=new FormData(form);
+var ing=[];
+document.querySelectorAll('#editIngs .r-row').forEach(function(row){
+var inputs=row.querySelectorAll('input');
+if(inputs[0].value.trim())ing.push({item:inputs[0].value.trim(),amount_g:inputs[1].value.trim()});
+});
+var tags=d.get('tags').split(',').map(function(t){return t.trim()}).filter(Boolean);
+var edit={name:d.get('name'),kcal:+d.get('kcal'),protein:+d.get('protein'),carbs:+d.get('carbs'),fat:+d.get('fat'),
+ing:ing,notes:d.get('notes'),tags:tags,servings:+d.get('servings'),slot:d.get('slot')};
+// Check if user recipe
+var ur=userRecipes.find(function(r){return r.id===id});
+if(ur){
+Object.assign(ur,{name:edit.name,slot:edit.slot,m:[edit.kcal,edit.protein,edit.carbs,edit.fat],
+ing:edit.ing,notes:edit.notes,tags:edit.tags,servings:edit.servings});
+saveState('user_recipes',userRecipes);
+}else{
+recipeEdits[id]=edit;
+saveState('recipe_edits',recipeEdits);
+}
+closeRecipeDetail();renderRecipes();return false;
+}
+
+// --- Add recipe ---
+function openAddRecipe(){
+var el=document.getElementById('rDetail');
+el.innerHTML='<div class="shop-head"><h3>Nowy przepis</h3><button class="shop-close" onclick="closeRecipeDetail()">✕</button></div>'+
+'<form class="r-edit-form" onsubmit="return saveNewRecipe(this)">'+
+'<input name="name" placeholder="Nazwa przepisu" required>'+
+'<select name="slot"><option value="b">Śniadanie</option><option value="sb">II śniadanie</option><option value="d" selected>Obiad</option><option value="s">Kolacja</option><option value="p">Przekąska</option></select>'+
+'<div class="r-section"><div class="r-section-title">Składniki <button type="button" style="background:#2d6a4f;color:#fff;border:none;border-radius:4px;padding:2px 8px;font-size:.8em;cursor:pointer" onclick="addIngRow(this)">+ dodaj</button></div>'+
+'<div id="editIngs"><div class="r-row"><input name="ei_item_0" placeholder="składnik"><input name="ei_amt_0" placeholder="ilość (g)" style="max-width:80px"><button type="button" class="p-del" onclick="this.parentElement.remove()">✕</button></div></div></div>'+
+'<div class="r-calc" id="editCalc">Dodaj składniki i przelicz ↓</div>'+
+'<button type="button" class="r-btn secondary" onclick="calcEditMacros()">🔄 Przelicz makra</button>'+
+'<div class="r-section"><div class="r-section-title">Makra per serving</div>'+
+'<div class="r-row"><input name="kcal" placeholder="kcal" type="number" required><input name="protein" placeholder="białko" type="number" required><input name="carbs" placeholder="węgle" type="number" required><input name="fat" placeholder="tłuszcz" type="number" required></div>'+
+'<input name="servings" value="2" placeholder="porcje" type="number" style="max-width:120px"></div>'+
+'<textarea name="notes" placeholder="Notatki"></textarea>'+
+'<input name="tags" placeholder="Tagi (po przecinku)">'+
+'<button type="submit" class="r-btn">💾 Dodaj przepis</button></form>';
+el.classList.add('open');
+}
+function saveNewRecipe(form){
+var d=new FormData(form);
+var ing=[];
+document.querySelectorAll('#editIngs .r-row').forEach(function(row){
+var inputs=row.querySelectorAll('input');
+if(inputs[0].value.trim())ing.push({item:inputs[0].value.trim(),amount_g:inputs[1].value.trim()});
+});
+var tags=d.get('tags').split(',').map(function(t){return t.trim()}).filter(Boolean);
+var id='user-'+Date.now();
+userRecipes.push({id:id,name:d.get('name'),slot:d.get('slot'),
+m:[+d.get('kcal'),+d.get('protein'),+d.get('carbs'),+d.get('fat')],
+ing:ing,notes:d.get('notes'),tags:tags,servings:+d.get('servings')});
+saveState('user_recipes',userRecipes);
+closeRecipeDetail();renderRecipes();return false;
+}
+function deleteRecipe(id){
+if(!confirm('Usunąć przepis?'))return;
+userRecipes=userRecipes.filter(function(r){return r.id!==id});
+saveState('user_recipes',userRecipes);
+closeRecipeDetail();renderRecipes();
+}
 
 // --- Init ---
 loadState();
