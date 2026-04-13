@@ -111,8 +111,11 @@ ok(f"{expected_meals} meals total ({num_days} days × 5 slots) ({meals_count})",
 # All meals have m:[4 numbers]
 m_arrays = re.findall(r'm:\[(\d+),(\d+),(\d+),(\d+)\]', js)
 ok(f"all meals have m[4] arrays ({len(m_arrays)} found)", len(m_arrays) >= expected_meals)
-for i, (kcal, p, c, f_) in enumerate(m_arrays[:16]):
-    ok(f"meal {i} kcal>0", int(kcal) > 0)
+meal_names = re.findall(r"name:'([^']*)'", js)
+for i, (kcal, p, c, f_) in enumerate(m_arrays[:expected_meals]):
+    name = meal_names[i] if i < len(meal_names) else ''
+    skipped = 'pominięt' in name.lower() or 'skip' in name.lower()
+    ok(f"meal {i} kcal>0 or skipped", int(kcal) > 0 or skipped)
 
 group("SHOP data")
 shop_depts = re.findall(r'\["([^"]+)",\[', js)
