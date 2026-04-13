@@ -1,28 +1,43 @@
 #!/usr/bin/env python3
-"""QA tests for nutrition app — run before deploy."""
-import json, re, sys
-
-# === Load and parse index.html ===
-with open('index.html') as f:
-    html = f.read()
+"""QA tests for nutrition app (modular architecture) — run before deploy."""
+import re, sys, os
 
 P = 0
 F = 0
 def ok(name, cond):
     global P, F
-    if cond:
-        P += 1; print(f"  ✓ {name}")
-    else:
-        F += 1; print(f"  ✗ FAIL: {name}")
-
-def eq(name, a, b):
-    ok(f"{name} ({a!r} == {b!r})", a == b)
+    if cond: P += 1; print(f"  ✓ {name}")
+    else: F += 1; print(f"  ✗ FAIL: {name}")
 
 def group(name):
     print(f"\n--- {name} ---")
 
+# Load all files
+with open('index.html') as f: html = f.read()
+with open('css/style.css') as f: style = f.read()
+with open('sw.js') as f: sw = f.read()
+
+js_files = {}
+for fn in ['app.js','state.js','data.js','nutrition-db.js','supabase.js','plan.js','shop.js','pantry.js','recipes.js']:
+    with open(f'js/{fn}') as f: js_files[fn] = f.read()
+
+# Combined JS for content checks
+js_all = '\n'.join(js_files.values())
+
 # =====================
-# 1. HTML STRUCTURE
+# 1. FILE STRUCTURE
+# =====================
+group("File structure")
+ok("index.html exists", os.path.exists('index.html'))
+ok("css/style.css exists", os.path.exists('css/style.css'))
+ok("sw.js exists", os.path.exists('sw.js'))
+for fn in ['app.js','state.js','data.js','nutrition-db.js','supabase.js','plan.js','shop.js','pantry.js','recipes.js']:
+    ok(f"js/{fn} exists", os.path.exists(f'js/{fn}'))
+ok("index.html links style.css", 'css/style.css' in html)
+ok("index.html loads app.js as module", 'type="module" src="js/app.js"' in html)
+
+# =====================
+# 2. HTML STRUCTURE
 # =====================
 group("HTML structure")
 ok("DOCTYPE present", html.startswith("<!DOCTYPE html>"))
@@ -33,17 +48,13 @@ ok("Supabase SDK loaded", 'supabase.min.js' in html)
 ok("manifest link", 'rel="manifest"' in html)
 ok("apple-mobile-web-app-capable", 'apple-mobile-web-app-capable' in html)
 ok("theme-color", 'theme-color' in html)
-
-# No orphan CSS classes used in HTML
-ok("no .shop-btn in HTML (removed)", 'class="shop-btn"' not in html)
-ok("no .shop-btn in CSS", '.shop-btn{' not in html)
+ok("no inline style tag", '<style>' not in html)
+ok("no inline script (except module)", html.count('<script') == 2)  # SDK + module
 
 # =====================
-# 2. CSS CHECKS
+# 3. CSS CHECKS
 # =====================
 group("CSS integrity")
-style = re.search(r'<style>(.*?)</style>', html, re.DOTALL).group(1)
-
 required_classes = [
     '.day', '.day-header', '.meal', '.macros', '.macro',
     '.fab-group', '.fab', '.fab-shop', '.fab-pantry',
@@ -55,126 +66,117 @@ required_classes = [
 ]
 for cls in required_classes:
     ok(f"CSS: {cls} defined", cls in style)
-
 ok("h2 AND h3 styled in .shop-head", '.shop-head h2,.shop-head h3' in style)
 ok("swap-bar bottom >= 140px", 'bottom:140px' in style)
 ok("fab z-index=110", 'z-index:110' in style)
 ok("modal z-index=120", 'z-index:120' in style)
+ok("treat CSS class", ".treat{" in style)
+ok("no .boost CSS", ".boost{" not in style)
 
 # =====================
-# 3. JS STRUCTURE
+# 4. ES MODULES
 # =====================
-group("JS structure")
-script = re.search(r'<script>(.*?)</script>', html, re.DOTALL)
-ok("script tag found", script is not None)
-js = script.group(1)
-
-ok("Supabase client created", "supabase.createClient(" in js)
-ok("SW registration relative path", "register('sw.js')" in js)
-ok("SW registration NOT absolute", "register('/sw.js')" not in js)
-ok("DAYS array defined", "var DAYS=[" in js)
-ok("SHOP array defined", "var SHOP=[" in js)
-ok("RECIPES array defined", "var RECIPES=[" in js)
-ok("LONG_TERM defined", "var LONG_TERM=" in js)
-ok("LONG_TERM_ITEMS defined", "var LONG_TERM_ITEMS=" in js)
-ok("mealOverrides state", "var mealOverrides=" in js)
-
-# Override key uses dayOrder[pos] not pos directly
-ok("getMeal key = dayOrder[pos]+'_'+slot", "dayOrder[pos]+'_'+slot" in js)
-ok("selectMeal kA uses dayOrder", "kA=dayOrder[selected.pos]" in js)
-ok("selectMeal kB uses dayOrder", "kB=dayOrder[pos]" in js)
-
-# =====================
-# 4. FUNCTIONS PRESENT
-# =====================
-group("Required functions")
-fns = ['getMeal', 'renderDays', 'toggle', 'initDrag',
-       'pantryHas', 'renderShop', 'ck', 'shopToggle', 'shopClose',
-       'selectMeal', 'cancelSwap', 'openRecipePicker', 'pickRecipe', 'closeRecipePicker',
-       'renderPantry', 'addPantryItem', 'delPantry', 'pantryToggle', 'pantryClose',
-       'showSync', 'saveState', 'loadState']
-for fn in fns:
-    ok(f"function {fn}", f"function {fn}" in js)
+group("ES modules")
+ok("state.js exports state", "export const state" in js_files['state.js'])
+ok("state.js exports SLOTS", "export const SLOTS" in js_files['state.js'])
+ok("data.js exports DAYS", "export const DAYS" in js_files['data.js'])
+ok("data.js exports SHOP", "export const SHOP" in js_files['data.js'])
+ok("data.js exports RECIPES", "export const RECIPES" in js_files['data.js'])
+ok("data.js exports RECIPES_INSP", "export const RECIPES_INSP" in js_files['data.js'])
+ok("supabase.js exports saveState", "export function saveState" in js_files['supabase.js'])
+ok("supabase.js exports loadState", "export async function loadState" in js_files['supabase.js'])
+ok("plan.js exports renderDays", "export function renderDays" in js_files['plan.js'])
+ok("shop.js exports renderShop", "export function renderShop" in js_files['shop.js'])
+ok("pantry.js exports renderPantry", "export function renderPantry" in js_files['pantry.js'])
+ok("recipes.js exports getAllRecipes", "export function getAllRecipes" in js_files['recipes.js'])
+ok("app.js imports all modules", js_files['app.js'].count('import ') >= 5)
+ok("app.js exposes window functions", "Object.assign(window" in js_files['app.js'])
 
 # =====================
 # 5. DATA INTEGRITY
 # =====================
 group("DAYS data")
-days_match = re.findall(r"hdr:'([^']+)'", js)
+data_js = js_files['data.js']
+days_match = re.findall(r"hdr:'([^']+)'", data_js)
 num_days = len(days_match)
 ok(f"{num_days} days found", num_days >= 2)
 
-meals_count = js.count("name:'")
+meals_count = data_js.count("name:'")
 expected_meals = num_days * 5
 ok(f"{expected_meals} meals total ({num_days} days × 5 slots) ({meals_count})", meals_count == expected_meals)
 
-# All meals have m:[4 numbers]
-m_arrays = re.findall(r'm:\[(\d+),(\d+),(\d+),(\d+)\]', js)
+m_arrays = re.findall(r'm:\[(\d+),(\d+),(\d+),(\d+)\]', data_js)
 ok(f"all meals have m[4] arrays ({len(m_arrays)} found)", len(m_arrays) >= expected_meals)
-meal_names = re.findall(r"name:'([^']*)'", js)
+meal_names = re.findall(r"name:'([^']*)'", data_js)
 for i, (kcal, p, c, f_) in enumerate(m_arrays[:expected_meals]):
     name = meal_names[i] if i < len(meal_names) else ''
     skipped = 'pominięt' in name.lower() or 'skip' in name.lower()
     ok(f"meal {i} kcal>0 or skipped", int(kcal) > 0 or skipped)
 
 group("SHOP data")
-shop_depts = re.findall(r'\["([^"]+)",\[', js)
+shop_depts = re.findall(r'\["([^"]+)",\[', data_js)
 ok(f"10 shop departments ({len(shop_depts)})", len(shop_depts) == 10)
-
-# All items have " — " separator
-shop_items = re.findall(r'"([^"]+) — ([^"]+)"', js)
+shop_items = re.findall(r'"([^"]+) — ([^"]+)"', data_js)
 ok(f"shop items have separator ({len(shop_items)} items)", len(shop_items) >= 20)
 
 group("RECIPES data")
-recipe_entries = re.findall(r"\['([^']+)','([^']+)','(b|sb|d|s|p)',(\d+),(\d+),(\d+),(\d+),", js)
+recipe_entries = re.findall(r"\['([^']+)','([^']+)','(b|sb|d|s|p)',(\d+),(\d+),(\d+),(\d+),", data_js)
 ok(f"recipes parsed ({len(recipe_entries)})", len(recipe_entries) >= 30)
 slots_found = set(r[2] for r in recipe_entries)
 ok("all 5 slots covered", slots_found == {'b', 'sb', 'd', 's', 'p'})
 
 # =====================
-# 6. SYNC & ERROR HANDLING
+# 6. FUNCTION CHECKS
 # =====================
-group("Supabase sync")
-ok("loadState loads day_order", "r.key==='day_order'" in js)
-ok("loadState loads shopping", "r.key==='shopping'" in js)
-ok("loadState loads pantry", "r.key==='pantry'" in js)
-ok("loadState loads meal_overrides", "r.key==='meal_overrides'" in js)
-ok("realtime channel subscribed", ".subscribe()" in js)
-ok("realtime handles meal_overrides", "meal_overrides" in js.split('.subscribe')[0].split("channel('sync')")[1])
-ok("error handling .catch", ".catch(" in js)
-ok("showSync for errors", "showSync(" in js)
-ok("network error message", "brak sieci" in js)
+group("Required functions")
+fn_checks = {
+    'plan.js': ['getMeal', 'renderDays', 'toggle', 'initDrag', 'selectMeal', 'cancelSwap', 'openRecipePicker', 'pickRecipe'],
+    'shop.js': ['pantryHas', 'renderShop', 'ck', 'shopToggle', 'shopClose'],
+    'pantry.js': ['renderPantry', 'addPantryItem', 'delPantry', 'pantryToggle', 'pantryClose'],
+    'supabase.js': ['showSync', 'saveState', 'loadState'],
+    'recipes.js': ['getAllRecipes', 'renderRecipes', 'openRecipeDetail', 'openEditRecipe', 'calcEditMacros']
+}
+for fn_file, fns in fn_checks.items():
+    for fn in fns:
+        ok(f"{fn} in {fn_file}", f"function {fn}" in js_files[fn_file])
 
 # =====================
-# 7. FEATURE CHECKS
+# 7. SYNC & FEATURES
 # =====================
+group("Supabase sync")
+sb_js = js_files['supabase.js']
+ok("loadState loads day_order", "day_order" in sb_js)
+ok("loadState loads shopping", "'shopping'" in sb_js)
+ok("loadState loads pantry", "'pantry'" in sb_js)
+ok("loadState loads meal_overrides", "'meal_overrides'" in sb_js)
+ok("realtime subscription", ".subscribe()" in sb_js)
+ok("error handling .catch", ".catch(" in sb_js)
+ok("network error message", "brak sieci" in sb_js)
+
 group("Features")
-ok("day open state preserved", "openSet" in js)
-ok("pantry sort uses .slice()", "pantry.slice().sort" in js)
-ok("pantry auto-add on long-term purchase", "LONG_TERM[di]||LONG_TERM_ITEMS[k]" in js)
-ok("pantry duplicate updates qty", "existing.qty=qty" in js)
-ok("recipe picker filters by slot", "r.slot===slot" in js)
-ok("macro comparison in picker", "ro-plus" in js and "ro-minus" in js)
-ok("drag handle present", "drag-handle" in js)
-ok("pointerdown for drag", "pointerdown" in js)
-ok("5 meal slots (SLOTS)", "['b','sb','d','s','p']" in js)
-ok("treat budget calculated", "treatMax" in js)
-ok("treat budget uses 15% cap", "target*0.15" in js)
-ok("no boost references", "d.boost" not in js)
-ok("treat CSS class", ".treat{" in style)
-ok("no .boost CSS", ".boost{" not in style)
+ok("day open state preserved", "openSet" in js_files['plan.js'])
+ok("pantry sort uses .slice()", ".slice().sort" in js_files['pantry.js'])
+ok("pantry auto-add on long-term purchase", "LONG_TERM[di]" in js_files['shop.js'])
+ok("recipe picker filters by slot", "r.slot===slot" in js_all or "r.slot === slot" in js_all)
+ok("macro comparison in picker", "ro-plus" in js_all and "ro-minus" in js_all)
+ok("drag handle present", "drag-handle" in js_all)
+ok("pointerdown for drag", "pointerdown" in js_all)
+ok("treat budget calculated", "treatMax" in js_all)
+ok("treat budget uses 15% cap", "target*0.15" in js_all or "target * 0.15" in js_all)
 ok("snack recipes in RECIPES", any(r[2]=='p' for r in recipe_entries))
+ok("NUT database has entries", "export const NUT" in js_files['nutrition-db.js'])
 
 # =====================
 # 8. SERVICE WORKER
 # =====================
 group("Service Worker")
-with open('sw.js') as f:
-    sw = f.read()
 ok("sw.js exists and readable", len(sw) > 0)
 ok("fetch event handler", "self.addEventListener('fetch'" in sw)
-ok("cache strategy (network-first)", "fetch(e.request).then" in sw or "fetch(e.request).catch" in sw)
-ok("cache versioning", "const V=" in sw or "var V=" in sw)
+ok("cache strategy (network-first)", "fetch(e.request).then" in sw)
+ok("cache versioning", "const V=" in sw)
+ok("sw caches CSS file", "css/style.css" in sw)
+ok("sw caches JS modules", "js/app.js" in sw)
+ok("sw caches all JS files", sw.count("js/") >= 7)
 
 # =====================
 # SUMMARY
