@@ -48,8 +48,8 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 .recipe-opt .ro-diff{font-size:.75em;margin-top:2px}.ro-plus{color:#2d6a4f}.ro-minus{color:#e76f51}
 </style></head><body>
 
-<h1>🍽️ Plan 09–10.04</h1>
-<div class="target"><span>🧔 On: ~2000 kcal | B 150g</span><span>👩 Ona: ~2000 kcal | B 120g</span></div>
+<h1>🍽️ Plan 14–18.04</h1>
+<div class="target"><span>🎯 2000 kcal | B 150g | W 182g | T 70g</span><span>🌱 fertility mode</span></div>
 <div id="days"></div>
 <div class="fab-group">
 <button class="fab fab-shop" onclick="shopToggle()">🛒</button>
@@ -70,8 +70,9 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 <input name="item" placeholder="Dodaj produkt..." required>
 <button type="submit">+</button>
 </form>
-<div style="display:flex;justify-content:space-between;align-items:center"><div class="shop-progress" id="prog"></div><button onclick="clearShop()" style="background:none;border:none;color:#e76f51;font-size:.75em;cursor:pointer">🗑️ wyczyść</button></div>
+<div class="shop-progress" id="prog"></div>
 <div id="shopList"></div>
+<div style="text-align:center;padding:24px 0 8px"><button onclick="clearShop()" style="background:none;border:1px solid #333;color:#666;font-size:.7em;cursor:pointer;border-radius:6px;padding:6px 16px">🗑️ wyczyść zaznaczenia</button></div>
 <div class="sync" id="syncStatus"></div>
 </div>
 <div class="pantry" id="pantry">
@@ -92,33 +93,54 @@ var sb=supabase.createClient('https://tkfxjkleaeuwqqaeiigt.supabase.co','sb_publ
 
 // --- Plan data (generated) ---
 var DAYS=[
-{hdr:'🗓️ Czw 09.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2 kromki · pomidor 75g · ogórek 75g · papryka 75g',m:[394,29,45,10]},
-{name:'🥞 Placuszki bananowe + jogurt grecki',ing:'banan 120g · 2 jajka · płatki 30g · olej 10ml · jogurt grecki 150g · maliny 50g',m:[649,35,61,32]},
-{name:'🍲 Spaghetti bolońskie',tag:'🍳 2d',tagClass:'cook',ing:'mielone 500g · makaron 500g · passata 700g · cebula · marchew · czosnek',m:[544,26,68,18]},
-{name:'🥗 Serek śmietankowy z łososiem + 2 jajka',tag:'🌿',tagClass:'cook',ing:'serek śmietankowy 60g · łosoś wędzony 50g · 2 jajka na twardo · chleb 2 kromki',m:[594,31,32,37]},
+{hdr:'🗓️ Wt 14.04 — biuro',meals:[
+{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
+{name:'🥞 Pieczona owsianka z jogurtem greckim',tag:'🍳 2d',tagClass:'cook',ing:'płatki 120g · mleko 300ml · 2 jajka · banan · masło orzechowe 30g · jogurt grecki 150g · maliny',m:[593,32,69,23]},
+{name:'🍲 Makaron z soczewicy z cukinią i mozzarellą',tag:'🍳 2d',tagClass:'cook',ing:'makaron soczewicowy 350g · cukinia 2szt · mozzarella 250g · suszone pomidory 100g · czosnek · oliwa',m:[568,36,49,22]},
+{name:'🥗 Sałatka jaglana z ciecierzycą i jajkiem',tag:'🍳',tagClass:'cook',ing:'kasza jaglana 100g · ciecierzyca 200g · 2 jajka · pomidorki · papryka · sałata · oliwa',m:[448,20,55,13]},
 {name:'🥜 Jabłko',ing:'jabłko 1 szt',m:[90,1,22,0]}
 ]},
-{hdr:'🗓️ Pt 10.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2 kromki · pomidor 75g · ogórek 75g · papryka 75g',m:[394,29,45,10]},
-{name:'🥤 Shake białkowy z owocami',ing:'WPC 30g · mleko 200ml · ½ banana 60g · maliny 30g',m:[273,32,30,4]},
-{name:'🍲 Spaghetti bolońskie',tag:'🔄 2/2',tagClass:'left',ing:'Resztki',m:[544,26,68,18]},
-{name:'🍳 Jajka na maśle z chlebem',ing:'3 jajka · masło 15g · chleb 1 kromka',m:[440,26,16,31]},
-{name:'🥜 Jogurt grecki z orzechami',ing:'jogurt grecki 150g · orzechy włoskie 15g · miód 5g',m:[200,12,16,11]}
+{hdr:'🗓️ Śr 15.04 — biuro',meals:[
+{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
+{name:'🥞 Pieczona owsianka z jogurtem greckim',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[593,32,69,23]},
+{name:'🍲 Makaron z soczewicy z cukinią i mozzarellą',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[568,36,49,22]},
+{name:'🥗 Kanapki z jajkiem na twardo',ing:'2 jajka na twardo · chleb 2kr · masło 10g · pomidor · ogórek',m:[430,20,32,22]},
+{name:'🥜 Jabłko',ing:'jabłko 1 szt',m:[90,1,22,0]}
+]},
+{hdr:'🗓️ Czw 16.04 — biuro',meals:[
+{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
+{name:'🥞 Budyń jaglany z białkiem i owocami',tag:'🍳 2d',tagClass:'cook',ing:'kasza jaglana (resztki!) · mleko 400ml · banan · białko 40g · maliny 100g',m:[470,31,75,6]},
+{name:'🍲 Spaghetti bolońskie (drobiowe)',tag:'🍳 2d',tagClass:'cook',ing:'mielone drobiowe 500g · makaron 500g · pomidory 800g · marchew · cebula · czosnek',m:[510,35,62,12]},
+{name:'🥗 Jajka po turecku',ing:'2 jajka · jogurt 150g · masło 15g · papryka wędzona · chleb 1kr',m:[451,24,24,30]},
+{name:'🥜 Jogurt grecki z bananem',ing:'jogurt grecki 200g · banan 0.5szt',m:[200,21,30,2]}
+]},
+{hdr:'🗓️ Pt 17.04',meals:[
+{name:'🥣 Shakshuka ze szpinakiem i fetą',tag:'🍳 2d',tagClass:'cook',ing:'4 jajka · szpinak 50g · feta 100g · pomidory puszka 400g · cebula · czosnek · oliwa',m:[432,26,14,30]},
+{name:'🥞 Budyń jaglany z białkiem i owocami',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[470,31,75,6]},
+{name:'🍲 Spaghetti bolońskie (drobiowe)',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[510,35,62,12]},
+{name:'🥗 Sałatka ze śliwkami i parmezanem',ing:'rukola 100g · śliwki suszone 80g · parmezan 60g · orzechy włoskie 20g · oliwa',m:[370,15,30,23]},
+{name:'🥜 Serek wiejski z warzywami',ing:'serek wiejski 100g · pomidor · ogórek',m:[130,13,11,4]}
+]},
+{hdr:'🗓️ Sob 18.04',meals:[
+{name:'🥣 Shakshuka ze szpinakiem i fetą',tag:'🔄 2/2',tagClass:'left',ing:'resztki z piątku',m:[432,26,14,30]},
+{name:'🥞 Placuszki bananowe z jogurtem greckim',tag:'🍳',tagClass:'cook',ing:'banan · 2 jajka · płatki 30g · olej · jogurt grecki 150g · maliny 50g',m:[649,35,61,32]},
+{name:'🍲 Ryba smażona z frytkami i surówką',tag:'🍳',tagClass:'cook',ing:'filet rybny 300g · ziemniaki 500g · mąka · olej · ogórek',m:[617,34,60,27]},
+{name:'🥗 Herbata zielona',ing:'herbata 1 filiżanka',m:[2,0,0,0]},
+{name:'🥜 Jabłko',ing:'jabłko 1 szt',m:[90,1,22,0]}
 ]}
 ];
 
 var SHOP=[
-["🥖 Pieczywo",["chleb żytni — 1 × 500g"]],
-["🥬 Owoce / warzywa",["pomidory — 1 × 500g","ogórki — 2 szt","papryka — 1 × 3 szt","cebula — 1 × 1kg","marchew — 1 × 1kg","banany — 1 × 1kg (~5 szt)","jabłka — 1 × 1kg"]],
-["🥫 Puszki",["passata pomidorowa — 2 × 400g"]],
-["🌾 Suche / kasze",["makaron — 1 × 500g","płatki owsiane — 1 × 500g"]],
-["🥚 Jajka / mleko",["jajka — 1 × 10 szt","mleko — 1 × 1L"]],
-["🥩 Mięso",["mięso mielone — 1 × 500g"]],
-["🧀 Nabiał",["serek wiejski — 2 × 200g","serek śmietankowy — 1 × 150g","jogurt grecki — 1 × 400g","masło — 1 × 200g"]],
-["🐟 Wędliny / ryby",["łosoś wędzony — 1 × 100g"]],
-["❄️ Mrożonki",["maliny — 1 × 125g"]],
-["📦 Inne",["olej rzepakowy — 1 × 1L","białko w proszku — 1 opak","orzechy włoskie — 1 × 100g","miód — 1 × 350g"]]
+["🥖 Pieczywo",["chleb żytni — 2 × 500g"]],
+["🍌 Owoce / warzywa",["banany — 1 × 1kg (~5szt)","pomidory — 1 × 500g","pomidory koktajlowe — 1 × 250g","ogórki — 5 szt","papryka — 1 × 3 szt","cebula — 3 szt (z 1kg)","marchew — 2 szt (z 1kg)","cukinia — 2 szt","szpinak — 1 × 100g","rukola — 1 × 100g","sałata mix — 1 × 150g","ziemniaki — 1 × 2kg","czosnek — 1 × 3 szt"]],
+["🥫 Puszki",["pomidory krojone — 4 × 400g","ciecierzyca — 1 × 400g"]],
+["🌾 Suche / kasze",["makaron z soczewicy — 1 opak ~350g","makaron — 1 × 500g","kasza jaglana — 1 × 400g","płatki owsiane — 1 × 500g","masło orzechowe — 1 × 350g","suszone pomidory w oleju — 1 słoik 280g","śliwki suszone — 1 × 200g"]],
+["🥚 Jajka / mleko / mąka",["jajka — 3 × 10 szt","mleko — 2 × 1L","mąka — 1 × 1kg"]],
+["🥩 Mięso",["mięso mielone drobiowe — 1 × 500g"]],
+["🧀 Nabiał",["serek wiejski — 4 × 200g","jogurt grecki — 3 × 400g","jogurt naturalny — 1 × 400g","masło — 1 × 200g","feta — 1 × 200g","mozzarella — 2 × 125g","parmezan — 1 × 200g"]],
+["🐟 Ryby",["filet rybny — 1 × 400g"]],
+["❄️ Mrożonki",["maliny mrożone — 2 × 300g"]],
+["📦 Inne",["białko w proszku — ~80g","orzechy włoskie — 1 × 100g","oliwa — 1 × 500ml","olej rzepakowy — 1 × 1L"]]
 ];
 
 var shopCleared=false;
@@ -166,6 +188,7 @@ var RECIPES=[
 ['quesadilla-kurczak','Quesadilla z kurczakiem','d',464,44,34,16],
 ['tortilla-kurczak','Tortilla z kurczakiem','d',400,38,39,10],
 ['makaron-ryzowy-tajski','Makaron ryżowy po tajsku','d',555,36,82,7],
+['makaron-soczewica-cukinia','Makaron z soczewicy z cukinią','d',568,36,49,22],
 ['salatka-jaglana-halloumi','Sałatka jaglana z halloumi','s',733,37,63,38],
 ['placki-ziemniaczane','Placki ziemniaczane','s',439,11,58,18],
 ['salatka-ciecierzyca','Sałatka z ciecierzycą','s',246,11,22,13],
@@ -174,6 +197,7 @@ var RECIPES=[
 ['pieczony-camembert','Pieczony camembert z miodem','s',451,19,37,26],
 ['serek-losos','Serek śmietankowy z łososiem','s',414,17,31,25],
 ['pizzerinki-wiejski','Pizzerinki z serka wiejskiego','s',434,26,51,13],
+['salatka-jaglana-ciecierzyca','Sałatka jaglana z ciecierzycą','s',448,20,55,13],
 ['kanapki-pasztet-s','Kanapki z pasztetem','s',366,13,38,19],
 ['kanapki-hummus-s','Kanapki z hummusem','s',286,11,45,8],
 ['kanapki-ser-wedlina-s','Kanapki z serem i wędliną','s',379,23,36,16],
@@ -305,7 +329,7 @@ customShopItems[i].checked=el.checked;
 renderShop();saveState('custom_shop',customShopItems);
 }
 function delShopItem(i){customShopItems.splice(i,1);renderShop();saveState('custom_shop',customShopItems)}
-function clearShop(){if(!confirm('Wyczyścić całą listę zakupów?'))return;shopCleared=true;shopChecked={};customShopItems=[];saveState('shopping',shopChecked);saveState('custom_shop',customShopItems);saveState('shop_cleared',{cleared:true});renderShop()}
+function clearShop(){if(!confirm('Wyczyścić zaznaczenia? Ręcznie dodane produkty zostaną.'))return;shopCleared=true;shopChecked={};saveState('shopping',shopChecked);saveState('shop_cleared',{cleared:true});renderShop()}
 function ck(k,el){
 if(el.checked){
 shopChecked[k]=1;
