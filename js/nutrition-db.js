@@ -21,7 +21,7 @@ export const NUT = {
   'śliwki suszone': [240, 2, 63, 0], 'orzechy włoskie': [654, 15, 14, 65], 'miód': [304, 0, 82, 0],
   'sos sojowy': [53, 8, 5, 0], 'suszone pomidory w oleju': [213, 6, 12, 15],
   'szynka parmeńska': [270, 26, 0, 18], 'boczek wędzony': [500, 10, 0, 50],
-  'pasztet': [320, 10, 5, 29], 'hummus': [166, 8, 14, 10], 'mąka': [340, 10, 72, 1],
+  'pasztet': [320, 10, 5, 29], 'hummus': [166, 8, 14, 10], 'mąka': [340, 10, 72, 1], 'majonez': [680, 1, 1, 75],
   'olej rzepakowy': [884, 0, 0, 100], 'makaron z soczewicy': [340, 24, 48, 2],
   'bułka tarta': [395, 11, 74, 5], 'buraki gotowane': [44, 2, 10, 0],
   'makaron ryżowy': [360, 4, 83, 0], 'gruszka': [57, 0, 15, 0],
@@ -47,7 +47,7 @@ export const DEPT = {
   'filet rybny':7,'łosoś wędzony':7,
   'maliny':8,'frytki mrożone':8,
   'oliwa':9,'olej rzepakowy':9,'białko w proszku':9,'orzechy włoskie':9,'sos sojowy':9,'miód':9,
-  'mleko kokosowe':9,'pasta curry':9,'tofu':9,'buraki gotowane':9
+  'mleko kokosowe':9,'pasta curry':9,'tofu':9,'buraki gotowane':9,'majonez':9
 };
 export const DEPT_NAMES = ['🥖 Pieczywo','🍌 Owoce / warzywa','🥫 Puszki','🌾 Suche / kasze','🥚 Jajka / mleko / mąka','🥩 Mięso','🧀 Nabiał','🐟 Ryby','❄️ Mrożonki','📦 Inne'];
 
