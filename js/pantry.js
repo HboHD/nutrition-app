@@ -12,7 +12,7 @@ export function renderPantry() {
       expStr = diff <= 0 ? 'przeterminowane!' : diff <= 2 ? 'za ' + diff + 'd!' : 'do ' + p.exp;
       expClass = diff <= 2 ? ' p-exp' : '';
     }
-    h += '<div class="p-item"><div class="p-info"><span class="p-name" contenteditable="true" onblur="editPantryItem(' + idx + ',\'name\',this.textContent)">' + p.item + '</span>' + (p.qty ? ' · <span class="p-qty" contenteditable="true" onblur="editPantryItem(' + idx + ',\'qty\',this.textContent)">' + p.qty + '</span>' : '') + '<br><span class="p-meta' + expClass + '">' + (expStr || 'brak daty') + '</span></div><button class="p-del" onclick="delPantry(' + idx + ')">✕</button></div>';
+    h += '<div class="p-item"><div class="p-info"><span class="p-name" onclick="startEditPantry(' + idx + ',\'item\',this)">' + p.item + '</span>' + (p.qty ? ' · <span class="p-qty" onclick="startEditPantry(' + idx + ',\'qty\',this)">' + p.qty + '</span>' : '') + '<br><span class="p-meta' + expClass + '">' + (expStr || 'brak daty') + '</span></div><button class="p-del" onclick="delPantry(' + idx + ')">✕</button></div>';
   });
   document.getElementById('pantryList').innerHTML = h || '<div style="color:#666;text-align:center;padding:20px">Spiżarnia pusta</div>';
 }
@@ -31,6 +31,29 @@ export function editPantryItem(i, field, value) {
   if (field === 'name') state.pantry[i].item = v;
   if (field === 'qty') state.pantry[i].qty = v;
   saveState('pantry', state.pantry);
+}
+
+export function startEditPantry(i, field, el) {
+  var text = el.textContent;
+  var input = document.createElement('input');
+  input.type = 'text'; input.value = text;
+  input.onblur = function() {
+    var val = input.value.trim();
+    if (val && val !== text && state.pantry[i]) {
+      if (field === 'item') state.pantry[i].item = val;
+      if (field === 'qty') state.pantry[i].qty = val;
+      saveState('pantry', state.pantry);
+    }
+    var span = document.createElement('span');
+    span.className = el.className;
+    span.textContent = val || text;
+    span.onclick = function() { startEditPantry(i, field, span); };
+    input.replaceWith(span);
+  };
+  input.onkeydown = function(e) { if (e.key === 'Enter') input.blur(); };
+  el.replaceWith(input);
+  input.focus();
+  input.select();
 }
 
 export function pantryToggle() { renderPantry(); }

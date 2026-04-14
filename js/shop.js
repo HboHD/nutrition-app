@@ -145,10 +145,11 @@ export function renderShop() {
       // Apply user edits
       var edited = state.shopEdits && state.shopEdits[it.split(' — ')[0]];
       var display = edited ? edited.item + ' — ' + edited.qty : it;
+      var origKey = it.split(' — ')[0].replace(/'/g, "\\'");
       total++; if (state.shopChecked[k]) done++;
       h += '<div class="item' + (state.shopChecked[k] ? ' done' : '') + (inP ? ' in-pantry' : '') + '">' +
         '<input type="checkbox" id="c' + k + '"' + (state.shopChecked[k] ? ' checked' : '') + ' onchange="ck(\'' + k + '\',this)">' +
-        '<label for="c' + k + '" contenteditable="true" onblur="saveShopEdit(this,\'' + it.split(' — ')[0].replace(/'/g, "\\'") + '\')">' + display + '</label>' +
+        '<span class="item-text" onclick="startEditShop(this,\'' + origKey + '\')">' + display + '</span>' +
         (inP ? '<span class="pantry-badge">masz ✓</span>' : '') +
         '</div>';
     }); h += '</div>';
@@ -167,20 +168,29 @@ export function renderShop() {
   document.getElementById('prog').textContent = total ? done + ' / ' + total + ' ✓' : '';
 }
 
-// --- Inline edit shop item (on blur) ---
-export function saveShopEdit(el, origName) {
-  var text = el.textContent.trim();
-  if (!text) return;
-  var parts = text.split(' — ');
-  var newName = parts[0].trim();
-  var newQty = parts[1] ? parts[1].trim() : '';
-  if (!state.shopEdits) state.shopEdits = {};
-  if (newName === origName && !newQty) {
-    delete state.shopEdits[origName];
-  } else {
-    state.shopEdits[origName] = { item: newName, qty: newQty || origName };
-  }
-  saveState('shop_edits', state.shopEdits);
+// --- Tap-to-edit shop item ---
+export function startEditShop(el, origName) {
+  var text = el.textContent;
+  var input = document.createElement('input');
+  input.type = 'text'; input.value = text;
+  input.onblur = function() {
+    var val = input.value.trim();
+    if (val && val !== text) {
+      var parts = val.split(' — ');
+      if (!state.shopEdits) state.shopEdits = {};
+      state.shopEdits[origName] = { item: parts[0].trim(), qty: parts[1] ? parts[1].trim() : '' };
+      saveState('shop_edits', state.shopEdits);
+    }
+    var span = document.createElement('span');
+    span.className = 'item-text';
+    span.textContent = val || text;
+    span.onclick = function() { startEditShop(span, origName); };
+    input.replaceWith(span);
+  };
+  input.onkeydown = function(e) { if (e.key === 'Enter') input.blur(); };
+  el.replaceWith(input);
+  input.focus();
+  input.select();
 }
 
 // --- Standard shop functions ---
