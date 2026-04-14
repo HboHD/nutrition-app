@@ -38,6 +38,12 @@ export function renderDays() {
   state.dayOrder.forEach(function(di, pos) {
     var d = DAYS[di], el = document.createElement('div');
     el.className = 'day'; el.dataset.pos = pos;
+    // Highlight today
+    var dateMatch = d.hdr.match(/(\d+)\.(\d+)/);
+    if (dateMatch) {
+      var now = new Date();
+      if (parseInt(dateMatch[1]) === now.getDate() && parseInt(dateMatch[2]) === now.getMonth() + 1) el.className += ' today';
+    }
     var meals = '', dt = [0, 0, 0, 0];
     for (var s = 0; s < d.meals.length; s++) {
       var ml = getMeal(pos, s);
@@ -55,12 +61,12 @@ export function renderDays() {
     var target = 2000;
     var treatMax = Math.min(Math.floor(target * 0.15), Math.max(0, target - dt[0]));
     var treatTxt = treatMax > 0 ? '🍬 ~' + treatMax + ' kcal (~' + Math.floor(treatMax / 160 * 30) + 'g czipsów / ' + Math.floor(treatMax / 135) + ' rządków czekolady / ' + Math.floor(treatMax / 25) + ' cukierków)' : '🍬 brak budżetu';
-    el.innerHTML = '<div class="day-header" onclick="toggle(this)"><span class="drag-handle">⠿</span><span>' + d.hdr + '</span><span>▼</span></div>' +
+    el.innerHTML = '<div class="day-header" onclick="toggle(this)"><span>' + d.hdr + '</span><span>▼</span></div>' +
       '<div class="day-content' + isOpen + '">' + meals +
       '<div class="summary"><div class="sum-row"><span class="sum-label"></span><div class="sum-vals"><span>kcal</span><span>B</span><span>W</span><span>T</span></div></div>' +
       '<div class="sum-row"><span class="sum-label">Baza</span><div class="sum-vals">' + dt.map(function(n, j) { return '<span><b>' + n + '</b>' + (j > 0 ? 'g' : '') + '</span>'; }).join('') + '</div></div></div>' +
       '<div class="treat">' + treatTxt + '</div></div>';
-    initDrag(el); c.appendChild(el);
+    c.appendChild(el);
   });
 }
 
@@ -118,6 +124,15 @@ export function selectMeal(pos, slot) {
 }
 
 export function cancelSwap() { state.selected = null; document.getElementById('swapBar').classList.remove('show'); renderDays(); }
+
+export function clearMeal() {
+  if (!state.selected) return;
+  var k = state.dayOrder[state.selected.pos] + '_' + state.selected.slot;
+  state.mealOverrides[k] = { name: '— pominięta', m: [0, 0, 0, 0], ing: '' };
+  state.selected = null; document.getElementById('swapBar').classList.remove('show');
+  renderDays(); saveState('meal_overrides', state.mealOverrides);
+  askRefreshShop();
+}
 
 export function openRecipePicker() {
   if (!state.selected) return;

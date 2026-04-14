@@ -5,14 +5,16 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 .tabs{display:none}
 /* Bottom nav */
 .bnav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;display:flex;background:#0f3460;border-top:1px solid #333;z-index:110;padding:0 0 env(safe-area-inset-bottom)}
-.bnav button{flex:1;background:transparent;border:none;color:#666;font-size:.65em;padding:8px 0 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-.bnav button .bi{font-size:1.4em}.bnav button.active{color:#e76f51}
-body{padding:12px 12px 70px}
+.bnav button{flex:1;background:transparent;border:none;color:#555;font-size:.7em;padding:10px 0 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;transition:color .2s}
+.bnav button .bi{font-size:1.5em}.bnav button.active{color:#fff}
+.bnav button.active::after{content:'';position:absolute;top:0;left:20%;right:20%;height:3px;background:#e76f51;border-radius:0 0 3px 3px}
+body{padding:12px 12px 74px}
 .view{display:none}.view.active{display:block}
 /* Plan */
 .day{margin:16px 0;background:#16213e;border-radius:12px;overflow:hidden;transition:transform .2s}.day-header{background:#0f3460;padding:10px 14px;font-weight:700;font-size:1em;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .drag-handle{cursor:grab;padding:0 6px;font-size:1.1em;color:#666;user-select:none;touch-action:none}.drag-handle:active{cursor:grabbing;color:#e76f51}
 .day.dragging{opacity:.3}.day.drag-over{border-top:3px solid #e76f51}
+.day.today{border:2px solid #e76f51}.day.today .day-header{background:#1a2744}
 .meal{padding:10px 14px;border-bottom:1px solid #1a1a2e;cursor:pointer;transition:border .15s}.meal:last-child{border:none}.meal.selected{border-left:3px solid #e76f51;background:#1a2744}.meal-name{font-weight:600;font-size:.95em;margin-bottom:2px}.ingredients{font-size:.75em;color:#aaa;margin-bottom:6px;line-height:1.4}
 .macros{display:flex;gap:6px;font-size:.8em}.macro{background:#0f3460;border-radius:6px;padding:3px 8px;text-align:center;flex:1}.macro .val{font-weight:700;font-size:1.1em;display:block}.macro .lbl{font-size:.7em;color:#888}
 .tag{font-size:.7em;color:#fff;border-radius:4px;padding:1px 5px;margin-left:4px}.tag.cook{background:#e76f51}.tag.left{background:#555}
