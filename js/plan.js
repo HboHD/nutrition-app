@@ -1,5 +1,5 @@
 import { state, SLOTS, slotLabel } from './state.js';
-import { DAYS } from './data.js';
+import { DAYS, RECIPES } from './data.js';
 import { saveState } from './supabase.js';
 import { getAllRecipes } from './recipes.js';
 import { refreshShop } from './shop.js';
@@ -38,10 +38,18 @@ export function renderDays() {
   state.dayOrder.forEach(function(di, pos) {
     var d = DAYS[di], el = document.createElement('div');
     el.className = 'day'; el.dataset.pos = pos;
-    var meals = '', dt = [0, 0, 0, 0];
+    var meals = '', dt = [0, 0, 0, 0], dayPrep = 0;
     for (var s = 0; s < d.meals.length; s++) {
       var ml = getMeal(pos, s);
       for (var mi = 0; mi < 4; mi++) dt[mi] += ml.m[mi];
+      // Count prep time only for cook days (not leftovers)
+      if (!(ml.tag && ml.tag.indexOf('🔄') >= 0)) {
+        var rid = ml.rid || ml.recipeId;
+        if (rid) {
+          var rr = RECIPES.find(function(x) { return x[0] === rid; });
+          if (rr && rr[10]) dayPrep += rr[10];
+        }
+      }
       var tg = ml.tag ? (' <span class="tag ' + ml.tagClass + '">' + ml.tag + '</span>') : '';
       var sel = (state.selected && state.selected.pos === pos && state.selected.slot === s) ? ' selected' : '';
       var altInfo = '';
@@ -54,7 +62,7 @@ export function renderDays() {
     var target = 2000;
     var treatMax = Math.min(Math.floor(target * 0.15), Math.max(0, target - dt[0]));
     var treatTxt = treatMax > 0 ? '🍬 ~' + treatMax + ' kcal (~' + Math.floor(treatMax / 160 * 30) + 'g czipsów / ' + Math.floor(treatMax / 135) + ' rządków czekolady / ' + Math.floor(treatMax / 25) + ' cukierków)' : '🍬 brak budżetu';
-    el.innerHTML = '<div class="day-header" onclick="toggle(this)"><span class="drag-handle">⠿</span><span>' + d.hdr + '</span><span>▼</span></div>' +
+    el.innerHTML = '<div class="day-header" onclick="toggle(this)"><span class="drag-handle">⠿</span><span>' + d.hdr + (dayPrep ? ' · ⏱' + dayPrep + 'min' : '') + '</span><span>▼</span></div>' +
       '<div class="day-content' + isOpen + '">' + meals +
       '<div class="summary"><div class="sum-row"><span class="sum-label"></span><div class="sum-vals"><span>kcal</span><span>B</span><span>W</span><span>T</span></div></div>' +
       '<div class="sum-row"><span class="sum-label">Baza</span><div class="sum-vals">' + dt.map(function(n, j) { return '<span><b>' + n + '</b>' + (j > 0 ? 'g' : '') + '</span>'; }).join('') + '</div></div></div>' +

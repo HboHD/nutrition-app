@@ -7,7 +7,7 @@ export function getAllRecipes() {
   var all = RECIPES.map(function(r) {
     var e = state.recipeEdits[r[0]] || {};
     return { id: r[0], name: e.name || r[1], slot: r[2], m: [e.kcal || r[3], e.protein || r[4], e.carbs || r[5], e.fat || r[6]],
-      ing: e.ing || r[7] || [], notes: e.notes != null ? e.notes : (r[8] || ''), tags: e.tags || r[9] || [], src: 'base' };
+      ing: e.ing || r[7] || [], notes: e.notes != null ? e.notes : (r[8] || ''), tags: e.tags || r[9] || [], prep: r[10] || 0, src: 'base' };
   });
   RECIPES_INSP.forEach(function(r) {
     var e = state.recipeEdits[r[0]] || {};
@@ -42,7 +42,7 @@ export function renderRecipes() {
   var h = '';
   all.forEach(function(r) {
     var tags = (r.tags || []).map(function(t) { return '<span class="r-tag">' + t + '</span>'; }).join('');
-    h += '<div class="r-card" onclick="openRecipeDetail(\'' + r.id + '\')"><div class="r-name">' + (r.src === 'user' ? '✏️ ' : r.src === 'insp' ? '💡 ' : '') + r.name + '</div><div class="r-meta">' + slotLabel(r.slot) + ' · ' + r.m[0] + ' kcal · B:' + r.m[1] + 'g W:' + r.m[2] + 'g T:' + r.m[3] + 'g' + (r.inspSrc ? ' · ' + r.inspSrc : '') + '</div>' + (tags ? '<div class="r-tags">' + tags + '</div>' : '') + '</div>';
+    h += '<div class="r-card" onclick="openRecipeDetail(\'' + r.id + '\')"><div class="r-name">' + (r.src === 'user' ? '✏️ ' : r.src === 'insp' ? '💡 ' : '') + r.name + '</div><div class="r-meta">' + slotLabel(r.slot) + ' · ' + r.m[0] + ' kcal · B:' + r.m[1] + 'g W:' + r.m[2] + 'g T:' + r.m[3] + 'g' + (r.prep ? ' · ⏱' + r.prep + 'min' : '') + (r.inspSrc ? ' · ' + r.inspSrc : '') + '</div>' + (tags ? '<div class="r-tags">' + tags + '</div>' : '') + '</div>';
   });
   if (!h) h = '<div style="color:#666;text-align:center;padding:20px">Brak przepisów</div>';
   document.getElementById('rList').innerHTML = h;
@@ -57,7 +57,7 @@ export function openRecipeDetail(id) {
   });
   var el = document.getElementById('rDetail');
   el.innerHTML = '<div class="shop-head"><h3>' + r.name + '</h3><button class="shop-close" onclick="closeRecipeDetail()">✕</button></div>' +
-    '<div class="r-meta" style="margin:4px 0">' + slotLabel(r.slot) + (r.src === 'user' ? ' · ✏️ własny' : '') + '</div>' +
+    '<div class="r-meta" style="margin:4px 0">' + slotLabel(r.slot) + (r.prep ? ' · ⏱ ' + r.prep + ' min' : '') + (r.src === 'user' ? ' · ✏️ własny' : '') + '</div>' +
     '<div class="r-macros">' + ['kcal', 'białko', 'węgle', 'tłuszcz'].map(function(l, i) { return '<div class="macro"><span class="val">' + r.m[i] + '</span><span class="lbl">' + l + '</span></div>'; }).join('') + '</div>' +
     (ingH ? '<div class="r-section"><div class="r-section-title">Składniki</div>' + ingH + '</div>' : '') +
     (r.notes ? '<div class="r-notes">' + r.notes + '</div>' : '') +
