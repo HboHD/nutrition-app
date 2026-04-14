@@ -34,6 +34,7 @@ export async function loadState() {
     if (r.key === 'recipe_edits' && r.value) state.recipeEdits = r.value;
     if (r.key === 'user_recipes' && Array.isArray(r.value)) state.userRecipes = r.value;
     if (r.key === 'shop_edits' && r.value) state.shopEdits = r.value;
+    if (r.key === 'shop_snapshot' && r.value) state.shopSnapshot = r.value;
   });
 }
 
@@ -49,5 +50,6 @@ export function initRealtime(handlers) {
     if (r.key === 'recipe_edits' && r.value) { state.recipeEdits = r.value; handlers.onRecipes(); }
     if (r.key === 'user_recipes' && Array.isArray(r.value)) { state.userRecipes = r.value; handlers.onRecipes(); }
     if (r.key === 'shop_edits' && r.value) { state.shopEdits = r.value; handlers.onShop(); }
+    if (r.key === 'shop_snapshot' && r.value) { state.shopSnapshot = r.value; handlers.onShop(); }
   }).subscribe();
 }

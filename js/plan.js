@@ -2,11 +2,11 @@ import { state, SLOTS, slotLabel } from './state.js';
 import { DAYS } from './data.js';
 import { saveState } from './supabase.js';
 import { getAllRecipes } from './recipes.js';
+import { refreshShop } from './shop.js';
 
-function resetShopIfConfirmed() {
-  if (confirm('Posiłek zmieniony. Zaktualizować listę zakupów?\n(Zaznaczenia zostaną zresetowane)')) {
-    state.shopChecked = {};
-    saveState('shopping', state.shopChecked);
+function askRefreshShop() {
+  if (confirm('Zaktualizować listę zakupów do nowego planu?')) {
+    refreshShop();
   }
 }
 
@@ -103,7 +103,7 @@ export function selectMeal(pos, slot) {
   state.mealOverrides[kB] = Array.isArray(origA) ? origA : { name: mA.name, m: mA.m, ing: mA.ing || '' };
   state.selected = null; document.getElementById('swapBar').classList.remove('show');
   renderDays(); saveState('meal_overrides', state.mealOverrides);
-  resetShopIfConfirmed();
+  askRefreshShop();
 }
 
 export function cancelSwap() { state.selected = null; document.getElementById('swapBar').classList.remove('show'); renderDays(); }
@@ -132,7 +132,7 @@ export function pickRecipe(id) {
   state.mealOverrides[k] = { name: r.name, m: r.m, ing: '', rid: r.id, recipeId: r.id };
   closeRecipePicker(); cancelSwap();
   renderDays(); saveState('meal_overrides', state.mealOverrides);
-  resetShopIfConfirmed();
+  askRefreshShop();
 }
 
 export function closeRecipePicker() { document.getElementById('recipePicker').classList.remove('open'); }

@@ -95,6 +95,23 @@ export function generateShop() {
     .map(function(name) { return [name, deptBuckets[name]]; });
 }
 
+// --- Get current shop data (snapshot or fresh) ---
+export function getShopData() {
+  if (state.shopSnapshot) return state.shopSnapshot;
+  var fresh = generateShop();
+  state.shopSnapshot = fresh;
+  saveState('shop_snapshot', fresh);
+  return fresh;
+}
+
+export function refreshShop() {
+  state.shopSnapshot = generateShop();
+  state.shopChecked = {};
+  saveState('shop_snapshot', state.shopSnapshot);
+  saveState('shopping', state.shopChecked);
+  renderShop();
+}
+
 // --- Pantry matching (exact) ---
 export function pantryHas(shopItem) {
   var name = shopItem.split(' — ')[0].toLowerCase().trim();
@@ -103,7 +120,7 @@ export function pantryHas(shopItem) {
 
 // --- Render shopping list ---
 export function renderShop() {
-  var shopData = state.shopCleared ? [] : generateShop();
+  var shopData = state.shopCleared ? [] : getShopData();
   var h = '', total = 0, done = 0;
 
   shopData.forEach(function(d, di) {
@@ -171,7 +188,7 @@ export function clearShop() {
 }
 
 export function ck(k, el) {
-  var shopData = generateShop();
+  var shopData = getShopData();
   if (el.checked) {
     state.shopChecked[k] = 1;
     // Auto-add long-term items to pantry (puszki:2, suche:3, jajka:4, mrożonki:8, inne:9 + masło)

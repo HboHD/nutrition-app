@@ -9,6 +9,7 @@ export const state = {
   recipeEdits: {},
   userRecipes: [],
   shopEdits: {},
+  shopSnapshot: null,
   rFilter: 'all',
   rSource: 'base'
 };
