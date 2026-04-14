@@ -225,10 +225,5 @@ export function ck(k, el) {
   renderShop(); saveState('shopping', state.shopChecked);
 }
 
-export function shopToggle() {
-  if (document.getElementById('shop').classList.contains('open')) { shopClose(); return; }
-  document.getElementById('pantry').classList.remove('open');
-  document.getElementById('shop').classList.add('open'); renderShop();
-}
-
-export function shopClose() { document.getElementById('shop').classList.remove('open'); }
+export function shopToggle() { renderShop(); }
+export function shopClose() { }

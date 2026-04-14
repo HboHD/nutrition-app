@@ -57,7 +57,7 @@ ok("no inline script (except module)", html.count('<script') == 2)  # SDK + modu
 group("CSS integrity")
 required_classes = [
     '.day', '.day-header', '.meal', '.macros', '.macro',
-    '.fab-group', '.fab', '.fab-shop', '.fab-pantry',
+     
     '.shop', '.pantry', '.swap-bar', '.modal',
     '.recipe-opt', '.drag-handle', '.item', '.dept',
     '.p-form', '.p-item', '.p-del',

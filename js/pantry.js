@@ -25,10 +25,5 @@ export function addPantryItem(form) {
 
 export function delPantry(i) { state.pantry.splice(i, 1); renderPantry(); saveState('pantry', state.pantry); }
 
-export function pantryToggle() {
-  if (document.getElementById('pantry').classList.contains('open')) { pantryClose(); return; }
-  document.getElementById('shop').classList.remove('open');
-  document.getElementById('pantry').classList.add('open'); renderPantry();
-}
-
-export function pantryClose() { document.getElementById('pantry').classList.remove('open'); }
+export function pantryToggle() { renderPantry(); }
+export function pantryClose() { }

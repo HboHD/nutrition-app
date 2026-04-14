@@ -110,10 +110,11 @@ for m in missing:
 
 group("📱 PWA elementy w HTML")
 elements = {
-    'toggle On/Ona': 'setPerson', 'tab Plan': 'Plan', 'tab Przepisy': 'Przepisy',
-    'FAB 🛒': 'shopToggle', 'FAB 📦': 'pantryToggle', 'FAB +': 'openAddRecipe',
+    'toggle On/Ona': 'togglePerson', 'tab Plan': 'Plan', 'tab Przepisy': 'Przepisy',
+    'bottom nav': 'bnav', 'nav Zakupy': 'Zakupy', 'nav Spiżarnia': 'Spiżarnia',
     'swap bar': 'swapBar', 'recipe picker': 'recipePicker', 'recipe detail': 'rDetail',
-    'shop overlay': 'id="shop"', 'pantry overlay': 'id="pantry"'
+    'shop view': 'shopView', 'pantry view': 'pantryView', 'recipe search': 'rSearch',
+    'sync indicator': 'syncDot', 'person prompt': 'personPrompt'
 }
 for name, check in elements.items():
     ok(name, check in html)

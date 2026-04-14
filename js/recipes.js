@@ -3,6 +3,13 @@ import { RECIPES, RECIPES_INSP } from './data.js';
 import { NUT } from './nutrition-db.js';
 import { saveState } from './supabase.js';
 
+var searchQuery = '';
+
+export function searchRecipes(q) {
+  searchQuery = q.toLowerCase().trim();
+  renderRecipes();
+}
+
 export function getAllRecipes() {
   var all = RECIPES.map(function(r) {
     var e = state.recipeEdits[r[0]] || {};
@@ -36,7 +43,10 @@ export function filterRecipes(f) {
 
 export function renderRecipes() {
   var all = getAllRecipes().filter(function(r) {
-    return (state.rFilter === 'all' || r.slot === state.rFilter) && (state.rSource === 'all' || r.src === state.rSource);
+    var matchSlot = state.rFilter === 'all' || r.slot === state.rFilter;
+    var matchSrc = state.rSource === 'all' || r.src === state.rSource;
+    var matchSearch = !searchQuery || r.name.toLowerCase().indexOf(searchQuery) >= 0;
+    return matchSlot && matchSrc && matchSearch;
   });
   all.sort(function(a, b) { return a.name.localeCompare(b.name, 'pl'); });
   var h = '';

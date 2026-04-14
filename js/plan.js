@@ -52,10 +52,11 @@ export function renderDays() {
       }
       var tg = ml.tag ? (' <span class="tag ' + ml.tagClass + '">' + ml.tag + '</span>') : '';
       var sel = (state.selected && state.selected.pos === pos && state.selected.slot === s) ? ' selected' : '';
+      var cookClass = (ml.tag && ml.tag.indexOf('🔄') >= 0) ? ' leftover' : (ml.tag && ml.tag.indexOf('🍳') >= 0) ? ' cook' : '';
       var altInfo = '';
       if (ml._hasAlt) altInfo = '<div class="meal-alt">👩 Ona: ' + ml._altName + '</div>';
       if (ml._isAlt) altInfo = '<div class="meal-alt">🧔 On: ' + ml._mainName + '</div>';
-      meals += '<div class="meal' + sel + '" onclick="selectMeal(' + pos + ',' + s + ')"><div class="meal-name">' + ml.name + tg + '</div>' + altInfo + '<div class="ingredients">' + (ml.ing || '') + '</div><div class="macros">' +
+      meals += '<div class="meal' + sel + cookClass + '" onclick="selectMeal(' + pos + ',' + s + ')"><div class="meal-name">' + ml.name + tg + '</div>' + altInfo + '<div class="ingredients">' + (ml.ing || '') + '</div><div class="macros">' +
         ['kcal', 'białko', 'węgle', 'tłuszcz'].map(function(l, i) { return '<div class="macro"><span class="val">' + ml.m[i] + '</span><span class="lbl">' + l + '</span></div>'; }).join('') + '</div></div>';
     }
     var isOpen = openSet[pos] ? ' open' : '';

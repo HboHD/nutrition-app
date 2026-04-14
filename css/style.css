@@ -1,8 +1,13 @@
 /* Base */
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,system-ui,sans-serif;background:#1a1a2e;color:#e0e0e0;padding:12px;max-width:480px;margin:0 auto}
 h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align:center;font-size:.8em;color:#888;padding:4px 0 12px;border-bottom:1px solid #333}.target span{display:block;margin:2px 0}
-/* Tabs */
-.tabs{display:flex;gap:0;margin:8px 0;border-radius:10px;overflow:hidden;background:#0f3460}.tab{flex:1;padding:10px;text-align:center;font-size:.9em;font-weight:600;cursor:pointer;border:none;background:transparent;color:#888}.tab.active{background:#16213e;color:#fff}
+/* Tabs — replaced by bottom nav */
+.tabs{display:none}
+/* Bottom nav */
+.bnav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;display:flex;background:#0f3460;border-top:1px solid #333;z-index:110;padding:0 0 env(safe-area-inset-bottom)}
+.bnav button{flex:1;background:transparent;border:none;color:#666;font-size:.65em;padding:8px 0 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bnav button .bi{font-size:1.4em}.bnav button.active{color:#e76f51}
+body{padding:12px 12px 70px}
 .view{display:none}.view.active{display:block}
 /* Plan */
 .day{margin:16px 0;background:#16213e;border-radius:12px;overflow:hidden;transition:transform .2s}.day-header{background:#0f3460;padding:10px 14px;font-weight:700;font-size:1em;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
@@ -22,7 +27,7 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 .recipe-opt .ro-name{font-weight:600;font-size:.9em}.recipe-opt .ro-macros{display:flex;gap:8px;font-size:.8em;color:#888;margin-top:4px}
 .recipe-opt .ro-diff{font-size:.75em;margin-top:2px}.ro-plus{color:#2d6a4f}.ro-minus{color:#e76f51}
 /* Shop */
-.shop{position:fixed;inset:0;background:#1a1a2e;z-index:100;overflow-y:auto;padding:12px;display:none;max-width:480px;margin:0 auto}
+.shop{display:none;padding:0;max-width:480px;margin:0 auto}
 .shop.open{display:block}.shop-head{display:flex;justify-content:space-between;align-items:center;padding:8px 0 12px}.shop-head h2,.shop-head h3{font-size:1.1em;margin:0}.shop-close{background:none;border:none;color:#e0e0e0;font-size:1.5em;cursor:pointer;padding:4px 8px}
 .dept{margin:12px 0}.dept-name{font-size:.85em;color:#e76f51;font-weight:700;padding:4px 0;border-bottom:1px solid #333;margin-bottom:6px}
 .item{display:flex;align-items:center;padding:6px 0;gap:10px;font-size:.9em}.item input{width:20px;height:20px;accent-color:#2d6a4f;flex-shrink:0}.item.done label{text-decoration:line-through;color:#666}
@@ -30,18 +35,16 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 .shop-progress{font-size:.8em;color:#888;text-align:center;padding:4px 0}
 .sync{font-size:.7em;color:#555;text-align:center;padding:4px 0}
 /* Pantry */
-.pantry{position:fixed;inset:0;background:#1a1a2e;z-index:100;overflow-y:auto;padding:12px;display:none;max-width:480px;margin:0 auto}
+.pantry{display:none;padding:0;max-width:480px;margin:0 auto}
 .pantry.open{display:block}
 .p-form{display:flex;gap:6px;padding:8px 0;flex-wrap:wrap}.p-form input{background:#16213e;border:1px solid #333;color:#e0e0e0;border-radius:6px;padding:8px;font-size:.85em}.p-form input[name=item]{flex:2;min-width:120px}.p-form input[name=qty]{flex:1;min-width:60px}.p-form input[name=exp]{flex:1;min-width:100px}
 .p-form button{background:#2d6a4f;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:.85em;cursor:pointer}
 .p-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #222;font-size:.9em}
 .p-item .p-info{flex:1}.p-item .p-name{font-weight:600}.p-item .p-meta{font-size:.75em;color:#888}.p-item .p-exp{color:#e76f51}
 .p-item .p-del{background:none;border:none;color:#666;font-size:1.2em;cursor:pointer;padding:4px 8px}.p-item .p-del:hover{color:#e76f51}
-/* FABs */
-.fab-group{position:fixed;bottom:16px;right:16px;display:flex;flex-direction:column;gap:10px;z-index:110}
-.fab{width:64px;height:48px;border-radius:14px;border:none;font-size:1.7em;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
-.fab-shop{background:#2d6a4f}.fab-pantry{background:#5c3a1e}
-.fab-add{position:fixed;bottom:16px;left:16px;width:48px;height:48px;border-radius:14px;border:none;background:#2d6a4f;color:#fff;font-size:1.5em;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);z-index:110;display:none}.fab-add.show{display:flex;align-items:center;justify-content:center}
+/* FABs — removed, replaced by bottom nav */
+.fab-group{display:none}
+.fab-add{display:none!important}
 /* Recipes */
 .r-list{margin:8px 0}.r-filter{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.r-filter button{background:#16213e;border:1px solid #333;color:#888;border-radius:6px;padding:5px 12px;font-size:.8em;cursor:pointer}.r-filter button.active{border-color:#e76f51;color:#e76f51}
 .r-card{background:#16213e;border-radius:10px;padding:10px 14px;margin:8px 0;cursor:pointer}.r-card:active{background:#1a2744}.r-card .r-name{font-weight:600;font-size:.9em}.r-card .r-meta{font-size:.75em;color:#888;margin-top:2px}.r-card .r-tags{margin-top:4px}.r-card .r-tag{font-size:.65em;background:#0f3460;color:#888;border-radius:4px;padding:1px 6px;margin-right:4px}
@@ -56,5 +59,16 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 .r-calc{background:#0f3460;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:.8em}.r-calc b{color:#e76f51}
 .r-add-ing{display:flex;gap:6px;margin:4px 0;flex-wrap:wrap}.r-add-ing input,.r-add-ing select{background:#16213e;border:1px solid #333;color:#e0e0e0;border-radius:6px;padding:6px;font-size:.8em}.r-add-ing input[name=ri_item]{flex:2;min-width:100px}.r-add-ing input[name=ri_amt]{flex:1;min-width:60px}
 /* Person toggle */
-.person{display:flex;justify-content:center;gap:4px;margin:4px 0}.person button{background:transparent;border:2px solid #333;border-radius:8px;padding:4px 14px;font-size:1em;cursor:pointer;color:#888}.person button.active{border-color:#e76f51;color:#fff;background:#16213e}
+.person-icon{position:absolute;right:12px;top:8px;background:none;border:none;font-size:1.2em;cursor:pointer;padding:4px;opacity:.6}.person-icon:hover{opacity:1}
+.person-prompt{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.person-prompt h2{color:#fff;font-size:1.2em}.person-prompt button{background:#16213e;border:2px solid #333;border-radius:12px;padding:16px 40px;font-size:1.1em;color:#e0e0e0;cursor:pointer}.person-prompt button:active{border-color:#e76f51}
 .meal-alt{font-size:.7em;color:#555;margin-top:2px}
+/* Cook/leftover distinction */
+.meal.cook{border-left:3px solid #2d6a4f}.meal.leftover{opacity:.65}
+/* Compact day summary */
+.day-summary{font-size:.75em;color:#888;padding:0 14px 0 36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Recipe search */
+.r-search{background:#16213e;border:1px solid #333;color:#e0e0e0;border-radius:8px;padding:10px 14px;font-size:.9em;width:100%;box-sizing:border-box;margin:8px 0}
+.r-search::placeholder{color:#555}
+/* Sync dot */
+.sync-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:6px;vertical-align:middle}.sync-dot.ok{background:#2d6a4f}.sync-dot.err{background:#e76f51}.sync-dot.loading{background:#f4a261}

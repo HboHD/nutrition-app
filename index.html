@@ -13,14 +13,42 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head><body>
 
-<h1>🍽️ Plan 14–18.04</h1>
-<div class="person" id="personToggle"><button onclick="setPerson('on')">🧔 On</button><button onclick="setPerson('ona')">👩 Ona</button></div>
-<div class="tabs"><button class="tab active" onclick="switchTab('plan')">📅 Plan</button><button class="tab" onclick="switchTab('recipes')">📖 Przepisy</button></div>
-<div class="target"><span>🎯 2000 kcal | B 150g | W 182g | T 70g</span></div>
+<div style="position:relative">
+<h1>🍽️ Plan 14–18.04 <span class="sync-dot loading" id="syncDot"></span></h1>
+<button class="person-icon" id="personBtn" onclick="togglePerson()"></button>
+</div>
+<div class="target" id="targetBar"><span>🎯 2000 kcal | B 150g | W 182g | T 70g</span></div>
+
+<div id="personPrompt" class="person-prompt" style="display:none">
+<h2>Kto jesz?</h2>
+<button onclick="setPerson('on')">🧔 On</button>
+<button onclick="setPerson('ona')">👩 Ona</button>
+</div>
 
 <div id="planView" class="view active"><div id="days"></div></div>
 
+<div id="shopView" class="view">
+<div class="shop open" id="shop" style="display:block">
+<div class="shop-head"><h2>🛒 Lista zakupów</h2></div>
+<form class="p-form" onsubmit="return addShopItem(this)"><input name="item" placeholder="Dodaj produkt..." required><button type="submit">+</button></form>
+<div class="shop-progress" id="prog"></div>
+<div id="shopList"></div>
+<div style="text-align:center;padding:24px 0 8px"><button onclick="clearShop()" style="background:none;border:1px solid #333;color:#666;font-size:.7em;cursor:pointer;border-radius:6px;padding:6px 16px">🗑️ wyczyść zaznaczenia</button></div>
+<div class="sync" id="syncStatus"></div>
+</div>
+</div>
+
+<div id="pantryView" class="view">
+<div class="pantry open" id="pantry" style="display:block">
+<div class="shop-head"><h2>📦 Spiżarnia</h2></div>
+<form class="p-form" onsubmit="return addPantryItem(this)"><input name="item" placeholder="Produkt" required><input name="qty" placeholder="Ilość"><input name="exp" type="date" placeholder="Ważność"><button type="submit">+</button></form>
+<div id="pantryList"></div>
+<div class="sync" id="syncStatus2"></div>
+</div>
+</div>
+
 <div id="recipesView" class="view">
+<input class="r-search" id="rSearch" type="text" placeholder="🔍 Szukaj przepisu..." oninput="searchRecipes(this.value)">
 <div class="r-filter" id="rSource">
 <button class="active" onclick="filterSource('base')">📚 Baza</button>
 <button onclick="filterSource('insp')">💡 Inspiracje</button>
@@ -29,18 +57,13 @@
 </div>
 <div class="r-filter" id="rFilter">
 <button class="active" onclick="filterRecipes('all')">Wszystkie</button>
-<button onclick="filterRecipes('b')">🥣 Śniadania</button>
-<button onclick="filterRecipes('sb')">🥞 II śniad.</button>
-<button onclick="filterRecipes('d')">🍲 Obiady</button>
-<button onclick="filterRecipes('s')">🥗 Kolacje</button>
+<button onclick="filterRecipes('b')">🥣</button>
+<button onclick="filterRecipes('sb')">🥞</button>
+<button onclick="filterRecipes('d')">🍲</button>
+<button onclick="filterRecipes('s')">🥗</button>
 </div>
+<div style="text-align:right;padding:4px 0"><button onclick="openAddRecipe()" style="background:#2d6a4f;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:.8em;cursor:pointer">+ Nowy przepis</button></div>
 <div class="r-list" id="rList"></div>
-</div>
-
-<button class="fab-add" id="fabAdd" onclick="openAddRecipe()">+</button>
-<div class="fab-group">
-<button class="fab fab-shop" onclick="shopToggle()">🛒</button>
-<button class="fab fab-pantry" onclick="pantryToggle()">📦</button>
 </div>
 
 <div class="swap-bar" id="swapBar">
@@ -54,23 +77,14 @@
 <div id="recipeList"></div>
 </div>
 
-<div class="shop" id="shop">
-<div class="shop-head"><h2>🛒 Lista zakupów</h2><button class="shop-close" onclick="shopClose()">✕</button></div>
-<form class="p-form" onsubmit="return addShopItem(this)"><input name="item" placeholder="Dodaj produkt..." required><button type="submit">+</button></form>
-<div class="shop-progress" id="prog"></div>
-<div id="shopList"></div>
-<div style="text-align:center;padding:24px 0 8px"><button onclick="clearShop()" style="background:none;border:1px solid #333;color:#666;font-size:.7em;cursor:pointer;border-radius:6px;padding:6px 16px">🗑️ wyczyść zaznaczenia</button></div>
-<div class="sync" id="syncStatus"></div>
-</div>
-
-<div class="pantry" id="pantry">
-<div class="shop-head"><h2>📦 Spiżarnia</h2><button class="shop-close" onclick="pantryClose()">✕</button></div>
-<form class="p-form" onsubmit="return addPantryItem(this)"><input name="item" placeholder="Produkt" required><input name="qty" placeholder="Ilość"><input name="exp" type="date" placeholder="Ważność"><button type="submit">+</button></form>
-<div id="pantryList"></div>
-<div class="sync" id="syncStatus2"></div>
-</div>
-
 <div class="r-detail" id="rDetail"></div>
+
+<nav class="bnav" id="bnav">
+<button class="active" onclick="switchTab('plan')"><span class="bi">📅</span>Plan</button>
+<button onclick="switchTab('shop')"><span class="bi">🛒</span>Zakupy</button>
+<button onclick="switchTab('pantry')"><span class="bi">📦</span>Spiżarnia</button>
+<button onclick="switchTab('recipes')"><span class="bi">📖</span>Przepisy</button>
+</nav>
 
 <script type="module" src="js/app.js"></script>
 </body></html>

@@ -1,56 +1,90 @@
 import { state } from './state.js';
 import { DAYS } from './data.js';
-import { loadState, initRealtime } from './supabase.js';
+import { loadState, initRealtime, showSync } from './supabase.js';
 import { renderDays, toggle, selectMeal, cancelSwap, openRecipePicker, pickRecipe, closeRecipePicker } from './plan.js';
 import { renderShop, shopToggle, shopClose, ck, ckCustom, addShopItem, delShopItem, clearShop, editShopItem, refreshShop } from './shop.js';
 import { renderPantry, pantryToggle, pantryClose, addPantryItem, delPantry } from './pantry.js';
-import { renderRecipes, filterRecipes, filterSource, openRecipeDetail, closeRecipeDetail, openEditRecipe, saveEditRecipe, openAddRecipe, saveNewRecipe, deleteRecipe, addIngRow, calcEditMacros } from './recipes.js';
+import { renderRecipes, filterRecipes, filterSource, searchRecipes, openRecipeDetail, closeRecipeDetail, openEditRecipe, saveEditRecipe, openAddRecipe, saveNewRecipe, deleteRecipe, addIngRow, calcEditMacros } from './recipes.js';
 
-// --- Tab switching ---
+// --- Tab switching (bottom nav) ---
+var currentTab = 'plan';
 function switchTab(t) {
-  document.querySelectorAll('.tab').forEach(function(el) { el.classList.toggle('active', el.textContent.indexOf(t === 'plan' ? 'Plan' : 'Przepisy') >= 0); });
-  document.getElementById('planView').classList.toggle('active', t === 'plan');
-  document.getElementById('recipesView').classList.toggle('active', t === 'recipes');
-  document.getElementById('fabAdd').classList.toggle('show', t === 'recipes');
-  document.querySelector('.fab-group').style.display = t === 'plan' ? 'flex' : 'none';
-  document.querySelector('.target').style.display = t === 'plan' ? 'block' : 'none';
+  currentTab = t;
+  ['planView', 'shopView', 'pantryView', 'recipesView'].forEach(function(id) {
+    document.getElementById(id).classList.remove('active');
+  });
+  document.querySelectorAll('.bnav button').forEach(function(b, i) {
+    b.classList.toggle('active', ['plan', 'shop', 'pantry', 'recipes'][i] === t);
+  });
+  var viewMap = { plan: 'planView', shop: 'shopView', pantry: 'pantryView', recipes: 'recipesView' };
+  document.getElementById(viewMap[t]).classList.add('active');
+  document.getElementById('targetBar').style.display = t === 'plan' ? 'block' : 'none';
+  if (t === 'shop') renderShop();
+  if (t === 'pantry') renderPantry();
   if (t === 'recipes') renderRecipes();
 }
 
-// --- Person toggle ---
+// --- Person (first-time prompt + subtle toggle) ---
+function initPerson() {
+  var saved = localStorage.getItem('person');
+  if (!saved) {
+    document.getElementById('personPrompt').style.display = 'flex';
+  } else {
+    state.person = saved;
+    updatePersonIcon();
+  }
+}
+
 function setPerson(p) {
   state.person = p;
   localStorage.setItem('person', p);
-  document.querySelectorAll('.person button').forEach(function(b) {
-    b.classList.toggle('active', b.textContent.indexOf(p === 'on' ? 'On' : 'Ona') >= 0);
-  });
+  document.getElementById('personPrompt').style.display = 'none';
+  updatePersonIcon();
   renderDays();
 }
 
-// Init person toggle
-document.querySelectorAll('.person button').forEach(function(b) {
-  b.classList.toggle('active', (state.person === 'on' && b.textContent.indexOf('On') >= 0) || (state.person === 'ona' && b.textContent.indexOf('Ona') >= 0));
-});
+function togglePerson() {
+  setPerson(state.person === 'on' ? 'ona' : 'on');
+}
+
+function updatePersonIcon() {
+  document.getElementById('personBtn').textContent = state.person === 'on' ? '🧔' : '👩';
+}
+
+// --- Sync indicator ---
+function setSyncDot(status) {
+  var dot = document.getElementById('syncDot');
+  if (dot) dot.className = 'sync-dot ' + status;
+}
 
 // --- Expose functions to window for onclick handlers ---
 Object.assign(window, {
-  switchTab, setPerson, toggle, selectMeal, cancelSwap, openRecipePicker, pickRecipe, closeRecipePicker,
+  switchTab, setPerson, togglePerson, toggle, selectMeal, cancelSwap, openRecipePicker, pickRecipe, closeRecipePicker,
   shopToggle, shopClose, ck, ckCustom, addShopItem, delShopItem, clearShop, editShopItem, refreshShop,
   pantryToggle, pantryClose, addPantryItem, delPantry,
-  renderRecipes, filterRecipes, filterSource, openRecipeDetail, closeRecipeDetail,
+  renderRecipes, filterRecipes, filterSource, searchRecipes, openRecipeDetail, closeRecipeDetail,
   openEditRecipe, saveEditRecipe, openAddRecipe, saveNewRecipe, deleteRecipe, addIngRow, calcEditMacros
 });
 
 // --- Init ---
 state.dayOrder = DAYS.map(function(_, i) { return i; });
 
-loadState().then(function() { renderDays(); });
+initPerson();
+setSyncDot('loading');
+
+loadState().then(function() {
+  renderDays();
+  setSyncDot('ok');
+}).catch(function() {
+  renderDays();
+  setSyncDot('err');
+});
 
 initRealtime({
   onPlan: renderDays,
-  onShop: function() { if (document.getElementById('shop').classList.contains('open')) renderShop(); },
-  onPantry: function() { if (document.getElementById('pantry').classList.contains('open')) renderPantry(); },
-  onRecipes: renderRecipes
+  onShop: function() { if (currentTab === 'shop') renderShop(); },
+  onPantry: function() { if (currentTab === 'pantry') renderPantry(); },
+  onRecipes: function() { if (currentTab === 'recipes') renderRecipes(); }
 });
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
