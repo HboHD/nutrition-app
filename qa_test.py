@@ -101,7 +101,7 @@ days_match = re.findall(r"hdr:'([^']+)'", data_js)
 num_days = len(days_match)
 ok(f"{num_days} days found", num_days >= 2)
 
-meals_count = data_js.count("name:'")
+meals_count = len(re.findall(r"(?<!alt:\{)name:'", data_js))
 expected_meals = num_days * 5
 ok(f"{expected_meals} meals total ({num_days} days × 5 slots) ({meals_count})", meals_count == expected_meals)
 
