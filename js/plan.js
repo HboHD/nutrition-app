@@ -121,7 +121,7 @@ export function pickRecipe(id) {
   var r = getAllRecipes().find(function(x) { return x.id === id; });
   if (!r || !state.selected) return;
   var k = state.dayOrder[state.selected.pos] + '_' + state.selected.slot;
-  state.mealOverrides[k] = { name: r.name, m: r.m, ing: '' };
+  state.mealOverrides[k] = { name: r.name, m: r.m, ing: '', rid: r.id, recipeId: r.id };
   closeRecipePicker(); cancelSwap();
   renderDays(); saveState('meal_overrides', state.mealOverrides);
 }

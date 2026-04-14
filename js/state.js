@@ -8,6 +8,7 @@ export const state = {
   shopCleared: false,
   recipeEdits: {},
   userRecipes: [],
+  shopEdits: {},
   rFilter: 'all',
   rSource: 'base'
 };

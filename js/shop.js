@@ -1,23 +1,128 @@
 import { state } from './state.js';
-import { SHOP, LONG_TERM, LONG_TERM_ITEMS } from './data.js';
+import { DAYS, RECIPES, RECIPES_INSP } from './data.js';
+import { DEPT, DEPT_NAMES, PKG } from './nutrition-db.js';
 import { saveState } from './supabase.js';
+import { getMeal } from './plan.js';
 
+// --- Find recipe by id across all sources ---
+function findRecipe(rid) {
+  if (!rid) return null;
+  var r = RECIPES.find(function(x) { return x[0] === rid; });
+  if (r) return { ing: r[7] || [], servings: 2 };
+  r = RECIPES_INSP.find(function(x) { return x[0] === rid; });
+  if (r) return { ing: [], servings: 1 };
+  var ur = state.userRecipes.find(function(x) { return x.id === rid; });
+  if (ur) return { ing: ur.ing || [], servings: ur.servings || 2 };
+  return null;
+}
+
+// --- Generate shopping list from current plan ---
+export function generateShop() {
+  var items = {}; // key → { total_g: N, counts: N, unit: 'g'|'szt'|'', dept: N }
+
+  state.dayOrder.forEach(function(di, pos) {
+    var d = DAYS[di];
+    for (var s = 0; s < d.meals.length; s++) {
+      var ml = getMeal(pos, s);
+      // Skip leftovers
+      if (ml.tag && ml.tag.indexOf('🔄') >= 0) continue;
+      // Skip skipped meals
+      if (ml.m[0] === 0) continue;
+
+      var rid = ml.rid || ml.recipeId;
+      var recipe = findRecipe(rid);
+      if (!recipe || !recipe.ing || !recipe.ing.length) continue;
+
+      // For servings:1 recipes (per person), multiply by 2
+      var mult = recipe.servings === 1 ? 2 : 1;
+
+      recipe.ing.forEach(function(ig) {
+        var key = ig.item;
+        if (!items[key]) items[key] = { total_g: 0, counts: [], dept: DEPT[key] != null ? DEPT[key] : 9 };
+
+        if (ig.amount_g) {
+          items[key].total_g += parseFloat(ig.amount_g) * mult;
+        } else if (ig.amount) {
+          items[key].counts.push(ig.amount);
+        }
+      });
+    }
+  });
+
+  // Format into department groups
+  var deptBuckets = {};
+  DEPT_NAMES.forEach(function(name) { deptBuckets[name] = []; });
+
+  Object.keys(items).sort().forEach(function(key) {
+    var info = items[key];
+    var deptName = DEPT_NAMES[info.dept] || DEPT_NAMES[9];
+    var qty;
+
+    if (info.total_g > 0) {
+      var pkg = PKG[key];
+      if (pkg) {
+        var needed = Math.ceil(info.total_g / pkg[0]);
+        qty = needed + ' × ' + pkg[2];
+      } else {
+        qty = Math.round(info.total_g) + 'g';
+      }
+    } else if (info.counts.length) {
+      // Aggregate piece counts
+      var totalPcs = 0;
+      info.counts.forEach(function(c) {
+        var n = parseFloat(c);
+        if (!isNaN(n)) totalPcs += n;
+      });
+      if (totalPcs > 0) {
+        var pkg = PKG[key];
+        if (pkg && pkg[1] === 'szt') {
+          qty = Math.ceil(totalPcs / pkg[0]) + ' × ' + pkg[2];
+        } else {
+          qty = Math.ceil(totalPcs) + ' szt';
+        }
+      } else {
+        qty = info.counts.join(' + ');
+      }
+    } else {
+      qty = '1';
+    }
+
+    deptBuckets[deptName].push(key + ' — ' + qty);
+  });
+
+  // Return only non-empty departments
+  return DEPT_NAMES.filter(function(name) { return deptBuckets[name].length > 0; })
+    .map(function(name) { return [name, deptBuckets[name]]; });
+}
+
+// --- Pantry matching (exact) ---
 export function pantryHas(shopItem) {
   var name = shopItem.split(' — ')[0].toLowerCase().trim();
   return state.pantry.some(function(p) { return p.item.toLowerCase().trim() === name; });
 }
 
+// --- Render shopping list ---
 export function renderShop() {
+  var shopData = state.shopCleared ? [] : generateShop();
   var h = '', total = 0, done = 0;
-  if (!state.shopCleared) {
-    SHOP.forEach(function(d, di) {
-      h += '<div class="dept"><div class="dept-name">' + d[0] + '</div>';
-      d[1].forEach(function(it, ii) {
-        var k = di + '_' + ii, inP = pantryHas(it); total++; if (state.shopChecked[k]) done++;
-        h += '<div class="item' + (state.shopChecked[k] ? ' done' : '') + (inP ? ' in-pantry' : '') + '"><input type="checkbox" id="c' + k + '"' + (state.shopChecked[k] ? ' checked' : '') + ' onchange="ck(\'' + k + '\',this)"><label for="c' + k + '">' + it + '</label>' + (inP ? '<span class="pantry-badge">masz ✓</span>' : '') + '</div>';
-      }); h += '</div>';
-    });
-  }
+
+  shopData.forEach(function(d, di) {
+    h += '<div class="dept"><div class="dept-name">' + d[0] + '</div>';
+    d[1].forEach(function(it, ii) {
+      var k = di + '_' + ii, inP = pantryHas(it);
+      // Apply user edits
+      var edited = state.shopEdits && state.shopEdits[it.split(' — ')[0]];
+      var display = edited ? edited.item + ' — ' + edited.qty : it;
+      total++; if (state.shopChecked[k]) done++;
+      h += '<div class="item' + (state.shopChecked[k] ? ' done' : '') + (inP ? ' in-pantry' : '') + '">' +
+        '<input type="checkbox" id="c' + k + '"' + (state.shopChecked[k] ? ' checked' : '') + ' onchange="ck(\'' + k + '\',this)">' +
+        '<label for="c' + k + '">' + display + '</label>' +
+        (inP ? '<span class="pantry-badge">masz ✓</span>' : '') +
+        '<button class="p-del" onclick="editShopItem(\'' + it.split(' — ')[0].replace(/'/g, "\\'") + '\',\'' + (it.split(' — ')[1] || '').replace(/'/g, "\\'") + '\')" style="background:none;border:none;color:#555;font-size:.8em;cursor:pointer;padding:2px 6px">✏️</button>' +
+        '</div>';
+    }); h += '</div>';
+  });
+
   if (state.customShopItems.length) {
     h += '<div class="dept"><div class="dept-name">✏️ Dodane ręcznie</div>';
     state.customShopItems.forEach(function(ci, i) {
@@ -25,11 +130,27 @@ export function renderShop() {
       h += '<div class="item' + (ci.checked ? ' done' : '') + '"><input type="checkbox"' + (ci.checked ? ' checked' : '') + ' onchange="ckCustom(' + i + ',this)"><label>' + ci.item + '</label><button class="p-del" onclick="delShopItem(' + i + ')">✕</button></div>';
     }); h += '</div>';
   }
+
   if (!h) h = '<div style="color:#666;text-align:center;padding:20px">Lista pusta</div>';
   document.getElementById('shopList').innerHTML = h;
   document.getElementById('prog').textContent = total ? done + ' / ' + total + ' ✓' : '';
 }
 
+// --- Edit shop item ---
+export function editShopItem(name, qty) {
+  var newQty = prompt('Ilość dla: ' + name, qty);
+  if (newQty === null) return;
+  if (!state.shopEdits) state.shopEdits = {};
+  if (newQty === '') {
+    delete state.shopEdits[name];
+  } else {
+    state.shopEdits[name] = { item: name, qty: newQty };
+  }
+  saveState('shop_edits', state.shopEdits);
+  renderShop();
+}
+
+// --- Standard shop functions ---
 export function addShopItem(form) {
   var d = new FormData(form);
   state.customShopItems.push({ item: d.get('item'), checked: false });
@@ -50,16 +171,22 @@ export function clearShop() {
 }
 
 export function ck(k, el) {
+  var shopData = generateShop();
   if (el.checked) {
     state.shopChecked[k] = 1;
+    // Auto-add long-term items to pantry (puszki:2, suche:3, jajka:4, mrożonki:8, inne:9 + masło)
     var parts = k.split('_'), di = +parts[0], ii = +parts[1];
-    if (LONG_TERM[di] || LONG_TERM_ITEMS[k]) {
-      var itemName = SHOP[di][1][ii].split(' — ')[0];
-      var qty = SHOP[di][1][ii].split(' — ')[1] || '';
-      var existing = state.pantry.find(function(p) { return p.item === itemName; });
-      if (existing) { existing.qty = qty; existing.exp = ''; }
-      else { state.pantry.push({ item: itemName, qty: qty, exp: '' }); }
-      saveState('pantry', state.pantry);
+    var LONG_TERM = { 2: 1, 3: 1, 4: 1, 8: 1, 9: 1 };
+    if (shopData[di] && shopData[di][1] && shopData[di][1][ii]) {
+      var itemName = shopData[di][1][ii].split(' — ')[0];
+      var qty = shopData[di][1][ii].split(' — ')[1] || '';
+      var deptIdx = DEPT_NAMES.indexOf(shopData[di][0]);
+      if (LONG_TERM[deptIdx] || itemName === 'masło') {
+        var existing = state.pantry.find(function(p) { return p.item === itemName; });
+        if (existing) { existing.qty = qty; existing.exp = ''; }
+        else { state.pantry.push({ item: itemName, qty: qty, exp: '' }); }
+        saveState('pantry', state.pantry);
+      }
     }
   } else { delete state.shopChecked[k]; }
   el.parentElement.classList.toggle('done', el.checked);

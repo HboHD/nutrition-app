@@ -3,39 +3,39 @@
 
 export const DAYS=[
 {hdr:'🗓️ Wt 14.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
-{name:'🥞 Pieczona owsianka z jogurtem greckim',tag:'🍳 2d',tagClass:'cook',ing:'płatki 120g · mleko 300ml · 2 jajka · banan · masło orzechowe 30g · jogurt grecki 150g · maliny',m:[593,32,69,23]},
-{name:'🍲 Makaron z soczewicy z cukinią i mozzarellą',tag:'🍳 2d',tagClass:'cook',ing:'makaron soczewicowy 350g · cukinia 2szt · mozzarella 250g · suszone pomidory 100g · czosnek · oliwa',m:[568,36,49,22]},
-{name:'🥗 Sałatka jaglana z ciecierzycą i jajkiem',tag:'🍳',tagClass:'cook',ing:'kasza jaglana 100g · ciecierzyca 200g · 2 jajka · pomidorki · papryka · sałata · oliwa',m:[448,20,55,13]},
-{name:'🥜 Jabłko',ing:'jabłko 1 szt',m:[90,1,22,0]}
+{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
+{name:'🥞 Pieczona owsianka z jogurtem greckim',rid:'pieczona-owsianka',tag:'🍳 2d',tagClass:'cook',ing:'płatki 120g · mleko 300ml · 2 jajka · banan · masło orzechowe 30g · jogurt grecki 150g · maliny',m:[593,32,69,23]},
+{name:'🍲 Makaron z soczewicy z cukinią i mozzarellą',rid:'makaron-soczewica-cukinia',tag:'🍳 2d',tagClass:'cook',ing:'makaron soczewicowy 350g · cukinia 2szt · mozzarella 250g · suszone pomidory 100g · czosnek · oliwa',m:[568,36,49,22]},
+{name:'🥗 Sałatka jaglana z ciecierzycą i jajkiem',rid:'salatka-jaglana-ciecierzyca',tag:'🍳',tagClass:'cook',ing:'kasza jaglana 100g · ciecierzyca 200g · 2 jajka · pomidorki · papryka · sałata · oliwa',m:[448,20,55,13]},
+{name:'🥜 Jabłko',rid:'owoc',ing:'jabłko 1 szt',m:[90,1,22,0]}
 ]},
 {hdr:'🗓️ Śr 15.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
-{name:'🥞 Pieczona owsianka z jogurtem greckim',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[593,32,69,23]},
-{name:'🍲 Makaron z soczewicy z cukinią i mozzarellą',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[568,36,49,22]},
-{name:'🥗 Kanapki z jajkiem na twardo',ing:'2 jajka na twardo · chleb 2kr · masło 10g · pomidor · ogórek',m:[430,20,32,22]},
-{name:'🥜 Jabłko',ing:'jabłko 1 szt',m:[90,1,22,0]}
+{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
+{name:'🥞 Pieczona owsianka z jogurtem greckim',rid:'pieczona-owsianka',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[593,32,69,23]},
+{name:'🍲 Makaron z soczewicy z cukinią i mozzarellą',rid:'makaron-soczewica-cukinia',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[568,36,49,22]},
+{name:'🥗 Kanapki z jajkiem na twardo',rid:'kanapki-jajko',ing:'2 jajka na twardo · chleb 2kr · masło 10g · pomidor · ogórek',m:[430,20,32,22]},
+{name:'🥜 Jabłko',rid:'owoc',ing:'jabłko 1 szt',m:[90,1,22,0]}
 ]},
 {hdr:'🗓️ Czw 16.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
-{name:'🥞 Budyń jaglany z białkiem i owocami',tag:'🍳 2d',tagClass:'cook',ing:'kasza jaglana (resztki!) · mleko 400ml · banan · białko 40g · maliny 100g',m:[470,31,75,6]},
-{name:'🍲 Spaghetti bolońskie (drobiowe)',tag:'🍳 2d',tagClass:'cook',ing:'mielone drobiowe 500g · makaron 500g · pomidory 800g · marchew · cebula · czosnek',m:[510,35,62,12]},
-{name:'🥗 Jajka po turecku',ing:'2 jajka · jogurt 150g · masło 15g · papryka wędzona · chleb 1kr',m:[451,24,24,30]},
-{name:'🥜 Jogurt grecki z bananem',ing:'jogurt grecki 200g · banan 0.5szt',m:[200,21,30,2]}
+{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
+{name:'🥞 Budyń jaglany z białkiem i owocami',rid:'budyn-jaglany',tag:'🍳 2d',tagClass:'cook',ing:'kasza jaglana (resztki!) · mleko 400ml · banan · białko 40g · maliny 100g',m:[470,31,75,6]},
+{name:'🍲 Spaghetti bolońskie (drobiowe)',rid:'spaghetti-bolognese',tag:'🍳 2d',tagClass:'cook',ing:'mielone drobiowe 500g · makaron 500g · pomidory 800g · marchew · cebula · czosnek',m:[510,35,62,12]},
+{name:'🥗 Jajka po turecku',rid:'jajka-po-turecku',ing:'2 jajka · jogurt 150g · masło 15g · papryka wędzona · chleb 1kr',m:[451,24,24,30]},
+{name:'🥜 Jogurt grecki z bananem',rid:'jogurt-orzechy',ing:'jogurt grecki 200g · banan 0.5szt',m:[200,21,30,2]}
 ]},
 {hdr:'🗓️ Pt 17.04',meals:[
-{name:'🥣 Shakshuka ze szpinakiem i fetą',tag:'🍳 2d',tagClass:'cook',ing:'4 jajka · szpinak 50g · feta 100g · pomidory puszka 400g · cebula · czosnek · oliwa',m:[432,26,14,30]},
-{name:'🥞 Budyń jaglany z białkiem i owocami',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[470,31,75,6]},
-{name:'🍲 Spaghetti bolońskie (drobiowe)',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[510,35,62,12]},
-{name:'🥗 Sałatka ze śliwkami i parmezanem',ing:'rukola 100g · śliwki suszone 80g · parmezan 60g · orzechy włoskie 20g · oliwa',m:[370,15,30,23]},
-{name:'🥜 Serek wiejski z warzywami',ing:'serek wiejski 100g · pomidor · ogórek',m:[130,13,11,4]}
+{name:'🥣 Shakshuka ze szpinakiem i fetą',rid:'shakshuka',tag:'🍳 2d',tagClass:'cook',ing:'4 jajka · szpinak 50g · feta 100g · pomidory puszka 400g · cebula · czosnek · oliwa',m:[432,26,14,30]},
+{name:'🥞 Budyń jaglany z białkiem i owocami',rid:'budyn-jaglany',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[470,31,75,6]},
+{name:'🍲 Spaghetti bolońskie (drobiowe)',rid:'spaghetti-bolognese',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[510,35,62,12]},
+{name:'🥗 Sałatka ze śliwkami i parmezanem',rid:'salatka-sliwki-parmezan',ing:'rukola 100g · śliwki suszone 80g · parmezan 60g · orzechy włoskie 20g · oliwa',m:[370,15,30,23]},
+{name:'🥜 Serek wiejski z warzywami',rid:'serek-wiejski-przekaska',ing:'serek wiejski 100g · pomidor · ogórek',m:[130,13,11,4]}
 ]},
 {hdr:'🗓️ Sob 18.04',meals:[
-{name:'🥣 Shakshuka ze szpinakiem i fetą',tag:'🔄 2/2',tagClass:'left',ing:'resztki z piątku',m:[432,26,14,30]},
-{name:'🥞 Placuszki bananowe z jogurtem greckim',tag:'🍳',tagClass:'cook',ing:'banan · 2 jajka · płatki 30g · olej · jogurt grecki 150g · maliny 50g',m:[649,35,61,32]},
-{name:'🍲 Ryba smażona z frytkami i surówką',tag:'🍳',tagClass:'cook',ing:'filet rybny 300g · frytki mrożone 500g · ogórek',m:[563,32,50,23]},
+{name:'🥣 Shakshuka ze szpinakiem i fetą',rid:'shakshuka',tag:'🔄 2/2',tagClass:'left',ing:'resztki z piątku',m:[432,26,14,30]},
+{name:'🥞 Placuszki bananowe z jogurtem greckim',rid:'placuszki-bananowe',tag:'🍳',tagClass:'cook',ing:'banan · 2 jajka · płatki 30g · olej · jogurt grecki 150g · maliny 50g',m:[649,35,61,32]},
+{name:'🍲 Ryba smażona z frytkami i surówką',rid:'ryba-frytki',tag:'🍳',tagClass:'cook',ing:'filet rybny 300g · frytki mrożone 500g · ogórek',m:[563,32,50,23]},
 {name:'🥗 Herbata zielona',ing:'herbata 1 filiżanka',m:[2,0,0,0]},
-{name:'🥜 Jabłko',ing:'jabłko 1 szt',m:[90,1,22,0]}
+{name:'🥜 Jabłko',rid:'owoc',ing:'jabłko 1 szt',m:[90,1,22,0]}
 ]}
 ];
 
@@ -96,6 +96,7 @@ export const RECIPES=[
 ['kanapki-pasztet-s','Kanapki z pasztetem','s',366,13,38,19,[{item:'pasztet',amount_g:'60'},{item:'chleb żytni',amount:'2 kromki'},{item:'pomidory',amount_g:'75'}],'',['polish','quick']],
 ['kanapki-hummus-s','Kanapki z hummusem','s',286,11,45,8,[{item:'hummus',amount_g:'60'},{item:'chleb żytni',amount:'2 kromki'},{item:'papryka',amount_g:'75'}],'',['mediterranean','vegetarian']],
 ['kanapki-ser-wedlina-s','Kanapki z serem i wędliną','s',379,23,36,16,[{item:'ser żółty',amount_g:'40'},{item:'wędlina',amount_g:'40'},{item:'chleb żytni',amount:'2 kromki'}],'',['polish','quick']],
+['kanapki-jajko','Kanapki z jajkiem na twardo','s',430,20,32,22,[{item:'jajka',amount:'2 szt'},{item:'chleb żytni',amount:'2 kromki'},{item:'masło',amount_g:'10'},{item:'pomidory',amount_g:'75'},{item:'ogórek',amount_g:'75'}],'',['polish','quick']],
 ['shake-przekaska','Shake białkowy','p',273,32,30,4,[{item:'białko w proszku',amount_g:'30'},{item:'mleko',amount_g:'200'}],'',['quick','high_protein']],
 ['jogurt-orzechy','Jogurt grecki z orzechami','p',200,12,16,11,[{item:'jogurt grecki',amount_g:'150'},{item:'orzechy włoskie',amount_g:'15'},{item:'miód',amount_g:'5'}],'',['quick']],
 ['owoc','Jabłko / banan','p',90,1,22,0,[],'',['quick']],

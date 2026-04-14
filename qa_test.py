@@ -114,10 +114,10 @@ for i, (kcal, p, c, f_) in enumerate(m_arrays[:expected_meals]):
     ok(f"meal {i} kcal>0 or skipped", int(kcal) > 0 or skipped)
 
 group("SHOP data")
-shop_depts = re.findall(r'\["([^"]+)",\[', data_js)
-ok(f"10 shop departments ({len(shop_depts)})", len(shop_depts) == 10)
-shop_items = re.findall(r'"([^"]+) — ([^"]+)"', data_js)
-ok(f"shop items have separator ({len(shop_items)} items)", len(shop_items) >= 20)
+ok("generateShop function exists", "function generateShop" in js_files['shop.js'])
+ok("shop uses DEPT mapping", "DEPT[" in js_files['shop.js'] or "DEPT_NAMES" in js_files['shop.js'])
+ok("shop uses PKG for rounding", "PKG[" in js_files['shop.js'])
+ok("editShopItem function", "function editShopItem" in js_files['shop.js'])
 
 group("RECIPES data")
 recipe_entries = re.findall(r"\['([^']+)','([^']+)','(b|sb|d|s|p)',(\d+),(\d+),(\d+),(\d+),", data_js)
@@ -155,8 +155,10 @@ ok("network error message", "brak sieci" in sb_js)
 
 group("Features")
 ok("day open state preserved", "openSet" in js_files['plan.js'])
+ok("meals have recipe IDs", "rid:" in data_js)
+ok("pantry exact match (no substring)", "=== name" in js_files['shop.js'])
 ok("pantry sort uses .slice()", ".slice().sort" in js_files['pantry.js'])
-ok("pantry auto-add on long-term purchase", "LONG_TERM[di]" in js_files['shop.js'])
+ok("pantry auto-add on long-term purchase", "LONG_TERM" in js_files['shop.js'])
 ok("recipe picker filters by slot", "r.slot===slot" in js_all or "r.slot === slot" in js_all)
 ok("macro comparison in picker", "ro-plus" in js_all and "ro-minus" in js_all)
 ok("drag handle present", "drag-handle" in js_all)
@@ -165,6 +167,9 @@ ok("treat budget calculated", "treatMax" in js_all)
 ok("treat budget uses 15% cap", "target*0.15" in js_all or "target * 0.15" in js_all)
 ok("snack recipes in RECIPES", any(r[2]=='p' for r in recipe_entries))
 ok("NUT database has entries", "export const NUT" in js_files['nutrition-db.js'])
+ok("DEPT mapping exists", "export const DEPT" in js_files['nutrition-db.js'])
+ok("DEPT_NAMES exists", "export const DEPT_NAMES" in js_files['nutrition-db.js'])
+ok("PKG mapping exists", "export const PKG" in js_files['nutrition-db.js'])
 
 # =====================
 # 8. SERVICE WORKER

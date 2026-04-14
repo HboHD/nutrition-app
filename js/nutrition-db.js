@@ -27,3 +27,55 @@ export const NUT = {
   'makaron ryżowy': [360, 4, 83, 0], 'gruszka': [57, 0, 15, 0],
   'frytki mrożone': [170, 2, 25, 7]
 };
+
+// Ingredient → store department index
+// 0:Pieczywo 1:Owoce/warzywa 2:Puszki 3:Suche 4:Jajka/mleko 5:Mięso 6:Nabiał 7:Ryby 8:Mrożonki 9:Inne
+export const DEPT = {
+  'chleb żytni':0,'tortilla':0,
+  'pomidory':1,'pomidory koktajlowe':1,'ogórek':1,'papryka':1,'cebula':1,'marchew':1,'cukinia':1,
+  'szpinak':1,'rukola':1,'sałata mix':1,'czosnek':1,'banan':1,'ziemniaki':1,'brokuł':1,'pieczarki':1,'gruszka':1,
+  'pomidory krojone puszka':2,'ciecierzyca puszka':2,'kukurydza puszka':2,'fasola puszka':2,'tuńczyk puszka':2,
+  'ryż':3,'makaron':3,'makaron z soczewicy':3,'makaron ryżowy':3,'kasza jaglana':3,'kasza gryczana':3,
+  'kasza jęczmienna':3,'płatki owsiane':3,'masło orzechowe':3,'suszone pomidory w oleju':3,'śliwki suszone':3,
+  'bułka tarta':3,'mąka':4,
+  'jajka':4,'mleko':4,
+  'pierś kurczaka':5,'mięso mielone drobiowe':5,'mięso mielone wieprzowo wołowe':5,'wołowina gulaszowa':5,
+  'udo kurczaka':5,'wątróbka drobiowa':5,'wędlina':5,'boczek wędzony':5,'szynka parmeńska':5,
+  'masło':6,'jogurt grecki':6,'jogurt naturalny':6,'serek wiejski':6,'twaróg':6,'feta':6,
+  'mozzarella':6,'ser żółty':6,'serek śmietankowy':6,'parmezan':6,'ser blue':6,
+  'camembert':6,'halloumi':6,'hummus':6,'pasztet':6,
+  'filet rybny':7,'łosoś wędzony':7,
+  'maliny':8,'frytki mrożone':8,
+  'oliwa':9,'olej rzepakowy':9,'białko w proszku':9,'orzechy włoskie':9,'sos sojowy':9,'miód':9,
+  'mleko kokosowe':9,'pasta curry':9,'tofu':9,'buraki gotowane':9
+};
+export const DEPT_NAMES = ['🥖 Pieczywo','🍌 Owoce / warzywa','🥫 Puszki','🌾 Suche / kasze','🥚 Jajka / mleko / mąka','🥩 Mięso','🧀 Nabiał','🐟 Ryby','❄️ Mrożonki','📦 Inne'];
+
+// Lidl package sizes: [size_value, unit, label]
+export const PKG = {
+  'jajka':[10,'szt','10 szt'],'mleko':[1000,'ml','1L'],'mąka':[1000,'g','1kg'],
+  'masło':[200,'g','200g'],'jogurt grecki':[400,'g','400g'],'jogurt naturalny':[400,'g','400g'],
+  'serek wiejski':[200,'g','200g'],'twaróg':[250,'g','250g'],'feta':[200,'g','200g'],
+  'mozzarella':[125,'g','125g'],'ser żółty':[250,'g','250g'],'serek śmietankowy':[150,'g','150g'],
+  'parmezan':[200,'g','200g'],'camembert':[120,'g','120g'],'halloumi':[200,'g','200g'],
+  'pierś kurczaka':[500,'g','500g'],'mięso mielone drobiowe':[500,'g','500g'],
+  'mięso mielone wieprzowo wołowe':[500,'g','500g'],'wołowina gulaszowa':[500,'g','500g'],
+  'udo kurczaka':[1000,'g','1kg'],'wątróbka drobiowa':[500,'g','500g'],
+  'wędlina':[100,'g','100g'],'łosoś wędzony':[100,'g','100g'],'tuńczyk puszka':[170,'g','170g'],
+  'filet rybny':[400,'g','400g'],'boczek wędzony':[200,'g','200g'],'szynka parmeńska':[80,'g','80g'],
+  'pomidory krojone puszka':[400,'g','400g'],'ciecierzyca puszka':[400,'g','400g'],
+  'kukurydza puszka':[340,'g','340g'],'fasola puszka':[400,'g','400g'],
+  'ryż':[1000,'g','1kg'],'makaron':[500,'g','500g'],'makaron z soczewicy':[350,'g','350g'],
+  'makaron ryżowy':[250,'g','250g'],'kasza jaglana':[400,'g','400g'],'kasza gryczana':[400,'g','400g'],
+  'kasza jęczmienna':[400,'g','400g'],'płatki owsiane':[500,'g','500g'],
+  'masło orzechowe':[350,'g','350g'],'chleb żytni':[500,'g','500g'],'tortilla':[6,'szt','6 szt'],
+  'szpinak':[100,'g','100g'],'rukola':[100,'g','100g'],'sałata mix':[150,'g','150g'],
+  'pomidory koktajlowe':[250,'g','250g'],'pieczarki':[250,'g','250g'],
+  'oliwa':[500,'ml','500ml'],'olej rzepakowy':[1000,'ml','1L'],
+  'orzechy włoskie':[100,'g','100g'],'śliwki suszone':[200,'g','200g'],
+  'suszone pomidory w oleju':[280,'g','280g'],'sos sojowy':[250,'ml','250ml'],
+  'mleko kokosowe':[400,'ml','400ml'],'pasta curry':[70,'g','70g'],
+  'miód':[350,'g','350g'],'hummus':[200,'g','200g'],'pasztet':[130,'g','130g'],
+  'bułka tarta':[200,'g','200g'],'frytki mrożone':[1000,'g','1kg'],
+  'maliny':[300,'g','300g'],'tofu':[400,'g','400g']
+};

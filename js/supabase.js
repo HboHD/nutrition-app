@@ -33,6 +33,7 @@ export async function loadState() {
     if (r.key === 'shop_cleared' && r.value) state.shopCleared = !!r.value.cleared;
     if (r.key === 'recipe_edits' && r.value) state.recipeEdits = r.value;
     if (r.key === 'user_recipes' && Array.isArray(r.value)) state.userRecipes = r.value;
+    if (r.key === 'shop_edits' && r.value) state.shopEdits = r.value;
   });
 }
 
@@ -47,5 +48,6 @@ export function initRealtime(handlers) {
     if (r.key === 'shop_cleared' && r.value) { state.shopCleared = !!r.value.cleared; handlers.onShop(); }
     if (r.key === 'recipe_edits' && r.value) { state.recipeEdits = r.value; handlers.onRecipes(); }
     if (r.key === 'user_recipes' && Array.isArray(r.value)) { state.userRecipes = r.value; handlers.onRecipes(); }
+    if (r.key === 'shop_edits' && r.value) { state.shopEdits = r.value; handlers.onShop(); }
   }).subscribe();
 }
