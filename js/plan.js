@@ -17,7 +17,14 @@ export function getMeal(pos, slot) {
     if (Array.isArray(o)) return DAYS[o[0]].meals[o[1]];
     return o;
   }
-  return DAYS[state.dayOrder[pos]].meals[slot];
+  var meal = DAYS[state.dayOrder[pos]].meals[slot];
+  if (meal.alt && state.person === 'ona') {
+    return { name: meal.alt.name, rid: meal.alt.rid, m: meal.alt.m, ing: meal.ing, tag: meal.tag, tagClass: meal.tagClass, _isAlt: true, _mainName: meal.name };
+  }
+  if (meal.alt) {
+    return Object.assign({}, meal, { _hasAlt: true, _altName: meal.alt.name });
+  }
+  return meal;
 }
 
 export function renderDays() {
@@ -37,7 +44,10 @@ export function renderDays() {
       for (var mi = 0; mi < 4; mi++) dt[mi] += ml.m[mi];
       var tg = ml.tag ? (' <span class="tag ' + ml.tagClass + '">' + ml.tag + '</span>') : '';
       var sel = (state.selected && state.selected.pos === pos && state.selected.slot === s) ? ' selected' : '';
-      meals += '<div class="meal' + sel + '" onclick="selectMeal(' + pos + ',' + s + ')"><div class="meal-name">' + ml.name + tg + '</div><div class="ingredients">' + (ml.ing || '') + '</div><div class="macros">' +
+      var altInfo = '';
+      if (ml._hasAlt) altInfo = '<div class="meal-alt">👩 Ona: ' + ml._altName + '</div>';
+      if (ml._isAlt) altInfo = '<div class="meal-alt">🧔 On: ' + ml._mainName + '</div>';
+      meals += '<div class="meal' + sel + '" onclick="selectMeal(' + pos + ',' + s + ')"><div class="meal-name">' + ml.name + tg + '</div>' + altInfo + '<div class="ingredients">' + (ml.ing || '') + '</div><div class="macros">' +
         ['kcal', 'białko', 'węgle', 'tłuszcz'].map(function(l, i) { return '<div class="macro"><span class="val">' + ml.m[i] + '</span><span class="lbl">' + l + '</span></div>'; }).join('') + '</div></div>';
     }
     var isOpen = openSet[pos] ? ' open' : '';

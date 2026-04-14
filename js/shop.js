@@ -33,8 +33,10 @@ export function generateShop() {
       var recipe = findRecipe(rid);
       if (!recipe || !recipe.ing || !recipe.ing.length) continue;
 
-      // For servings:1 recipes (per person), multiply by 2
-      var mult = recipe.servings === 1 ? 2 : 1;
+      // Check if meal has alt variant (both people eat different things)
+      var baseMeal = DAYS[di].meals[s];
+      var hasAlt = baseMeal && baseMeal.alt;
+      var mult = hasAlt ? 1 : (recipe.servings === 1 ? 2 : 1);
 
       recipe.ing.forEach(function(ig) {
         var key = ig.item;
@@ -46,6 +48,19 @@ export function generateShop() {
           items[key].counts.push(ig.amount);
         }
       });
+
+      // Also add alt variant ingredients (for the other person)
+      if (hasAlt) {
+        var altRecipe = findRecipe(baseMeal.alt.rid);
+        if (altRecipe && altRecipe.ing) {
+          altRecipe.ing.forEach(function(ig) {
+            var key = ig.item;
+            if (!items[key]) items[key] = { total_g: 0, counts: [], dept: DEPT[key] != null ? DEPT[key] : 9 };
+            if (ig.amount_g) items[key].total_g += parseFloat(ig.amount_g);
+            else if (ig.amount) items[key].counts.push(ig.amount);
+          });
+        }
+      }
     }
   });
 

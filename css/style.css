@@ -55,3 +55,6 @@ h1{font-size:1.2em;text-align:center;padding:8px 0;color:#fff}.target{text-align
 .r-btn{background:#2d6a4f;color:#fff;border:none;border-radius:8px;padding:10px;font-size:.9em;cursor:pointer;width:100%;margin:6px 0}.r-btn.danger{background:#e76f51}.r-btn.secondary{background:#333}
 .r-calc{background:#0f3460;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:.8em}.r-calc b{color:#e76f51}
 .r-add-ing{display:flex;gap:6px;margin:4px 0;flex-wrap:wrap}.r-add-ing input,.r-add-ing select{background:#16213e;border:1px solid #333;color:#e0e0e0;border-radius:6px;padding:6px;font-size:.8em}.r-add-ing input[name=ri_item]{flex:2;min-width:100px}.r-add-ing input[name=ri_amt]{flex:1;min-width:60px}
+/* Person toggle */
+.person{display:flex;justify-content:center;gap:4px;margin:4px 0}.person button{background:transparent;border:2px solid #333;border-radius:8px;padding:4px 14px;font-size:1em;cursor:pointer;color:#888}.person button.active{border-color:#e76f51;color:#fff;background:#16213e}
+.meal-alt{font-size:.7em;color:#555;margin-top:2px}

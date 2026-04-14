@@ -17,9 +17,24 @@ function switchTab(t) {
   if (t === 'recipes') renderRecipes();
 }
 
+// --- Person toggle ---
+function setPerson(p) {
+  state.person = p;
+  localStorage.setItem('person', p);
+  document.querySelectorAll('.person button').forEach(function(b) {
+    b.classList.toggle('active', b.textContent.indexOf(p === 'on' ? 'On' : 'Ona') >= 0);
+  });
+  renderDays();
+}
+
+// Init person toggle
+document.querySelectorAll('.person button').forEach(function(b) {
+  b.classList.toggle('active', (state.person === 'on' && b.textContent.indexOf('On') >= 0) || (state.person === 'ona' && b.textContent.indexOf('Ona') >= 0));
+});
+
 // --- Expose functions to window for onclick handlers ---
 Object.assign(window, {
-  switchTab, toggle, selectMeal, cancelSwap, openRecipePicker, pickRecipe, closeRecipePicker,
+  switchTab, setPerson, toggle, selectMeal, cancelSwap, openRecipePicker, pickRecipe, closeRecipePicker,
   shopToggle, shopClose, ck, ckCustom, addShopItem, delShopItem, clearShop, editShopItem, refreshShop,
   pantryToggle, pantryClose, addPantryItem, delPantry,
   renderRecipes, filterRecipes, filterSource, openRecipeDetail, closeRecipeDetail,

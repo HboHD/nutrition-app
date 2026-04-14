@@ -11,7 +11,8 @@ export const state = {
   shopEdits: {},
   shopSnapshot: null,
   rFilter: 'all',
-  rSource: 'base'
+  rSource: 'base',
+  person: localStorage.getItem('person') || 'on'
 };
 
 export const SLOTS = ['b', 'sb', 'd', 's', 'p'];
