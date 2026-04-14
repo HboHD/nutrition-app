@@ -12,7 +12,7 @@ export function getAllRecipes() {
   RECIPES_INSP.forEach(function(r) {
     var e = state.recipeEdits[r[0]] || {};
     all.push({ id: r[0], name: e.name || r[1], slot: r[2], m: [e.kcal || r[3], e.protein || r[4], e.carbs || r[5], e.fat || r[6]],
-      ing: e.ing || [], notes: e.notes || '', tags: [r[7], 'inspiration'], src: 'insp', inspSrc: r[7] });
+      ing: e.ing || r[7] || [], notes: e.notes || r[8] || '', tags: [r[9], 'inspiration'], prep: r[10] || 30, src: 'insp', inspSrc: r[9] });
   });
   state.userRecipes.forEach(function(r) { all.push(Object.assign({ src: 'user' }, r)); });
   return all;
