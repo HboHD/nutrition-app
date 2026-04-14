@@ -148,9 +148,8 @@ export function renderShop() {
       total++; if (state.shopChecked[k]) done++;
       h += '<div class="item' + (state.shopChecked[k] ? ' done' : '') + (inP ? ' in-pantry' : '') + '">' +
         '<input type="checkbox" id="c' + k + '"' + (state.shopChecked[k] ? ' checked' : '') + ' onchange="ck(\'' + k + '\',this)">' +
-        '<label for="c' + k + '">' + display + '</label>' +
+        '<label for="c' + k + '" contenteditable="true" onblur="saveShopEdit(this,\'' + it.split(' — ')[0].replace(/'/g, "\\'") + '\')">' + display + '</label>' +
         (inP ? '<span class="pantry-badge">masz ✓</span>' : '') +
-        '<button class="p-del" onclick="editShopItem(\'' + it.split(' — ')[0].replace(/'/g, "\\'") + '\',\'' + (it.split(' — ')[1] || '').replace(/'/g, "\\'") + '\')" style="background:none;border:none;color:#555;font-size:.8em;cursor:pointer;padding:2px 6px">✏️</button>' +
         '</div>';
     }); h += '</div>';
   });
@@ -168,18 +167,20 @@ export function renderShop() {
   document.getElementById('prog').textContent = total ? done + ' / ' + total + ' ✓' : '';
 }
 
-// --- Edit shop item ---
-export function editShopItem(name, qty) {
-  var newQty = prompt('Ilość dla: ' + name, qty);
-  if (newQty === null) return;
+// --- Inline edit shop item (on blur) ---
+export function saveShopEdit(el, origName) {
+  var text = el.textContent.trim();
+  if (!text) return;
+  var parts = text.split(' — ');
+  var newName = parts[0].trim();
+  var newQty = parts[1] ? parts[1].trim() : '';
   if (!state.shopEdits) state.shopEdits = {};
-  if (newQty === '') {
-    delete state.shopEdits[name];
+  if (newName === origName && !newQty) {
+    delete state.shopEdits[origName];
   } else {
-    state.shopEdits[name] = { item: name, qty: newQty };
+    state.shopEdits[origName] = { item: newName, qty: newQty || origName };
   }
   saveState('shop_edits', state.shopEdits);
-  renderShop();
 }
 
 // --- Standard shop functions ---

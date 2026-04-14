@@ -12,7 +12,7 @@ export function renderPantry() {
       expStr = diff <= 0 ? 'przeterminowane!' : diff <= 2 ? 'za ' + diff + 'd!' : 'do ' + p.exp;
       expClass = diff <= 2 ? ' p-exp' : '';
     }
-    h += '<div class="p-item"><div class="p-info"><span class="p-name">' + p.item + '</span>' + (p.qty ? ' · ' + p.qty : '') + '<br><span class="p-meta' + expClass + '">' + (expStr || 'brak daty') + '</span></div><button class="p-del" onclick="delPantry(' + idx + ')">✕</button></div>';
+    h += '<div class="p-item"><div class="p-info"><span class="p-name" contenteditable="true" onblur="editPantryItem(' + idx + ',\'name\',this.textContent)">' + p.item + '</span>' + (p.qty ? ' · <span class="p-qty" contenteditable="true" onblur="editPantryItem(' + idx + ',\'qty\',this.textContent)">' + p.qty + '</span>' : '') + '<br><span class="p-meta' + expClass + '">' + (expStr || 'brak daty') + '</span></div><button class="p-del" onclick="delPantry(' + idx + ')">✕</button></div>';
   });
   document.getElementById('pantryList').innerHTML = h || '<div style="color:#666;text-align:center;padding:20px">Spiżarnia pusta</div>';
 }
@@ -24,6 +24,14 @@ export function addPantryItem(form) {
 }
 
 export function delPantry(i) { state.pantry.splice(i, 1); renderPantry(); saveState('pantry', state.pantry); }
+
+export function editPantryItem(i, field, value) {
+  var v = value.trim();
+  if (!v || !state.pantry[i]) return;
+  if (field === 'name') state.pantry[i].item = v;
+  if (field === 'qty') state.pantry[i].qty = v;
+  saveState('pantry', state.pantry);
+}
 
 export function pantryToggle() { renderPantry(); }
 export function pantryClose() { }
