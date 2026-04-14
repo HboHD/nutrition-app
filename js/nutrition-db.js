@@ -24,5 +24,6 @@ export const NUT = {
   'pasztet': [320, 10, 5, 29], 'hummus': [166, 8, 14, 10], 'mąka': [340, 10, 72, 1],
   'olej rzepakowy': [884, 0, 0, 100], 'makaron z soczewicy': [340, 24, 48, 2],
   'bułka tarta': [395, 11, 74, 5], 'buraki gotowane': [44, 2, 10, 0],
-  'makaron ryżowy': [360, 4, 83, 0], 'gruszka': [57, 0, 15, 0]
+  'makaron ryżowy': [360, 4, 83, 0], 'gruszka': [57, 0, 15, 0],
+  'frytki mrożone': [170, 2, 25, 7]
 };

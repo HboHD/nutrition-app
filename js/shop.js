@@ -3,8 +3,8 @@ import { SHOP, LONG_TERM, LONG_TERM_ITEMS } from './data.js';
 import { saveState } from './supabase.js';
 
 export function pantryHas(shopItem) {
-  var name = shopItem.split(' — ')[0].toLowerCase();
-  return state.pantry.some(function(p) { return name.indexOf(p.item.toLowerCase()) >= 0 || p.item.toLowerCase().indexOf(name) >= 0; });
+  var name = shopItem.split(' — ')[0].toLowerCase().trim();
+  return state.pantry.some(function(p) { return p.item.toLowerCase().trim() === name; });
 }
 
 export function renderShop() {

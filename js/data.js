@@ -33,7 +33,7 @@ export const DAYS=[
 {hdr:'🗓️ Sob 18.04',meals:[
 {name:'🥣 Shakshuka ze szpinakiem i fetą',tag:'🔄 2/2',tagClass:'left',ing:'resztki z piątku',m:[432,26,14,30]},
 {name:'🥞 Placuszki bananowe z jogurtem greckim',tag:'🍳',tagClass:'cook',ing:'banan · 2 jajka · płatki 30g · olej · jogurt grecki 150g · maliny 50g',m:[649,35,61,32]},
-{name:'🍲 Ryba smażona z frytkami i surówką',tag:'🍳',tagClass:'cook',ing:'filet rybny 300g · ziemniaki 500g · mąka · olej · ogórek',m:[617,34,60,27]},
+{name:'🍲 Ryba smażona z frytkami i surówką',tag:'🍳',tagClass:'cook',ing:'filet rybny 300g · frytki mrożone 500g · ogórek',m:[563,32,50,23]},
 {name:'🥗 Herbata zielona',ing:'herbata 1 filiżanka',m:[2,0,0,0]},
 {name:'🥜 Jabłko',ing:'jabłko 1 szt',m:[90,1,22,0]}
 ]}
@@ -41,14 +41,14 @@ export const DAYS=[
 
 export const SHOP=[
 ["🥖 Pieczywo",["chleb żytni — 2 × 500g"]],
-["🍌 Owoce / warzywa",["banany — 1 × 1kg (~5szt)","pomidory — 1 × 500g","pomidory koktajlowe — 1 × 250g","ogórki — 5 szt","papryka — 1 × 3 szt","cebula — 3 szt (z 1kg)","marchew — 2 szt (z 1kg)","cukinia — 2 szt","szpinak — 1 × 100g","rukola — 1 × 100g","sałata mix — 1 × 150g","ziemniaki — 1 × 2kg","czosnek — 1 × 3 szt"]],
+["🍌 Owoce / warzywa",["banany — 1 × 1kg (~5szt)","pomidory — 1 × 500g","pomidory koktajlowe — 1 × 250g","ogórki — 5 szt","papryka — 1 × 3 szt","cebula — 3 szt (z 1kg)","marchew — 2 szt (z 1kg)","cukinia — 2 szt","szpinak — 1 × 100g","rukola — 1 × 100g","sałata mix — 1 × 150g","czosnek — 1 × 3 szt"]],
 ["🥫 Puszki",["pomidory krojone — 4 × 400g","ciecierzyca — 1 × 400g"]],
 ["🌾 Suche / kasze",["makaron z soczewicy — 1 opak ~350g","makaron — 1 × 500g","kasza jaglana — 1 × 400g","płatki owsiane — 1 × 500g","masło orzechowe — 1 × 350g","suszone pomidory w oleju — 1 słoik 280g","śliwki suszone — 1 × 200g"]],
 ["🥚 Jajka / mleko / mąka",["jajka — 3 × 10 szt","mleko — 2 × 1L","mąka — 1 × 1kg"]],
 ["🥩 Mięso",["mięso mielone drobiowe — 1 × 500g"]],
 ["🧀 Nabiał",["serek wiejski — 4 × 200g","jogurt grecki — 3 × 400g","jogurt naturalny — 1 × 400g","masło — 1 × 200g","feta — 1 × 200g","mozzarella — 2 × 125g","parmezan — 1 × 200g"]],
 ["🐟 Ryby",["filet rybny — 1 × 400g"]],
-["❄️ Mrożonki",["maliny mrożone — 2 × 300g"]],
+["❄️ Mrożonki",["maliny mrożone — 2 × 300g","frytki mrożone — 1 × 1kg"]],
 ["📦 Inne",["białko w proszku — ~80g","orzechy włoskie — 1 × 100g","oliwa — 1 × 500ml","olej rzepakowy — 1 × 1L"]]
 ];
 
@@ -75,7 +75,7 @@ export const RECIPES=[
 ['spaghetti-bolognese','Spaghetti bolońskie','d',544,26,68,18,[{item:'mięso mielone wieprzowo wołowe',amount_g:'500'},{item:'makaron',amount_g:'500'},{item:'pomidory krojone puszka',amount_g:'700'},{item:'cebula',amount:'1 szt'},{item:'marchew',amount:'1 szt'}],'',['mediterranean','comfort']],
 ['ryz-kurczak-warzywa','Ryż z kurczakiem i warzywami','d',484,46,58,5,[{item:'pierś kurczaka',amount_g:'500'},{item:'ryż',amount_g:'250'},{item:'sos sojowy',amount_g:'20'}],'',['asian','quick','high_protein']],
 ['gulasz-wolowy','Gulasz wołowy z kaszą','d',681,52,51,33,[{item:'wołowina gulaszowa',amount_g:'1000'},{item:'kasza gryczana',amount_g:'360'},{item:'marchew',amount:'2 szt'},{item:'cebula',amount:'2 szt'}],'',['polish','slow_cook','fertility']],
-['ryba-frytki','Ryba z frytkami','d',617,34,60,27,[{item:'filet rybny',amount_g:'300'},{item:'ziemniaki',amount_g:'500'},{item:'mąka',amount_g:'40'},{item:'olej rzepakowy',amount_g:'50'}],'',['polish','comfort']],
+['ryba-frytki','Ryba z frytkami','d',563,32,50,23,[{item:'filet rybny',amount_g:'300'},{item:'frytki mrożone',amount_g:'500'},{item:'ogórek',amount_g:'100'}],'Frytki mrożone z piekarnika, nie domowe',['polish','comfort','quick']],
 ['pieczone-udka','Pieczone udka z dodatkami','d',703,68,30,33,[{item:'udo kurczaka',amount_g:'1000'},{item:'ziemniaki',amount_g:'600'},{item:'marchew',amount:'2 szt'},{item:'oliwa',amount_g:'20'}],'',['polish','high_protein']],
 ['mielone-por','Mielone z porem i marchewką','d',467,30,11,33,[{item:'mięso mielone wieprzowo wołowe',amount_g:'600'},{item:'marchew',amount:'2 szt'},{item:'jajka',amount:'2 szt'}],'',['polish','comfort']],
 ['kotlety-udka','Kotlety z udek z ziemniakami','d',604,59,35,24,[{item:'udo kurczaka',amount_g:'800'},{item:'bułka tarta',amount_g:'50'},{item:'jajka',amount:'1 szt'},{item:'ziemniaki',amount_g:'600'}],'',['polish','high_protein']],
