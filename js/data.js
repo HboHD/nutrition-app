@@ -19,14 +19,14 @@ export const DAYS=[
 {hdr:'🗓️ Czw 23.04',meals:[
 {name:'🥣 Tosty z awokado i jajkiem sadzonym',rid:'tosty-awokado-jajko',ing:'chleb 2kr · jajko sadzone · awokado 0.5 · pomidorki · oliwa',m:[523,23,42,30]},
 {name:'🥞 Koktajl owocowy z kefiru',rid:'koktajl-owocowy',ing:'jogurt 250g · banan · maliny 80g · płatki 20g',m:[350,15,52,8]},
-{name:'🍲 Mielone z porem i marchewką',rid:'mielone-por',tag:'🍳 2d',tagClass:'cook',ing:'mielone wieprzowo-wołowe 150g · por · marchew · jajko',m:[467,30,11,33]},
+{name:'🍲 Mielone z porem i marchewką',rid:'mielone-por',tag:'🍳 2d',tagClass:'cook',ing:'mielone wieprzowo-wołowe 150g · por · marchew · jajko',m:[544,32,45,33]},
 {name:'🥗 Kanapki z serkiem wiejskim i wędliną',rid:'kanapki-wiejski-wedlina',ing:'serek wiejski 100g · wędlina 40g · chleb 2kr · pomidor · ogórek',m:[362,28,41,7]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
 {hdr:'🗓️ Pt 24.04',meals:[
 {name:'🥣 Omlet po grecku ze szpinakiem',rid:'omlet-grecki',ing:'3 jajka · szpinak 50g · mozzarella 40g · płatki 20g · oliwa',m:[520,35,20,34]},
 {name:'🥞 Overnight oats z jogurtem',rid:'overnight-oats',ing:'płatki 50g · jogurt grecki 150g · mleko 100ml · banan 0.5 · maliny',m:[383,21,51,11]},
-{name:'🍲 Mielone z porem i marchewką',rid:'mielone-por',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[467,30,11,33]},
+{name:'🍲 Mielone z porem i marchewką',rid:'mielone-por',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[544,32,45,33]},
 {name:'🥗 Placki cukiniowe',rid:'placki-cukiniowe',ing:'cukinia 100g · 1 jajko · mąka 10g · czosnek · oliwa',m:[340,18,26,18]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]}
@@ -69,7 +69,7 @@ export const RECIPES=[
 ['gulasz-wolowy','Gulasz wołowy z kaszą','d',681,52,51,33,[{item:'wołowina gulaszowa',amount_g:'1000'},{item:'kasza gryczana',amount_g:'360'},{item:'marchew',amount:'2 szt'},{item:'cebula',amount:'2 szt'}],'',['polish','slow_cook','fertility'],120],
 ['ryba-frytki','Ryba z frytkami','d',563,32,50,23,[{item:'filet rybny',amount_g:'300'},{item:'frytki mrożone',amount_g:'500'},{item:'ogórek',amount_g:'100'}],'Frytki mrożone z piekarnika, nie domowe',['polish','comfort','quick'],25],
 ['pieczone-udka','Pieczone udka z dodatkami','d',703,68,30,33,[{item:'udo kurczaka',amount_g:'1000'},{item:'ziemniaki',amount_g:'600'},{item:'marchew',amount:'2 szt'},{item:'oliwa',amount_g:'20'}],'',['polish','high_protein'],60],
-['mielone-por','Mielone z porem i marchewką','d',467,30,11,33,[{item:'mięso mielone wieprzowo wołowe',amount_g:'600'},{item:'por',amount:'1 szt'},{item:'marchew',amount:'2 szt'},{item:'jajka',amount:'2 szt'}],'',['polish','comfort'],50],
+['mielone-por','Mielone z porem i marchewką','d',544,32,45,33,[{item:'mięso mielone wieprzowo wołowe',amount_g:'600'},{item:'por',amount:'1 szt'},{item:'marchew',amount:'2 szt'},{item:'jajka',amount:'2 szt'},{item:'ziemniaki',amount_g:'800'}],'Podawaj z ziemniakami (200g/os).',['polish','comfort'],50],
 ['kotlety-udka','Kotlety z udek z ziemniakami','d',604,59,35,24,[{item:'udo kurczaka',amount_g:'800'},{item:'bułka tarta',amount_g:'50'},{item:'jajka',amount:'1 szt'},{item:'ziemniaki',amount_g:'600'}],'',['polish','high_protein'],50],
 ['kaszotto-buraczane','Kaszotto buraczane z kurczakiem','d',411,38,45,8,[{item:'kasza jęczmienna',amount_g:'200'},{item:'pierś kurczaka',amount_g:'400'},{item:'buraki gotowane',amount_g:'250'},{item:'cebula',amount:'1 szt'},{item:'oliwa',amount_g:'15'}],'',['polish','fertility'],45],
 ['quesadilla-kurczak','Quesadilla z kurczakiem','d',464,44,34,16,[{item:'pierś kurczaka',amount_g:'400'},{item:'tortilla',amount:'4 szt'},{item:'cukinia',amount:'1 szt'},{item:'ser żółty',amount_g:'100'},{item:'jogurt naturalny',amount_g:'100'}],'',['mexican','quick'],25],
