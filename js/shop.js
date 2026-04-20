@@ -173,10 +173,25 @@ export function refreshShop() {
   setTimeout(function() { state.shopChanges = {}; renderShop(); }, 8000);
 }
 
-// --- Pantry matching (exact) ---
+// --- Pantry matching (exact, quantity-aware) ---
 export function pantryHas(shopItem) {
-  var name = shopItem.split(' — ')[0].toLowerCase().trim();
-  return state.pantry.some(function(p) { return p.item.toLowerCase().trim() === name; });
+  var parts = shopItem.split(' — ');
+  var name = parts[0].toLowerCase().trim();
+  var p = state.pantry.find(function(x) { return x.item.toLowerCase().trim() === name; });
+  if (!p) return false;
+  // If we can parse both quantities, compare
+  var needQty = parts[1] ? parseShopQty(parts[1]) : null;
+  var haveQty = p.qty ? parseShopQty(p.qty) : null;
+  if (needQty && haveQty && needQty.unit === haveQty.unit) return haveQty.val >= needQty.val;
+  return true; // can't compare, just show "masz"
+}
+
+function parseShopQty(s) {
+  var m = s.match(/(\d+)\s*×\s*(\d+)\s*(g|kg|ml|L|szt)/i);
+  if (m) { var n = parseInt(m[1]) * parseInt(m[2]), u = m[3].toLowerCase(); if (u==='kg'||u==='l') n*=1000; return {val:n, unit:u==='szt'?'szt':'g'}; }
+  m = s.match(/(\d+)\s*(g|kg|ml|szt)/i);
+  if (m) { var n2 = parseInt(m[1]), u2 = m[2].toLowerCase(); if (u2==='kg') n2*=1000; return {val:n2, unit:u2==='szt'?'szt':'g'}; }
+  return null;
 }
 
 // --- Render shopping list ---
