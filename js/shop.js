@@ -112,7 +112,7 @@ export function generateShop() {
 
 // --- Get current shop data (snapshot or fresh) ---
 export function getShopData() {
-  if (state.shopSnapshot) return state.shopSnapshot;
+  if (state.shopSnapshot && state.shopSnapshot.length) return state.shopSnapshot;
   var fresh = generateShop();
   state.shopSnapshot = fresh;
   saveState('shop_snapshot', fresh);

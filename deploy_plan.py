@@ -116,14 +116,17 @@ def main():
     resets = {
         'day_order': [],
         'shopping': {},
-        'shop_snapshot': [],
         'meal_overrides': {},
         'shop_cleared': {'cleared': False},
         'shop_edits': {},
     }
     for key, val in resets.items():
         supa_set(key, val)
-    print('🔄 Zresetowano: ' + ', '.join(resets.keys()))
+    # Delete snapshot so app regenerates fresh from DAYS
+    url = f'{SUPA_URL}/rest/v1/app_state?key=eq.shop_snapshot'
+    req = urllib.request.Request(url, headers=HEADERS, method='DELETE')
+    urllib.request.urlopen(req)
+    print('🔄 Zresetowano: ' + ', '.join(resets.keys()) + ' + shop_snapshot (deleted)')
     print('\n✅ Gotowe! Teraz wgraj nowy data.js i pushuj.')
 
 if __name__ == '__main__':
