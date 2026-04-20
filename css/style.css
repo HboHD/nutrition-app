@@ -15,7 +15,8 @@ body{padding:12px 12px 74px}
 .drag-handle{cursor:grab;padding:0 6px;font-size:1.1em;color:#666;user-select:none;touch-action:none}.drag-handle:active{cursor:grabbing;color:#e76f51}
 .day.dragging{opacity:.3}.day.drag-over{border-top:3px solid #e76f51}
 .day.today{border:2px solid #e76f51}.day.today .day-header{background:#1a2744}
-.meal{padding:10px 14px;border-bottom:1px solid #1a1a2e;cursor:pointer;transition:border .15s}.meal:last-child{border:none}.meal.selected{border-left:3px solid #e76f51;background:#1a2744}.meal-name{font-weight:600;font-size:.95em;margin-bottom:2px}.ingredients{font-size:.75em;color:#aaa;margin-bottom:6px;line-height:1.4}
+.meal{padding:10px 14px;border-bottom:1px solid #1a1a2e;cursor:pointer;transition:border .15s}.meal:last-child{border:none}.meal.selected{border-left:3px solid #e76f51;background:#1a2744}.meal-name{font-weight:600;font-size:.95em;margin-bottom:2px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.recipe-link{font-size:.8em;opacity:.5;cursor:pointer;padding:2px 4px;flex-shrink:0}.recipe-link:active{opacity:1}.ingredients{font-size:.75em;color:#aaa;margin-bottom:6px;line-height:1.4}
 .macros{display:flex;gap:6px;font-size:.8em}.macro{background:#0f3460;border-radius:6px;padding:3px 8px;text-align:center;flex:1}.macro .val{font-weight:700;font-size:1.1em;display:block}.macro .lbl{font-size:.7em;color:#888}
 .tag{font-size:.7em;color:#fff;border-radius:4px;padding:1px 5px;margin-left:4px}.tag.cook{background:#e76f51}.tag.left{background:#555}
 .summary{padding:8px 14px;font-size:.8em}.sum-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #0f3460}.sum-row:last-child{border:none}.sum-label{color:#888;width:60px}.sum-vals{display:flex;gap:12px;flex:1;justify-content:space-around}.sum-vals span{min-width:40px;text-align:center}
@@ -26,7 +27,7 @@ body{padding:12px 12px 74px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:120;display:none;overflow-y:auto;padding:12px;max-width:480px;margin:0 auto}
 .modal.open{display:block}.modal h3{font-size:1em;padding:8px 0;color:#fff}
 .recipe-opt{background:#16213e;border-radius:8px;padding:10px;margin:8px 0;cursor:pointer}.recipe-opt:active{background:#1a2744}
-.recipe-opt .ro-name{font-weight:600;font-size:.9em}.recipe-opt .ro-macros{display:flex;gap:8px;font-size:.8em;color:#888;margin-top:4px}
+.recipe-opt .ro-name{font-weight:600;font-size:.9em}.recipe-opt .ro-ing{font-size:.7em;color:#888;margin-top:3px;line-height:1.4}.recipe-opt .ro-macros{display:flex;gap:8px;font-size:.8em;color:#888;margin-top:4px}
 .recipe-opt .ro-diff{font-size:.75em;margin-top:2px}.ro-plus{color:#2d6a4f}.ro-minus{color:#e76f51}
 /* Shop */
 .shop{display:none;padding:0;max-width:480px;margin:0 auto}
@@ -70,6 +71,8 @@ body{padding:12px 12px 74px}
 .meal-alt{font-size:.7em;color:#555;margin-top:2px}
 /* Cook/leftover distinction */
 .meal.cook{border-left:3px solid #2d6a4f}.meal.leftover{opacity:.65}
+.batch-note{color:#2d6a4f;font-weight:600}
+.batch-total{margin-top:4px;color:#2d6a4f;font-size:.95em;border-top:1px dashed #333;padding-top:3px}
 /* Compact day summary */
 .day-summary{font-size:.75em;color:#888;padding:0 14px 0 36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Recipe search */
@@ -77,3 +80,8 @@ body{padding:12px 12px 74px}
 .r-search::placeholder{color:#555}
 /* Sync dot */
 .sync-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:6px;vertical-align:middle}.sync-dot.ok{background:#2d6a4f}.sync-dot.err{background:#e76f51}.sync-dot.loading{background:#f4a261}
+/* Shop change highlights */
+.item.shop-new{background:rgba(45,106,79,.15);border-left:3px solid #2d6a4f}.item.shop-changed{background:rgba(244,162,97,.12);border-left:3px solid #f4a261}
+.shop-badge{font-size:.65em;border-radius:4px;padding:1px 5px;margin-left:6px}.shop-badge.new{background:#2d6a4f;color:#fff}.shop-badge.chg{background:#f4a261;color:#1a1a2e}
+/* Toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#0f3460;color:#e0e0e0;padding:10px 20px;border-radius:8px;font-size:.8em;z-index:150;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90%;text-align:center}.toast.show{opacity:1}

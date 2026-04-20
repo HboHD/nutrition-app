@@ -14,7 +14,7 @@
 </head><body>
 
 <div style="position:relative">
-<h1>🍽️ Plan 14–18.04 <span class="sync-dot loading" id="syncDot"></span></h1>
+<h1>🍽️ Plan 21–24.04 <span class="sync-dot loading" id="syncDot"></span></h1>
 <button class="person-icon" id="personBtn" onclick="togglePerson()"></button>
 </div>
 <div class="target" id="targetBar"><span>🎯 2000 kcal | B 150g | W 182g | T 70g</span></div>
@@ -43,6 +43,7 @@
 <div class="shop-head"><h2>📦 Spiżarnia</h2></div>
 <form class="p-form" onsubmit="return addPantryItem(this)"><input name="item" placeholder="Produkt" required><input name="qty" placeholder="Ilość"><input name="exp" type="date" placeholder="Ważność"><button type="submit">+</button></form>
 <div id="pantryList"></div>
+<div style="text-align:center;padding:24px 0 8px"><button onclick="consumePlan()" style="background:none;border:1px solid #333;color:#f4a261;font-size:.75em;cursor:pointer;border-radius:6px;padding:6px 16px">🔄 Rozlicz plan (odejmij z spiżarni)</button></div>
 <div class="sync" id="syncStatus2"></div>
 </div>
 </div>

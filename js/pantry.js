@@ -1,5 +1,118 @@
 import { state } from './state.js';
+import { DAYS, RECIPES, RECIPES_INSP } from './data.js';
+import { PKG } from './nutrition-db.js';
 import { saveState } from './supabase.js';
+import { getMeal } from './plan.js';
+
+function findRecipe(rid) {
+  if (!rid) return null;
+  var r = RECIPES.find(function(x) { return x[0] === rid; });
+  if (r) return { ing: r[7] || [], servings: 2 };
+  r = RECIPES_INSP.find(function(x) { return x[0] === rid; });
+  if (r) return { ing: [], servings: 1 };
+  var ur = state.userRecipes.find(function(x) { return x.id === rid; });
+  if (ur) return { ing: ur.ing || [], servings: ur.servings || 2 };
+  return null;
+}
+
+// Parse pantry qty string → grams or pieces
+// "2 × 300g" → {val:600, unit:'g'}, "1 × 1kg" → {val:1000, unit:'g'}, "3 szt" → {val:3, unit:'szt'}
+function parseQty(s) {
+  if (!s) return null;
+  var m = s.match(/(\d+)\s*×\s*(\d+)\s*(g|kg|ml|L|szt)/i);
+  if (m) {
+    var n = parseInt(m[1]) * parseInt(m[2]);
+    var u = m[3].toLowerCase();
+    if (u === 'kg' || u === 'l') n *= 1000;
+    return { val: n, unit: u === 'szt' ? 'szt' : 'g' };
+  }
+  m = s.match(/(\d+)\s*(g|kg|ml|szt)/i);
+  if (m) {
+    var n2 = parseInt(m[1]);
+    var u2 = m[2].toLowerCase();
+    if (u2 === 'kg') n2 *= 1000;
+    return { val: n2, unit: u2 === 'szt' ? 'szt' : 'g' };
+  }
+  return null;
+}
+
+export function consumePlan() {
+  // Aggregate ingredient usage from current plan
+  var usage = {}; // itemName → total_g or total_szt
+  state.dayOrder.forEach(function(di, pos) {
+    var d = DAYS[di];
+    for (var s = 0; s < d.meals.length; s++) {
+      var ml = getMeal(pos, s);
+      if (ml.tag && ml.tag.indexOf('🔄') >= 0) continue;
+      if (ml.m[0] === 0) continue;
+      var rid = ml.rid || ml.recipeId;
+      var recipe = findRecipe(rid);
+      if (!recipe || !recipe.ing || !recipe.ing.length) continue;
+      var baseMeal = DAYS[di].meals[s];
+      var hasAlt = baseMeal && baseMeal.alt;
+      var mult = hasAlt ? 1 : (recipe.servings === 1 ? 2 : 1);
+      recipe.ing.forEach(function(ig) {
+        var key = ig.item;
+        if (!usage[key]) usage[key] = { g: 0, szt: 0 };
+        if (ig.amount_g) usage[key].g += parseFloat(ig.amount_g) * mult;
+        else if (ig.amount) {
+          var n = parseFloat(ig.amount);
+          if (!isNaN(n)) usage[key].szt += n * mult;
+        }
+      });
+      if (hasAlt) {
+        var altRecipe = findRecipe(baseMeal.alt.rid);
+        if (altRecipe && altRecipe.ing) {
+          altRecipe.ing.forEach(function(ig) {
+            var key = ig.item;
+            if (!usage[key]) usage[key] = { g: 0, szt: 0 };
+            if (ig.amount_g) usage[key].g += parseFloat(ig.amount_g);
+            else if (ig.amount) {
+              var n = parseFloat(ig.amount);
+              if (!isNaN(n)) usage[key].szt += n;
+            }
+          });
+        }
+      }
+    }
+  });
+
+  // Subtract from pantry
+  var consumed = [], removed = [];
+  state.pantry = state.pantry.filter(function(p) {
+    var name = p.item.toLowerCase().trim();
+    // Find matching usage (case-insensitive, replacing spaces/underscores)
+    var uKey = Object.keys(usage).find(function(k) {
+      return k.toLowerCase().replace(/_/g, ' ').trim() === name.replace(/_/g, ' ');
+    });
+    if (!uKey) return true; // no match, keep
+
+    var pq = parseQty(p.qty);
+    if (!pq) { removed.push(p.item); return false; } // can't parse → remove entirely
+
+    var used = usage[uKey];
+    var usedVal = pq.unit === 'szt' ? used.szt : used.g;
+    if (usedVal <= 0) return true;
+
+    var remaining = pq.val - usedVal;
+    if (remaining <= 0) {
+      removed.push(p.item);
+      return false;
+    }
+    consumed.push(p.item + ': ' + Math.round(pq.val) + pq.unit + ' → ' + Math.round(remaining) + pq.unit);
+    p.qty = Math.round(remaining) + (pq.unit === 'szt' ? ' szt' : 'g');
+    return true;
+  });
+
+  saveState('pantry', state.pantry);
+  renderPantry();
+
+  var msg = '';
+  if (removed.length) msg += 'Usunięto: ' + removed.join(', ') + '\n';
+  if (consumed.length) msg += 'Zmniejszono: ' + consumed.join(', ');
+  if (!msg) msg = 'Brak produktów do rozliczenia (spiżarnia nie pasuje do planu).';
+  alert('📦 Rozliczenie planu:\n\n' + msg);
+}
 
 export function renderPantry() {
   var h = '';

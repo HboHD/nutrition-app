@@ -120,11 +120,57 @@ export function getShopData() {
 }
 
 export function refreshShop() {
-  state.shopSnapshot = generateShop();
-  state.shopChecked = {};
+  var oldSnap = state.shopSnapshot || [];
+  var newSnap = generateShop();
+
+  // Build old map: itemName → checked (by scanning old snapshot + shopChecked)
+  var oldMap = {};
+  oldSnap.forEach(function(d, di) {
+    d[1].forEach(function(it, ii) {
+      var name = it.split(' — ')[0];
+      oldMap[name] = { checked: !!state.shopChecked[di + '_' + ii], qty: it.split(' — ')[1] || '' };
+    });
+  });
+
+  // Build new checked state + detect changes
+  var newChecked = {};
+  var changes = {}; // itemName → 'new' | 'changed'
+  newSnap.forEach(function(d, di) {
+    d[1].forEach(function(it, ii) {
+      var name = it.split(' — ')[0];
+      var newQty = it.split(' — ')[1] || '';
+      var k = di + '_' + ii;
+      if (oldMap[name]) {
+        if (oldMap[name].checked) newChecked[k] = 1;
+        if (oldMap[name].qty !== newQty) changes[name] = 'changed';
+        delete oldMap[name];
+      } else {
+        changes[name] = 'new';
+      }
+    });
+  });
+
+  state.shopSnapshot = newSnap;
+  state.shopChecked = newChecked;
+  state.shopChanges = changes;
   saveState('shop_snapshot', state.shopSnapshot);
   saveState('shopping', state.shopChecked);
   renderShop();
+
+  // Toast summary
+  var added = 0, changed = 0;
+  Object.keys(changes).forEach(function(n) { if (changes[n] === 'new') added++; else changed++; });
+  var removed = Object.keys(oldMap).length;
+  if (added || changed || removed) {
+    var parts = [];
+    if (added) parts.push('+' + added + ' nowych');
+    if (changed) parts.push(changed + ' zmienionych');
+    if (removed) parts.push('-' + removed + ' usuniętych');
+    showToast('Lista zaktualizowana: ' + parts.join(', '));
+  }
+
+  // Clear highlights after 8s
+  setTimeout(function() { state.shopChanges = {}; renderShop(); }, 8000);
 }
 
 // --- Pantry matching (exact) ---
@@ -146,11 +192,14 @@ export function renderShop() {
       var edited = state.shopEdits && state.shopEdits[it.split(' — ')[0]];
       var display = edited ? edited.item + ' — ' + edited.qty : it;
       var origKey = it.split(' — ')[0].replace(/'/g, "\\'");
+      var chg = state.shopChanges && state.shopChanges[it.split(' — ')[0]];
+      var chgClass = chg === 'new' ? ' shop-new' : chg === 'changed' ? ' shop-changed' : '';
+      var chgBadge = chg === 'new' ? '<span class="shop-badge new">nowy</span>' : chg === 'changed' ? '<span class="shop-badge chg">zmiana</span>' : '';
       total++; if (state.shopChecked[k]) done++;
-      h += '<div class="item' + (state.shopChecked[k] ? ' done' : '') + (inP ? ' in-pantry' : '') + '">' +
+      h += '<div class="item' + (state.shopChecked[k] ? ' done' : '') + (inP ? ' in-pantry' : '') + chgClass + '">' +
         '<input type="checkbox" id="c' + k + '"' + (state.shopChecked[k] ? ' checked' : '') + ' onchange="ck(\'' + k + '\',this)">' +
         '<span class="item-text" onclick="startEditShop(this,\'' + origKey + '\')">' + display + '</span>' +
-        (inP ? '<span class="pantry-badge">masz ✓</span>' : '') +
+        (inP ? '<span class="pantry-badge">masz ✓</span>' : '') + chgBadge +
         '</div>';
     }); h += '</div>';
   });
@@ -238,3 +287,10 @@ export function ck(k, el) {
 
 export function shopToggle() { renderShop(); }
 export function shopClose() { }
+
+function showToast(msg) {
+  var t = document.getElementById('shopToast');
+  if (!t) { t = document.createElement('div'); t.id = 'shopToast'; t.className = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 4000);
+}

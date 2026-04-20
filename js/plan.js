@@ -1,5 +1,6 @@
 import { state, SLOTS, slotLabel } from './state.js';
-import { DAYS } from './data.js';
+import { DAYS, RECIPES, RECIPES_INSP } from './data.js';
+import { SERVINGS } from './nutrition-db.js';
 import { saveState } from './supabase.js';
 import { getAllRecipes } from './recipes.js';
 import { refreshShop } from './shop.js';
@@ -8,6 +9,69 @@ function askRefreshShop() {
   if (confirm('Zaktualizować listę zakupów do nowego planu?')) {
     refreshShop();
   }
+}
+
+// Build per-serving ingredient string from recipe data
+function recipeIngStr(rid) {
+  if (!rid) return '';
+  var r = RECIPES.find(function(x) { return x[0] === rid; });
+  if (!r) r = RECIPES_INSP.find(function(x) { return x[0] === rid; });
+  if (!r || !r[7] || !r[7].length) {
+    var ur = state.userRecipes.find(function(x) { return x.id === rid; });
+    if (ur && ur.ing) return ur.ing.map(function(ig) {
+      var q = ig.amount_g ? ig.amount_g + 'g' : (ig.amount || '');
+      return ig.item + (q ? ' ' + q : '');
+    }).join(' · ');
+    return '';
+  }
+  var srv = SERVINGS[rid] || 1;
+  return r[7].map(function(ig) {
+    if (ig.amount_g) {
+      var g = Math.round(parseFloat(ig.amount_g) / srv);
+      return ig.item + ' ' + g + 'g';
+    }
+    if (ig.amount) {
+      var n = parseFloat(ig.amount);
+      if (!isNaN(n) && srv > 1) {
+        var perServ = n / srv;
+        var display = perServ % 1 === 0 ? perServ.toString() : perServ.toFixed(1).replace(/\.0$/, '');
+        return ig.item + ' ' + display + ' szt';
+      }
+      return ig.item + ' ' + ig.amount;
+    }
+    return ig.item;
+  }).join(' · ');
+}
+
+// Full recipe amounts (for batch cooking — what goes in the pot)
+function recipeTotalStr(rid) {
+  if (!rid) return '';
+  var r = RECIPES.find(function(x) { return x[0] === rid; });
+  if (!r) r = RECIPES_INSP.find(function(x) { return x[0] === rid; });
+  if (!r || !r[7] || !r[7].length) return '';
+  return r[7].map(function(ig) {
+    if (ig.amount_g) return ig.item + ' ' + ig.amount_g + 'g';
+    if (ig.amount) return ig.item + ' ' + ig.amount;
+    return ig.item;
+  }).join(' · ');
+}
+
+// Format ingredient string for picker (always per-serving)
+export function pickerIngStr(r) {
+  if (!r.ing || !r.ing.length) return recipeIngStr(r.id);
+  var srv = SERVINGS[r.id] || 1;
+  return r.ing.map(function(ig) {
+    if (ig.amount_g) {
+      var g = Math.round(parseFloat(ig.amount_g) / srv);
+      return ig.item + ' ' + g + 'g';
+    }
+    if (ig.amount) {
+      var n = parseFloat(ig.amount);
+      if (!isNaN(n) && srv > 1) return ig.item + ' ' + (n / srv).toFixed(1).replace(/\.0$/, '') + ' szt';
+      return ig.item + ' ' + ig.amount;
+    }
+    return ig.item;
+  }).join(' · ');
 }
 
 export function getMeal(pos, slot) {
@@ -51,10 +115,29 @@ export function renderDays() {
       var tg = ml.tag ? (' <span class="tag ' + ml.tagClass + '">' + ml.tag + '</span>') : '';
       var sel = (state.selected && state.selected.pos === pos && state.selected.slot === s) ? ' selected' : '';
       var cookClass = (ml.tag && ml.tag.indexOf('🔄') >= 0) ? ' leftover' : (ml.tag && ml.tag.indexOf('🍳') >= 0) ? ' cook' : '';
+      // Ingredient display: per-serving from recipe data, with batch/leftover notes
+      var isLeftover = ml.tag && ml.tag.indexOf('🔄') >= 0;
+      var isCook = ml.tag && ml.tag.indexOf('🍳') >= 0;
+      var ingDisplay = '';
+      if (isLeftover) {
+        ingDisplay = 'resztki z poprzedniego dnia';
+      } else {
+        ingDisplay = ml.ing || recipeIngStr(ml.rid || ml.recipeId) || '';
+        if (isCook && ingDisplay) {
+          var rid = ml.rid || ml.recipeId;
+          var srv = SERVINGS[rid] || 0;
+          if (srv > 1) {
+            var totalStr = recipeTotalStr(rid);
+            if (totalStr) ingDisplay += '<div class="batch-total">🍳 Gotuj łącznie: ' + totalStr + '</div>';
+          }
+        }
+      }
       var altInfo = '';
       if (ml._hasAlt) altInfo = '<div class="meal-alt">👩 Ona: ' + ml._altName + '</div>';
       if (ml._isAlt) altInfo = '<div class="meal-alt">🧔 On: ' + ml._mainName + '</div>';
-      meals += '<div class="meal' + sel + cookClass + '" onclick="selectMeal(' + pos + ',' + s + ')"><div class="meal-name">' + ml.name + tg + '</div>' + altInfo + '<div class="ingredients">' + (ml.ing || '') + '</div><div class="macros">' +
+      var rid = ml.rid || ml.recipeId || '';
+      var recipeBtn = rid ? '<span class="recipe-link" onclick="event.stopPropagation();openRecipeDetail(\'' + rid + '\')">📖</span>' : '';
+      meals += '<div class="meal' + sel + cookClass + '" onclick="selectMeal(' + pos + ',' + s + ')"><div class="meal-name">' + ml.name + tg + recipeBtn + '</div>' + altInfo + '<div class="ingredients">' + ingDisplay + '</div><div class="macros">' +
         ['kcal', 'białko', 'węgle', 'tłuszcz'].map(function(l, i) { return '<div class="macro"><span class="val">' + ml.m[i] + '</span><span class="lbl">' + l + '</span></div>'; }).join('') + '</div></div>';
     }
     var isOpen = openSet[pos] ? ' open' : '';
@@ -145,7 +228,10 @@ export function openRecipePicker() {
       var d = r.m[i] - current.m[i];
       return '<span class="' + (d >= 0 ? 'ro-plus' : 'ro-minus') + '">' + (d >= 0 ? '+' : '') + d + ' ' + l + '</span>';
     }).join(' ');
-    h += '<div class="recipe-opt" onclick="pickRecipe(\'' + r.id + '\')"><div class="ro-name">' + r.name + '</div><div class="ro-macros"><span>' + r.m[0] + ' kcal</span><span>B:' + r.m[1] + '</span><span>W:' + r.m[2] + '</span><span>T:' + r.m[3] + '</span></div><div class="ro-diff">vs obecny: ' + diff + '</div></div>';
+    var ingStr = pickerIngStr(r);
+    h += '<div class="recipe-opt" onclick="pickRecipe(\'' + r.id + '\')"><div class="ro-name">' + r.name + '</div>' +
+      (ingStr ? '<div class="ro-ing">' + ingStr + '</div>' : '') +
+      '<div class="ro-macros"><span>' + r.m[0] + ' kcal</span><span>B:' + r.m[1] + '</span><span>W:' + r.m[2] + '</span><span>T:' + r.m[3] + '</span></div><div class="ro-diff">vs obecny: ' + diff + '</div></div>';
   });
   document.getElementById('recipeList').innerHTML = h;
   document.getElementById('recipePicker').classList.add('open');
@@ -155,7 +241,8 @@ export function pickRecipe(id) {
   var r = getAllRecipes().find(function(x) { return x.id === id; });
   if (!r || !state.selected) return;
   var k = state.dayOrder[state.selected.pos] + '_' + state.selected.slot;
-  state.mealOverrides[k] = { name: r.name, m: r.m, ing: '', rid: r.id, recipeId: r.id };
+  var ingStr = pickerIngStr(r);
+  state.mealOverrides[k] = { name: r.name, m: r.m, ing: ingStr, rid: r.id, recipeId: r.id };
   closeRecipePicker(); cancelSwap();
   renderDays(); saveState('meal_overrides', state.mealOverrides);
   askRefreshShop();

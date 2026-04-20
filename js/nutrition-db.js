@@ -25,7 +25,9 @@ export const NUT = {
   'olej rzepakowy': [884, 0, 0, 100], 'makaron z soczewicy': [340, 24, 48, 2],
   'bułka tarta': [395, 11, 74, 5], 'buraki gotowane': [44, 2, 10, 0],
   'makaron ryżowy': [360, 4, 83, 0], 'gruszka': [57, 0, 15, 0],
-  'frytki mrożone': [170, 2, 25, 7]
+  'frytki mrożone': [170, 2, 25, 7],
+  'soczewica': [350, 25, 60, 1], 'kapusta kiszona': [19, 1, 4, 0], 'pomarańcza': [47, 1, 12, 0],
+  'por': [61, 2, 14, 0], 'warzywa mrożone': [50, 3, 8, 0]
 };
 
 // Ingredient → store department index
@@ -47,7 +49,8 @@ export const DEPT = {
   'filet rybny':7,'łosoś wędzony':7,
   'maliny':8,'frytki mrożone':8,
   'oliwa':9,'olej rzepakowy':9,'białko w proszku':9,'orzechy włoskie':9,'sos sojowy':9,'miód':9,
-  'mleko kokosowe':9,'pasta curry':9,'tofu':9,'buraki gotowane':9,'majonez':9
+  'mleko kokosowe':9,'pasta curry':9,'tofu':9,'buraki gotowane':9,'majonez':9,
+  'soczewica':3,'kapusta kiszona':2,'pomarańcza':1,'por':1,'warzywa mrożone':8
 };
 export const DEPT_NAMES = ['🥖 Pieczywo','🍌 Owoce / warzywa','🥫 Puszki','🌾 Suche / kasze','🥚 Jajka / mleko / mąka','🥩 Mięso','🧀 Nabiał','🐟 Ryby','❄️ Mrożonki','📦 Inne'];
 
@@ -78,4 +81,26 @@ export const PKG = {
   'miód':[350,'g','350g'],'hummus':[200,'g','200g'],'pasztet':[130,'g','130g'],
   'bułka tarta':[200,'g','200g'],'frytki mrożone':[1000,'g','1kg'],
   'maliny':[300,'g','300g'],'tofu':[400,'g','400g']
+};
+
+// Recipe servings (total portions per recipe, e.g. 4 = 2 people × 2 batch days)
+export const SERVINGS={
+'budyn-jaglany':2,'curry':6,'gulasz-wolowy':6,'jajka-na-masle':1,'jajka-po-turecku':1,
+'jajka-sadzone-boczek':1,'kanapki-awokado-jajko':1,'kanapki-camembert-parma':1,'kanapki-feta-rukola':1,
+'kanapki-hummus':1,'kanapki-indyk-hummus':1,'kanapki-jajko':1,'kanapki-pasztet':1,'kanapki-ser-wedlina':1,
+'kanapki-szynka-warzywa':1,'kanapki-wiejski-wedlina':1,'kaszotto-buraczane':4,'kotlety-udka':4,
+'makaron-ryzowy-tajski':4,'makaron-soczewica-cukinia':4,'mielone-por':4,'nalesniki':1,'overnight-oats':1,
+'pasta-jajeczna-tunczyk':1,'pasta-losos':1,'pasta-tunczyk-prosty':2,'pieczona-owsianka':2,'pieczone-udka':4,
+'pieczony-camembert':2,'pizzerinki-wiejski':2,'placki-ziemniaczane':2,'placuszki-bananowe':1,
+'quesadilla-kurczak':4,'ryba-frytki':2,'ryz-kurczak-warzywa':4,'salatka-ciecierzyca':2,
+'salatka-gruszka-blue':2,'salatka-jaglana-ciecierzyca':2,'salatka-jaglana-halloumi':2,
+'salatka-sliwki-parmezan':2,'serek-losos':1,'serek-wiejski-sniadanie':1,'shake-bialkowy':1,'shakshuka':2,
+'spaghetti-bolognese':6,'tofu-bulgogi':4,'tortilla-kurczak':4,'twarozek-rzodkiewka':2,
+'twarozek-szczypiorek':2,'watrobka-ziemniaki':2,
+'koktajl-owocowy':1,'pulpety-drobiowe':4,'losos-ziemniaki':2,
+'makaron-brokul-feta':4,'omlet-grecki':1,'grahamka-szynka-mozz':1,
+'tosty-awokado-jajko':1,'jaglanka-orzechy':1,'smoothie-bowl':1,
+'zapiekanka-brokul-kurczak':4,'leczo-ryz':4,'zupa-krem-por':2,'kurczak-teriyaki':4,
+'pasta-buraczkowa':2,'pasta-pieczone-warzywa':2,'pasta-buraczkowa-b':2,'pasta-pieczone-warzywa-b':2,
+'salatka-tunczyk-jajko':1,'placki-cukiniowe':2,'marchewki-hummus':1
 };

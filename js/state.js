@@ -10,6 +10,7 @@ export const state = {
   userRecipes: [],
   shopEdits: {},
   shopSnapshot: null,
+  shopChanges: {},
   rFilter: 'all',
   rSource: 'base',
   person: localStorage.getItem('person') || 'on'

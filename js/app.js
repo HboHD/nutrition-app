@@ -3,7 +3,7 @@ import { DAYS } from './data.js';
 import { loadState, initRealtime, showSync } from './supabase.js';
 import { renderDays, toggle, selectMeal, cancelSwap, clearMeal, openRecipePicker, pickRecipe, closeRecipePicker } from './plan.js';
 import { renderShop, shopToggle, shopClose, ck, ckCustom, addShopItem, delShopItem, clearShop, startEditShop, refreshShop } from './shop.js';
-import { renderPantry, pantryToggle, pantryClose, addPantryItem, delPantry, editPantryItem, startEditPantry } from './pantry.js';
+import { renderPantry, pantryToggle, pantryClose, addPantryItem, delPantry, editPantryItem, startEditPantry, consumePlan } from './pantry.js';
 import { renderRecipes, filterRecipes, filterSource, searchRecipes, openRecipeDetail, closeRecipeDetail, openEditRecipe, saveEditRecipe, openAddRecipe, saveNewRecipe, deleteRecipe, addIngRow, calcEditMacros } from './recipes.js';
 
 // --- Tab switching (bottom nav) ---
@@ -61,7 +61,7 @@ function setSyncDot(status) {
 Object.assign(window, {
   switchTab, setPerson, togglePerson, toggle, selectMeal, cancelSwap, clearMeal, openRecipePicker, pickRecipe, closeRecipePicker,
   shopToggle, shopClose, ck, ckCustom, addShopItem, delShopItem, clearShop, startEditShop, refreshShop,
-  pantryToggle, pantryClose, addPantryItem, delPantry, editPantryItem, startEditPantry,
+  pantryToggle, pantryClose, addPantryItem, delPantry, editPantryItem, startEditPantry, consumePlan,
   renderRecipes, filterRecipes, filterSource, searchRecipes, openRecipeDetail, closeRecipeDetail,
   openEditRecipe, saveEditRecipe, openAddRecipe, saveNewRecipe, deleteRecipe, addIngRow, calcEditMacros
 });
