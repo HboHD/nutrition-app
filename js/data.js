@@ -7,28 +7,28 @@ export const DAYS=[
 {name:'🥞 Pieczona owsianka z jogurtem i WPC',rid:'pieczona-owsianka',tag:'🍳 2d',tagClass:'cook',ing:'płatki 50g · mleko 150ml · 1 jajko · banan 0.5 · masło orzechowe 15g · jogurt grecki 75g · maliny · WPC 15g',m:[616,43,65,22]},
 {name:'🍲 Kaszotto buraczane z kurczakiem',rid:'kaszotto-buraczane',tag:'🍳 2d',tagClass:'cook',ing:'kasza jęczmienna 50g · pierś kurczaka 100g · buraki 62g · cebula · oliwa',m:[411,38,45,8]},
 {name:'🥗 Sałatka z tuńczykiem, jajkiem i szpinakiem',rid:'salatka-tunczyk-jajko',ing:'tuńczyk 85g · 2 jajka · szpinak 50g · pomidorki 80g · oliwa',m:[380,32,12,22]},
-{name:'🥜 Shake białkowy z owocami',rid:'shake-przekaska',ing:'białko 30g · mleko 200ml · banan · maliny',m:[273,32,30,4]}
+{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
 {hdr:'🗓️ Śr 22.04 — biuro',meals:[
 {name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',alt:{name:'🥣 Twarożek ze szczypiorkiem',rid:'twarozek-szczypiorek',m:[361,31,38,10],ing:'twaróg 125g · jogurt 100g · chleb 2kr · szczypiorek'},ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[394,29,45,10]},
 {name:'🥞 Pieczona owsianka z jogurtem i WPC',rid:'pieczona-owsianka',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[616,43,65,22]},
 {name:'🍲 Kaszotto buraczane z kurczakiem',rid:'kaszotto-buraczane',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[411,38,45,8]},
 {name:'🥗 Kanapki z jajkiem na twardo',rid:'kanapki-jajko',ing:'2 jajka · chleb 2kr · masło 10g · pomidor · ogórek',m:[430,20,32,22]},
-{name:'🥜 Shake białkowy z owocami',rid:'shake-przekaska',ing:'białko 30g · mleko 200ml · banan · maliny',m:[273,32,30,4]}
+{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
 {hdr:'🗓️ Czw 23.04',meals:[
 {name:'🥣 Tosty z awokado i jajkiem sadzonym',rid:'tosty-awokado-jajko',ing:'chleb 2kr · jajko sadzone · awokado 0.5 · pomidorki · oliwa',m:[490,22,35,30]},
 {name:'🥞 Koktajl owocowy z kefiru',rid:'koktajl-owocowy',ing:'jogurt 250g · banan · maliny 80g · płatki 20g',m:[350,15,52,8]},
 {name:'🍲 Pulpety drobiowe z ziemniakami',rid:'pulpety-drobiowe',tag:'🍳 2d',tagClass:'cook',ing:'mielone drobiowe 125g · ziemniaki 200g · marchew · jajko · mąka',m:[520,36,55,15]},
-{name:'🥗 Pasta buraczkowa z twarożkiem',rid:'pasta-buraczkowa',ing:'buraki 75g · twaróg 50g · chleb 2kr · ogórek',m:[360,22,34,14]},
-{name:'🥜 Shake białkowy z owocami',rid:'shake-przekaska',ing:'białko 30g · mleko 200ml · banan · maliny',m:[273,32,30,4]}
+{name:'🥗 Kanapki z serkiem wiejskim i wędliną',rid:'kanapki-wiejski-wedlina',ing:'serek wiejski 100g · wędlina 40g · chleb 2kr · pomidor · ogórek',m:[329,27,34,7]},
+{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
 {hdr:'🗓️ Pt 24.04',meals:[
 {name:'🥣 Omlet po grecku ze szpinakiem',rid:'omlet-grecki',ing:'3 jajka · szpinak 50g · mozzarella 40g · płatki 20g · oliwa',m:[520,35,20,34]},
 {name:'🥞 Overnight oats z jogurtem',rid:'overnight-oats',ing:'płatki 50g · jogurt grecki 150g · mleko 100ml · banan 0.5 · maliny',m:[383,21,51,11]},
 {name:'🍲 Pulpety drobiowe z ziemniakami',rid:'pulpety-drobiowe',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[520,36,55,15]},
 {name:'🥗 Placki cukiniowe',rid:'placki-cukiniowe',ing:'cukinia 100g · 1 jajko · mąka 10g · czosnek · oliwa',m:[340,18,26,18]},
-{name:'🥜 Shake białkowy z owocami',rid:'shake-przekaska',ing:'białko 30g · mleko 200ml · banan · maliny',m:[273,32,30,4]}
+{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]}
 ];
 
