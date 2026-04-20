@@ -112,11 +112,7 @@ export function generateShop() {
 
 // --- Get current shop data (snapshot or fresh) ---
 export function getShopData() {
-  if (state.shopSnapshot && state.shopSnapshot.length) return state.shopSnapshot;
-  var fresh = generateShop();
-  state.shopSnapshot = fresh;
-  saveState('shop_snapshot', fresh);
-  return fresh;
+  return generateShop();
 }
 
 export function refreshShop() {
@@ -153,7 +149,6 @@ export function refreshShop() {
   state.shopSnapshot = newSnap;
   state.shopChecked = newChecked;
   state.shopChanges = changes;
-  saveState('shop_snapshot', state.shopSnapshot);
   saveState('shopping', state.shopChecked);
   renderShop();
 
