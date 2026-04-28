@@ -2,46 +2,54 @@
 // Auto-extracted from monolithic index.html
 
 export const DAYS=[
-{hdr:'🗓️ Wt 21.04 — biuro',meals:[
+{hdr:'🗓️ Śr 29.04 — biuro',meals:[
 {name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',alt:{name:'🥣 Twarożek ze szczypiorkiem',rid:'twarozek-szczypiorek',m:[394,32,45,10],ing:'twaróg 125g · jogurt 100g · chleb 2kr · szczypiorek'},ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[427,30,52,10]},
-{name:'🥞 Pieczona owsianka z jogurtem i WPC',rid:'pieczona-owsianka',tag:'🍳 2d',tagClass:'cook',ing:'płatki 50g · mleko 150ml · 1 jajko · banan 0.5 · masło orzechowe 15g · jogurt grecki 75g · maliny · WPC 15g',m:[616,43,65,22]},
-{name:'🍲 Kaszotto buraczane z kurczakiem',rid:'kaszotto-buraczane',tag:'🍳 2d',tagClass:'cook',ing:'kasza jęczmienna 50g · pierś kurczaka 100g · buraki 62g · cebula · oliwa',m:[411,38,45,8]},
-{name:'🥗 Sałatka z tuńczykiem, jajkiem i szpinakiem',rid:'salatka-tunczyk-jajko',ing:'tuńczyk 85g · 2 jajka · szpinak 50g · pomidorki 80g · oliwa',m:[380,32,12,22]},
-{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
-]},
-{hdr:'🗓️ Śr 22.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',alt:{name:'🥣 Twarożek ze szczypiorkiem',rid:'twarozek-szczypiorek',m:[394,32,45,10],ing:'twaróg 125g · jogurt 100g · chleb 2kr · szczypiorek'},ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[427,30,52,10]},
-{name:'🥞 Pieczona owsianka z jogurtem i WPC',rid:'pieczona-owsianka',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[616,43,65,22]},
-{name:'🍲 Kaszotto buraczane z kurczakiem',rid:'kaszotto-buraczane',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[411,38,45,8]},
+{name:'🥞 Naleśniki z twarożkiem i owocami',rid:'nalesniki',tag:'🍳 2d',tagClass:'cook',ing:'mąka 60g · mleko 150ml · jajko · twaróg 100g · jogurt grecki 75g · banan 0.5 · masło 10g',m:[650,45,70,22]},
+{name:'🍲 Tortilla z kurczakiem i tzatzykami',rid:'tortilla-kurczak',tag:'🍳 2d',tagClass:'cook',ing:'pierś kurczaka 100g · tortilla 1szt · papryka 75g · cebula czerwona · jogurt 40g · ogórek',m:[400,38,39,10]},
 {name:'🥗 Kanapki z jajkiem na twardo',rid:'kanapki-jajko',ing:'2 jajka · chleb 2kr · masło 10g · pomidor · ogórek',m:[463,21,39,22]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
-{hdr:'🗓️ Czw 23.04',meals:[
-{name:'🥣 Tosty z awokado i jajkiem sadzonym',rid:'tosty-awokado-jajko',ing:'chleb 2kr · jajko sadzone · awokado 0.5 · pomidorki · oliwa',m:[523,23,42,30]},
-{name:'🥞 Koktajl owocowy z kefiru',rid:'koktajl-owocowy',ing:'jogurt 250g · banan · maliny 80g · płatki 20g',m:[350,15,52,8]},
-{name:'🍲 Mielone z porem i marchewką',rid:'mielone-por',tag:'🍳 2d',tagClass:'cook',ing:'mielone wieprzowo-wołowe 150g · por · marchew · jajko',m:[544,32,45,33]},
+{hdr:'🗓️ Czw 30.04 — biuro',meals:[
+{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',alt:{name:'🥣 Twarożek ze szczypiorkiem',rid:'twarozek-szczypiorek',m:[394,32,45,10],ing:'twaróg 125g · jogurt 100g · chleb 2kr · szczypiorek'},ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[427,30,52,10]},
+{name:'🥞 Naleśniki z twarożkiem i owocami',rid:'nalesniki',tag:'🔄 2/2',tagClass:'left',ing:'resztki ze środy',m:[650,45,70,22]},
+{name:'🍲 Tortilla z kurczakiem i tzatzykami',rid:'tortilla-kurczak',tag:'🔄 2/2',tagClass:'left',ing:'resztki ze środy',m:[400,38,39,10]},
+{name:'🥗 — pominięta (kolacja na mieście)',ing:'',m:[0,0,0,0]},
+{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
+]},
+{hdr:'🗓️ Pt 01.05',meals:[
+{name:'🥣 Jajka po turecku',rid:'jajka-po-turecku',ing:'2 jajka · jogurt 150g · masło 15g · papryka wędzona · chleb 1kr',m:[467,25,27,30]},
+{name:'🥞 Pieczona owsianka z wiśniami i WPC',rid:'pieczona-owsianka',tag:'🍳 2d',tagClass:'cook',ing:'płatki 50g · mleko 150ml · 1 jajko · banan 0.5 · masło orzechowe 15g · jogurt grecki 75g · wiśnie mrożone · WPC 15g',m:[616,43,65,22]},
+{name:'🍲 Makaron ryżowy po tajsku z udem kurczaka',rid:'makaron-ryzowy-tajski',tag:'🍳 2d',tagClass:'cook',ing:'makaron ryżowy 75g · udo kurczaka 100g · sos sojowy · miód · warzywa mrożone 150g · olej sezamowy',m:[522,31,72,11]},
+{name:'🥗 Pasta z tuńczyka na kanapkach',rid:'pasta-tunczyk-prosty',ing:'tuńczyk 85g · jogurt 15g · ogórek · chleb 2kr',m:[396,29,33,16]},
+{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
+]},
+{hdr:'🗓️ Sob 02.05',meals:[
+{name:'🥣 Jajka na maśle z chlebem',rid:'jajka-na-masle',ing:'3 jajka · masło 15g · chleb 1kr',m:[440,26,16,31]},
+{name:'🥞 Pieczona owsianka z wiśniami i WPC',rid:'pieczona-owsianka',tag:'🔄 2/2',tagClass:'left',ing:'resztki z piątku',m:[616,43,65,22]},
+{name:'🍲 Makaron ryżowy po tajsku z udem kurczaka',rid:'makaron-ryzowy-tajski',tag:'🔄 2/2',tagClass:'left',ing:'resztki z piątku',m:[522,31,72,11]},
 {name:'🥗 Kanapki z serkiem wiejskim i wędliną',rid:'kanapki-wiejski-wedlina',ing:'serek wiejski 100g · wędlina 40g · chleb 2kr · pomidor · ogórek',m:[362,28,41,7]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
-{hdr:'🗓️ Pt 24.04',meals:[
-{name:'🥣 Omlet po grecku ze szpinakiem',rid:'omlet-grecki',ing:'3 jajka · szpinak 50g · mozzarella 40g · płatki 20g · oliwa',m:[520,35,20,34]},
-{name:'🥞 Overnight oats z jogurtem',rid:'overnight-oats',ing:'płatki 50g · jogurt grecki 150g · mleko 100ml · banan 0.5 · maliny',m:[383,21,51,11]},
-{name:'🍲 Mielone z porem i marchewką',rid:'mielone-por',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[544,32,45,33]},
-{name:'🥗 Placki cukiniowe',rid:'placki-cukiniowe',ing:'cukinia 100g · 1 jajko · mąka 10g · czosnek · oliwa',m:[340,18,26,18]},
+{hdr:'🗓️ Ndz 03.05',meals:[
+{name:'🥣 Shakshuka ze szpinakiem i fetą',rid:'shakshuka',ing:'2 jajka · szpinak 25g · feta 50g · pomidory puszka 200g · cebula · oliwa',m:[432,26,14,30]},
+{name:'🥞 Placuszki bananowe z jogurtem greckim',rid:'placuszki-bananowe',ing:'banan · 2 jajka · płatki 30g · olej · jogurt grecki 150g · maliny',m:[649,35,61,32]},
+{name:'🍲 Tofu stir-fry z makaronem i orzeszkami',rid:'tofu-stir-fry',tag:'fresh',tagClass:'cook',ing:'tofu 200g · makaron 75g · warzywa mrożone 200g · orzeszki ziemne 20g · sos sojowy · olej sezamowy · miód',m:[550,32,60,22]},
+{name:'🥗 Kanapki z serkiem wiejskim i wędliną',rid:'kanapki-wiejski-wedlina',ing:'serek wiejski 100g · wędlina 40g · chleb 2kr · pomidor · ogórek',m:[362,28,41,7]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]}
 ];
 
 export const SHOP=[
 ["🥖 Pieczywo",["chleb żytni — 2 × 500g"]],
-["🍌 Owoce / warzywa",["banany — 1 × 1kg (~5szt)","pomidory — 3 szt","pomidory koktajlowe — 1 × 250g","ogórki — 4 szt","papryka — 1 × 3 szt","cebula — 2 szt (z 1kg)","marchew — 2 szt (z 1kg)","szpinak — 2 × 100g","cukinia — 1 szt","czosnek — 1 szt","awokado — 1 szt","buraki gotowane — 2 × 250g","szczypiorek — 1 pęczek"]],
-["🥫 Puszki",["tuńczyk — 1 × 170g"]],
-["🌾 Suche / kasze",["kasza jęczmienna — 1 × 400g","płatki owsiane — 1 × 500g"]],
-["🥚 Jajka / mleko / mąka",["jajka — 2 × 10 szt","mleko — 2 × 1L","mąka — 1 × 1kg"]],
-["🥩 Mięso",["pierś kurczaka — 1 × 500g","mięso mielone drobiowe — 1 × 500g"]],
-["🧀 Nabiał",["serek wiejski — 2 × 200g","jogurt grecki — 2 × 400g","jogurt naturalny — 1 × 400g","masło — 1 × 200g","masło orzechowe — 1 × 350g","twaróg — 1 × 250g","mozzarella — 1 × 125g"]],
-["❄️ Mrożonki",["maliny mrożone — 2 × 300g"]],
-["📦 Inne",["białko w proszku — ~200g","oliwa — 1 × 500ml","orzechy włoskie — 1 × 100g","ziemniaki — 1 × 2kg"]]
+["🍌 Owoce / warzywa",["banany — 1 × 1kg (~5szt)","pomidory — 1 × 500g","ogórki — 4 szt","papryka — 1 × 3 szt","cebula — 3 szt (z 1kg)","cebula czerwona — 1 szt","cukinia — 1 szt","czosnek — 1 szt","szpinak — 1 × 100g"]],
+["🥫 Puszki",["tuńczyk — 1 × 170g","pomidory krojone — 1 × 400g"]],
+["🌾 Suche / kasze",["makaron ryżowy — 2 × 250g","makaron (stir-fry) — 1 × 500g","tortilla — 1 × 6 szt","płatki owsiane — 1 × 500g","orzeszki ziemne — 1 × 100g"]],
+["🥚 Jajka / mleko / mąka",["jajka — 3 × 10 szt","mleko — 1 × 1L"]],
+["🥩 Mięso",["pierś kurczaka — 1 × 500g","udo kurczaka — 1 × 1kg","wędlina — 2 × 100g"]],
+["🧀 Nabiał",["serek wiejski — 3 × 200g","twaróg — 1 × 250g","jogurt naturalny — 1 × 400g","jogurt grecki — 1 × 400g","masło — 1 × 200g","feta — 1 × 200g"]],
+["🫘 Roślinne",["tofu — 1 × 400g"]],
+["❄️ Mrożonki",["warzywa mrożone mix — 1 × 450g","wiśnie mrożone — 1 × 300g"]],
+["📦 Inne",["sos sojowy — 1 × 250ml","masło orzechowe — 1 × 350g (jeśli brak)","olej sezamowy — z zapasów","białko w proszku — z zapasów","oliwa — z zapasów","miód — z zapasów"]]
 ];
 
 export const RECIPES=[
@@ -59,7 +67,7 @@ export const RECIPES=[
 ['pieczona-owsianka','Pieczona owsianka z jogurtem','sb',616,43,65,22,[{item:'płatki owsiane',amount_g:'100'},{item:'mleko',amount_g:'300'},{item:'jajka',amount:'2 szt'},{item:'banan',amount:'1 szt'},{item:'masło orzechowe',amount_g:'30'},{item:'jogurt grecki',amount_g:'150'},{item:'maliny',amount_g:'30'},{item:'białko w proszku',amount_g:'30'}],'',['vegetarian','meal_prep'],35],
 ['budyn-jaglany','Budyń jaglany z białkiem','sb',434,30,68,6,[{item:'kasza jaglana',amount_g:'100'},{item:'mleko',amount_g:'400'},{item:'banan',amount:'1 szt'},{item:'białko w proszku',amount_g:'40'},{item:'maliny',amount_g:'100'}],'Z resztek kaszy jaglanej',['vegetarian','high_protein'],25],
 ['placuszki-bananowe','Placuszki bananowe z jogurtem','sb',649,35,61,32,[{item:'banan',amount:'1 szt'},{item:'jajka',amount:'2 szt'},{item:'płatki owsiane',amount_g:'30'},{item:'olej rzepakowy',amount_g:'10'},{item:'jogurt grecki',amount_g:'150'},{item:'maliny',amount_g:'50'}],'',['vegetarian','quick'],20],
-['nalesniki','Naleśniki z twarożkiem','sb',619,46,60,22,[{item:'mąka',amount_g:'60'},{item:'mleko',amount_g:'150'},{item:'jajka',amount:'1 szt'},{item:'twaróg',amount_g:'150'},{item:'masło',amount_g:'10'}],'',['polish','vegetarian'],30],
+['nalesniki','Naleśniki z twarożkiem i owocami','sb',650,45,70,22,[{item:'mąka',amount_g:'60'},{item:'mleko',amount_g:'150'},{item:'jajka',amount:'1 szt'},{item:'twaróg',amount_g:'100'},{item:'jogurt grecki',amount_g:'75'},{item:'banan',amount:'0.5 szt'},{item:'masło',amount_g:'10'}],'Nadzienie: twaróg + jogurt grecki + owoce sezonowe',['polish','vegetarian'],30],
 ['shake-bialkowy','Shake białkowy z owocami','sb',273,32,30,4,[{item:'białko w proszku',amount_g:'30'},{item:'mleko',amount_g:'200'},{item:'banan',amount:'0.5 szt'},{item:'maliny',amount_g:'30'}],'',['quick','high_protein'],5],
 ['watrobka-ziemniaki','Wątróbka z ziemniakami','d',591,52,44,25,[{item:'wątróbka drobiowa',amount_g:'500'},{item:'ziemniaki',amount_g:'400'},{item:'cebula',amount:'2 szt'},{item:'masło',amount_g:'30'}],'',['polish','fertility'],40],
 ['curry','Curry z kurczakiem i batatami','d',642,46,69,19,[{item:'pierś kurczaka',amount_g:'750'},{item:'mleko kokosowe',amount_g:'400'},{item:'pasta curry',amount_g:'35'},{item:'ryż',amount_g:'360'},{item:'papryka',amount:'1 szt'}],'',['asian','slow_cook','fertility'],50],
@@ -116,6 +124,7 @@ export const RECIPES=[
 ['leczo-ryz','Leczo z papryką i ryżem','d',550,22,65,20,[{item:'papryka',amount:'3 szt'},{item:'pomidory krojone puszka',amount_g:'400'},{item:'wędlina',amount_g:'100'},{item:'ryż',amount_g:'200'},{item:'cebula',amount:'1 szt'}],'Cebulę podsmaż, dodaj paprykę, pomidory, wędlinę. Duś 20 min. Podaj z ryżem.',['polish','comfort'],30],
 ['zupa-krem-por','Zupa krem z pora z grzankami','d',436,17,48,18,[{item:'por',amount:'1 szt'},{item:'ziemniaki',amount_g:'300'},{item:'mleko',amount_g:'100'},{item:'chleb żytni',amount:'2 kromki'},{item:'ser żółty',amount_g:'30'},{item:'masło',amount_g:'15'}],'Por + ziemniaki ugotuj, zblenduj z mlekiem. Grzanki z sera na wierzch.',['polish','comfort'],30],
 ['kurczak-teriyaki','Kurczak teriyaki z ryżem','d',520,38,62,10,[{item:'pierś kurczaka',amount_g:'400'},{item:'ryż',amount_g:'200'},{item:'sos sojowy',amount_g:'30'},{item:'miód',amount_g:'15'},{item:'warzywa mrożone',amount_g:'200'}],'Kurczak w sosie sojowym + miód, smaż z warzywami. Podaj z ryżem.',['asian','high_protein','quick'],25],
+['tofu-stir-fry','Tofu stir-fry z makaronem i orzeszkami','d',550,32,60,22,[{item:'tofu',amount_g:'400'},{item:'makaron',amount_g:'150'},{item:'warzywa mrożone',amount_g:'400'},{item:'orzeszki ziemne',amount_g:'40'},{item:'sos sojowy',amount_g:'30'},{item:'olej sezamowy',amount_g:'10'},{item:'miód',amount_g:'15'}],'Tofu pokrój w kostkę, podsmaż na oleju sezamowym. Dodaj warzywa, sos sojowy i miód. Podaj z makaronem i orzeszkami.',['asian','vegetarian'],25],
 ['pasta-buraczkowa','Pasta buraczkowa z twarożkiem','s',376,23,37,14,[{item:'buraki gotowane',amount_g:'150'},{item:'twaróg',amount_g:'100'},{item:'chleb żytni',amount:'2 kromki'},{item:'ogórek',amount_g:'50'}],'Buraki zblenduj z twarogiem. Batch 3 dni. Fertility: żelazo, folian.',['polish','quick','fertility'],10],
 ['pasta-pieczone-warzywa','Pasta z pieczonych warzyw','s',356,13,39,16,[{item:'papryka',amount:'1 szt'},{item:'cukinia',amount_g:'100'},{item:'chleb żytni',amount:'2 kromki'},{item:'oliwa',amount_g:'10'}],'Paprykę i cukinię piecz 200°C 25 min, zblenduj z oliwą. Batch 3 dni.',['mediterranean','vegetarian','quick'],30],
 ['pasta-buraczkowa-b','Pasta buraczkowa z twarożkiem','b',376,23,37,14,[{item:'buraki gotowane',amount_g:'150'},{item:'twaróg',amount_g:'100'},{item:'chleb żytni',amount:'2 kromki'},{item:'ogórek',amount_g:'50'}],'Buraki zblenduj z twarogiem. Batch 3 dni.',['polish','quick','fertility'],10],

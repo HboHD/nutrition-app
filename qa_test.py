@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """QA tests for nutrition app (modular architecture) — run before deploy."""
 import re, sys, os
+sys.stdout.reconfigure(encoding='utf-8',errors='replace')
+sys.stderr.reconfigure(encoding='utf-8',errors='replace')
 
 P = 0
 F = 0
@@ -13,13 +15,13 @@ def group(name):
     print(f"\n--- {name} ---")
 
 # Load all files
-with open('index.html') as f: html = f.read()
-with open('css/style.css') as f: style = f.read()
-with open('sw.js') as f: sw = f.read()
+with open('index.html',encoding='utf-8') as f: html = f.read()
+with open('css/style.css',encoding='utf-8') as f: style = f.read()
+with open('sw.js',encoding='utf-8') as f: sw = f.read()
 
 js_files = {}
 for fn in ['app.js','state.js','data.js','nutrition-db.js','supabase.js','plan.js','shop.js','pantry.js','recipes.js']:
-    with open(f'js/{fn}') as f: js_files[fn] = f.read()
+    with open(f'js/{fn}',encoding='utf-8') as f: js_files[fn] = f.read()
 
 # Combined JS for content checks
 js_all = '\n'.join(js_files.values())
