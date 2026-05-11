@@ -3,31 +3,31 @@
 
 export const DAYS=[
 {hdr:'🗓️ Wt 12.05 — biuro',meals:[
-{name:'🥣 Pasta jajeczna z tuńczykiem',rid:'pasta-jajeczna-tunczyk',ing:'2 jajka · tuńczyk 85g · majonez 15g · chleb 2kr',m:[555,44,37,26]},
-{name:'🥞 Shake białkowy z bananem',rid:'shake-bialkowy-banan',ing:'białko 30g · mleko 200ml · banan 0.5',m:[243,32,24,4]},
+{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[427,30,52,10]},
+{name:'🥞 Koktajl owocowy z kefiru',rid:'koktajl-owocowy',ing:'jogurt 250g · banan 1 · maliny 80g · płatki 20g',m:[350,15,52,8]},
 {name:'🍲 Spaghetti bolońskie',rid:'spaghetti-bolognese',tag:'🍳 2d',tagClass:'cook',ing:'mięso mielone 125g · makaron 113g · pomidory puszka 175g · cebula · marchew',m:[515,26,62,18]},
-{name:'🥗 Kanapki z serkiem wiejskim i wędliną',rid:'kanapki-wiejski-wedlina',ing:'serek wiejski 100g · wędlina 40g · chleb 2kr · pomidor · ogórek',m:[362,28,41,7]},
+{name:'🥗 Jajka na maśle z chlebem',rid:'jajka-na-masle',ing:'3 jajka · masło 15g · chleb 1kr',m:[440,26,16,31]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
 {hdr:'🗓️ Śr 13.05 ⚠️ On: ubogo-resztkowa',meals:[
 {name:'🥣 Jajka na maśle z białą bułką',rid:'jajka-na-masle',alt:{name:'🥣 Kanapki z hummusem i warzywami',rid:'kanapki-hummus',m:[319,12,52,8],ing:'hummus 60g · chleb 2kr · pomidor · papryka'},ing:'3 jajka · masło 15g · biała bułka',m:[440,26,20,31]},
 {name:'🥞 Białe bułki z masłem i szynką',rid:'bulki-maslo-szynka',alt:{name:'🥞 Overnight oats z jogurtem',rid:'overnight-oats',m:[383,21,51,11],ing:'płatki 50g · jogurt grecki 150g · mleko 100ml · banan 0.5 · maliny 30g'},ing:'białe bułki 2 · masło 15g · szynka 60g',m:[380,18,40,16]},
 {name:'🍲 Spaghetti bolońskie',rid:'spaghetti-bolognese',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[515,26,62,18]},
-{name:'🥗 Kanapki z jajkiem na twardo',rid:'kanapki-jajko',ing:'2 jajka · chleb 2kr · masło 10g · pomidor · ogórek',m:[463,21,39,22]},
+{name:'🥗 Rosół domowy',rid:'rosol-domowy',tag:'🍳 3d',tagClass:'cook',ing:'kości kurczaka · marchew · pietruszka · cebula · makaron nitki',m:[300,18,30,12]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
 {hdr:'🗓️ Czw 14.05 ⚠️ On: Fortrans od 17:00',meals:[
-{name:'🥣 Białe bułki z szynką + kisiel',rid:'bulki-szynka-kisiel',alt:{name:'🥣 Jajka po turecku',rid:'jajka-po-turecku',m:[467,25,27,30],ing:'2 jajka · jogurt 150g · masło 15g · papryka wędzona · chleb 1kr'},ing:'białe bułki 2 · masło 15g · szynka 60g · kisiel',m:[400,15,55,14]},
+{name:'🥣 Białe bułki z szynką + kisiel',rid:'bulki-szynka-kisiel',alt:{name:'🥣 Jajka na maśle z chlebem',rid:'jajka-na-masle',m:[440,26,16,31],ing:'3 jajka · masło 15g · chleb 1kr'},ing:'białe bułki 2 · masło 15g · szynka 60g · kisiel',m:[400,15,55,14]},
 {name:'🥞 Shake białkowy z bananem',rid:'shake-bialkowy-banan',ing:'białko 30g · mleko 200ml · banan 0.5',m:[243,32,24,4]},
-{name:'🍲 Rosół domowy',rid:'rosol-domowy',tag:'🍳 2d',tagClass:'cook',ing:'kości kurczaka · marchew · pietruszka · cebula · makaron nitki',m:[300,18,30,12]},
-{name:'🥗 Pasta z tuńczyka na kanapkach',rid:'pasta-tunczyk-prosty',ing:'tuńczyk 85g · jogurt 15g · ogórek · chleb 2kr',m:[396,29,33,16]},
+{name:'🍲 Rosół domowy',rid:'rosol-domowy',tag:'🔄 2/3',tagClass:'left',ing:'resztki ze środy',m:[300,18,30,12]},
+{name:'🥗 Kanapki z serkiem wiejskim i wędliną',rid:'kanapki-wiejski-wedlina',ing:'serek wiejski 100g · wędlina 40g · chleb 2kr · pomidor · ogórek',m:[362,28,41,7]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
 {hdr:'🗓️ Pt 15.05 ⚠️ On: badanie + recovery',meals:[
-{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[427,30,52,10]},
+{name:'🥣 Kanapki z szynką drobiową i warzywami',rid:'kanapki-szynka-warzywa',ing:'wędlina 60g · masło 10g · chleb 2kr · pomidor · ogórek',m:[365,23,44,11]},
 {name:'🥞 Placuszki bananowe z jogurtem',rid:'placuszki-bananowe',ing:'banan · 2 jajka · płatki 30g · olej · jogurt grecki 150g · maliny',m:[649,35,61,32]},
-{name:'🍲 Rosół domowy',rid:'rosol-domowy',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[300,18,30,12]},
-{name:'🥗 🩺 Recovery: rosół klarowny + bułka',rid:'rosol-domowy',alt:{name:'🥗 Kanapki z szynką drobiową',rid:'kanapki-szynka-warzywa',m:[365,23,44,11],ing:'wędlina 60g · masło 10g · chleb 2kr · pomidor · ogórek'},ing:'rosół klarowny + biała bułka',m:[350,12,40,12]},
+{name:'🍲 Rosół domowy',rid:'rosol-domowy',tag:'🔄 3/3',tagClass:'left',ing:'resztki ze środy',m:[300,18,30,12]},
+{name:'🥗 Kanapki z jajkiem na twardo',rid:'kanapki-jajko',alt:{name:'🥗 🩺 Recovery: rosół klarowny + bułka',rid:'rosol-domowy',m:[350,12,40,12],ing:'rosół klarowny + biała bułka'},ing:'2 jajka · chleb 2kr · masło 10g · pomidor · ogórek',m:[463,21,39,22]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]}
 ];
