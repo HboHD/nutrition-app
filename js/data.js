@@ -27,7 +27,7 @@ export const DAYS=[
 {name:'🥣 Kanapki z szynką drobiową i warzywami',rid:'kanapki-szynka-warzywa',ing:'wędlina 60g · masło 10g · chleb 2kr · pomidor · ogórek',m:[365,23,44,11]},
 {name:'🥞 Placuszki bananowe z jogurtem',rid:'placuszki-bananowe',ing:'banan · 2 jajka · płatki 30g · olej · jogurt grecki 150g · maliny',m:[649,35,61,32]},
 {name:'🍲 Rosół domowy',rid:'rosol-domowy',tag:'🔄 3/3',tagClass:'left',ing:'resztki ze środy',m:[300,18,30,12]},
-{name:'🥗 Kanapki z jajkiem na twardo',rid:'kanapki-jajko',alt:{name:'🥗 🩺 Recovery: rosół klarowny + bułka',rid:'rosol-domowy',m:[350,12,40,12],ing:'rosół klarowny + biała bułka'},ing:'2 jajka · chleb 2kr · masło 10g · pomidor · ogórek',m:[463,21,39,22]},
+{name:'🥗 Kanapki z jajkiem na twardo',rid:'kanapki-jajko',ing:'2 jajka · chleb 2kr · masło 10g · pomidor · ogórek',m:[463,21,39,22]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]}
 ];
