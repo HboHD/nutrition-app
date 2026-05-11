@@ -2,39 +2,32 @@
 // Auto-extracted from monolithic index.html
 
 export const DAYS=[
-{hdr:'🗓️ Śr 29.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',alt:{name:'🥣 Twarożek ze szczypiorkiem',rid:'twarozek-szczypiorek',m:[394,32,45,10],ing:'twaróg 125g · jogurt 100g · chleb 2kr · szczypiorek'},ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[427,30,52,10]},
-{name:'🥞 Naleśniki z twarożkiem i owocami',rid:'nalesniki',tag:'🍳 2d',tagClass:'cook',ing:'mąka 60g · mleko 150ml · jajko · twaróg 100g · jogurt grecki 75g · banan 0.5 · masło 10g',m:[650,45,70,22]},
-{name:'🍲 Tortilla z kurczakiem i tzatzykami',rid:'tortilla-kurczak',tag:'🍳 2d',tagClass:'cook',ing:'pierś kurczaka 100g · tortilla 1szt · papryka 75g · cebula czerwona · jogurt 40g · ogórek',m:[400,38,39,10]},
+{hdr:'🗓️ Wt 12.05 — biuro',meals:[
+{name:'🥣 Pasta jajeczna z tuńczykiem',rid:'pasta-jajeczna-tunczyk',ing:'2 jajka · tuńczyk 85g · majonez 15g · chleb 2kr',m:[555,44,37,26]},
+{name:'🥞 Shake białkowy z bananem',rid:'shake-bialkowy-banan',ing:'białko 30g · mleko 200ml · banan 0.5',m:[243,32,24,4]},
+{name:'🍲 Spaghetti bolońskie',rid:'spaghetti-bolognese',tag:'🍳 2d',tagClass:'cook',ing:'mięso mielone 125g · makaron 113g · pomidory puszka 175g · cebula · marchew',m:[515,26,62,18]},
+{name:'🥗 Kanapki z serkiem wiejskim i wędliną',rid:'kanapki-wiejski-wedlina',ing:'serek wiejski 100g · wędlina 40g · chleb 2kr · pomidor · ogórek',m:[362,28,41,7]},
+{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
+]},
+{hdr:'🗓️ Śr 13.05 ⚠️ On: ubogo-resztkowa',meals:[
+{name:'🥣 Jajka na maśle z białą bułką',rid:'jajka-na-masle',alt:{name:'🥣 Kanapki z hummusem i warzywami',rid:'kanapki-hummus',m:[319,12,52,8],ing:'hummus 60g · chleb 2kr · pomidor · papryka'},ing:'3 jajka · masło 15g · biała bułka',m:[440,26,20,31]},
+{name:'🥞 Białe bułki z masłem i szynką',rid:'bulki-maslo-szynka',alt:{name:'🥞 Overnight oats z jogurtem',rid:'overnight-oats',m:[383,21,51,11],ing:'płatki 50g · jogurt grecki 150g · mleko 100ml · banan 0.5 · maliny 30g'},ing:'białe bułki 2 · masło 15g · szynka 60g',m:[380,18,40,16]},
+{name:'🍲 Spaghetti bolońskie',rid:'spaghetti-bolognese',tag:'🔄 2/2',tagClass:'left',ing:'resztki z wtorku',m:[515,26,62,18]},
 {name:'🥗 Kanapki z jajkiem na twardo',rid:'kanapki-jajko',ing:'2 jajka · chleb 2kr · masło 10g · pomidor · ogórek',m:[463,21,39,22]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
-{hdr:'🗓️ Czw 30.04 — biuro',meals:[
-{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',alt:{name:'🥣 Twarożek ze szczypiorkiem',rid:'twarozek-szczypiorek',m:[394,32,45,10],ing:'twaróg 125g · jogurt 100g · chleb 2kr · szczypiorek'},ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[427,30,52,10]},
-{name:'🥞 Naleśniki z twarożkiem i owocami',rid:'nalesniki',tag:'🔄 2/2',tagClass:'left',ing:'resztki ze środy',m:[650,45,70,22]},
-{name:'🍲 Tortilla z kurczakiem i tzatzykami',rid:'tortilla-kurczak',tag:'🔄 2/2',tagClass:'left',ing:'resztki ze środy',m:[400,38,39,10]},
-{name:'🥗 — pominięta (kolacja na mieście)',ing:'',m:[0,0,0,0]},
-{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
-]},
-{hdr:'🗓️ Pt 01.05',meals:[
-{name:'🥣 Jajka po turecku',rid:'jajka-po-turecku',ing:'2 jajka · jogurt 150g · masło 15g · papryka wędzona · chleb 1kr',m:[467,25,27,30]},
-{name:'🥞 Pieczona owsianka z wiśniami i WPC',rid:'pieczona-owsianka',tag:'🍳 2d',tagClass:'cook',ing:'płatki 50g · mleko 150ml · 1 jajko · banan 0.5 · masło orzechowe 15g · jogurt grecki 75g · wiśnie mrożone · WPC 15g',m:[616,43,65,22]},
-{name:'🍲 Makaron ryżowy po tajsku z udem kurczaka',rid:'makaron-ryzowy-tajski',tag:'🍳 2d',tagClass:'cook',ing:'makaron ryżowy 75g · udo kurczaka 100g · sos sojowy · miód · warzywa mrożone 150g · olej sezamowy',m:[522,31,72,11]},
+{hdr:'🗓️ Czw 14.05 ⚠️ On: Fortrans od 17:00',meals:[
+{name:'🥣 Białe bułki z szynką + kisiel',rid:'bulki-szynka-kisiel',alt:{name:'🥣 Jajka po turecku',rid:'jajka-po-turecku',m:[467,25,27,30],ing:'2 jajka · jogurt 150g · masło 15g · papryka wędzona · chleb 1kr'},ing:'białe bułki 2 · masło 15g · szynka 60g · kisiel',m:[400,15,55,14]},
+{name:'🥞 Shake białkowy z bananem',rid:'shake-bialkowy-banan',ing:'białko 30g · mleko 200ml · banan 0.5',m:[243,32,24,4]},
+{name:'🍲 Rosół domowy',rid:'rosol-domowy',tag:'🍳 2d',tagClass:'cook',ing:'kości kurczaka · marchew · pietruszka · cebula · makaron nitki',m:[300,18,30,12]},
 {name:'🥗 Pasta z tuńczyka na kanapkach',rid:'pasta-tunczyk-prosty',ing:'tuńczyk 85g · jogurt 15g · ogórek · chleb 2kr',m:[396,29,33,16]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]},
-{hdr:'🗓️ Sob 02.05',meals:[
-{name:'🥣 Jajka na maśle z chlebem',rid:'jajka-na-masle',ing:'3 jajka · masło 15g · chleb 1kr',m:[440,26,16,31]},
-{name:'🥞 Pieczona owsianka z wiśniami i WPC',rid:'pieczona-owsianka',tag:'🔄 2/2',tagClass:'left',ing:'resztki z piątku',m:[616,43,65,22]},
-{name:'🍲 Makaron ryżowy po tajsku z udem kurczaka',rid:'makaron-ryzowy-tajski',tag:'🔄 2/2',tagClass:'left',ing:'resztki z piątku',m:[522,31,72,11]},
-{name:'🥗 Kanapki z serkiem wiejskim i wędliną',rid:'kanapki-wiejski-wedlina',ing:'serek wiejski 100g · wędlina 40g · chleb 2kr · pomidor · ogórek',m:[362,28,41,7]},
-{name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
-]},
-{hdr:'🗓️ Ndz 03.05',meals:[
-{name:'🥣 Shakshuka ze szpinakiem i fetą',rid:'shakshuka',ing:'2 jajka · szpinak 25g · feta 50g · pomidory puszka 200g · cebula · oliwa',m:[432,26,14,30]},
-{name:'🥞 Placuszki bananowe z jogurtem greckim',rid:'placuszki-bananowe',ing:'banan · 2 jajka · płatki 30g · olej · jogurt grecki 150g · maliny',m:[649,35,61,32]},
-{name:'🍲 Tofu stir-fry z makaronem i orzeszkami',rid:'tofu-stir-fry',tag:'fresh',tagClass:'cook',ing:'tofu 200g · makaron 75g · warzywa mrożone 200g · orzeszki ziemne 20g · sos sojowy · olej sezamowy · miód',m:[550,32,60,22]},
-{name:'🥗 Kanapki z serkiem wiejskim i wędliną',rid:'kanapki-wiejski-wedlina',ing:'serek wiejski 100g · wędlina 40g · chleb 2kr · pomidor · ogórek',m:[362,28,41,7]},
+{hdr:'🗓️ Pt 15.05 ⚠️ On: badanie + recovery',meals:[
+{name:'🥣 Serek wiejski z warzywami',rid:'serek-wiejski-sniadanie',ing:'serek wiejski 200g · chleb 2kr · pomidor · ogórek · papryka',m:[427,30,52,10]},
+{name:'🥞 Placuszki bananowe z jogurtem',rid:'placuszki-bananowe',ing:'banan · 2 jajka · płatki 30g · olej · jogurt grecki 150g · maliny',m:[649,35,61,32]},
+{name:'🍲 Rosół domowy',rid:'rosol-domowy',tag:'🔄 2/2',tagClass:'left',ing:'resztki z czwartku',m:[300,18,30,12]},
+{name:'🥗 🩺 Recovery: rosół klarowny + bułka',rid:'rosol-domowy',alt:{name:'🥗 Kanapki z szynką drobiową',rid:'kanapki-szynka-warzywa',m:[365,23,44,11],ing:'wędlina 60g · masło 10g · chleb 2kr · pomidor · ogórek'},ing:'rosół klarowny + biała bułka',m:[350,12,40,12]},
 {name:'🥜 — pominięta',ing:'',m:[0,0,0,0]}
 ]}
 ];
@@ -131,7 +124,11 @@ export const RECIPES=[
 ['pasta-pieczone-warzywa-b','Pasta z pieczonych warzyw','b',356,13,39,16,[{item:'papryka',amount:'1 szt'},{item:'cukinia',amount_g:'100'},{item:'chleb żytni',amount:'2 kromki'},{item:'oliwa',amount_g:'10'}],'Paprykę i cukinię piecz 200°C 25 min, zblenduj z oliwą. Batch 3 dni.',['mediterranean','vegetarian','quick'],30],
 ['salatka-tunczyk-jajko','Sałatka z tuńczykiem, jajkiem i szpinakiem','s',380,32,12,22,[{item:'tuńczyk puszka',amount_g:'85'},{item:'jajka',amount:'2 szt'},{item:'szpinak',amount_g:'50'},{item:'pomidory koktajlowe',amount_g:'80'},{item:'oliwa',amount_g:'10'}],'Jajka na twardo, tuńczyk odsączony, szpinak + pomidorki + oliwa.',['high_protein','fertility','quick'],15],
 ['placki-cukiniowe','Placki cukiniowe','s',340,18,26,18,[{item:'cukinia',amount_g:'200'},{item:'jajka',amount:'2 szt'},{item:'mąka',amount_g:'20'},{item:'czosnek',amount:'1 ząbek'},{item:'oliwa',amount_g:'10'}],'Cukinię zetrzyj, odciśnij, wymieszaj z jajkami i mąką. Piecz 180°C 25 min.',['vegetarian','quick'],30],
-['marchewki-hummus','Marchewki z hummusem','p',150,5,18,7,[{item:'marchew',amount_g:'150'},{item:'hummus',amount_g:'40'}],'Przekąska Ona. Marchew w paski + hummus.',['quick','fertility'],2]
+['marchewki-hummus','Marchewki z hummusem','p',150,5,18,7,[{item:'marchew',amount_g:'150'},{item:'hummus',amount_g:'40'}],'Przekąska Ona. Marchew w paski + hummus.',['quick','fertility'],2],
+['rosol-domowy','Rosół domowy z makaronem','d',300,18,30,12,[{item:'kości kurczaka',amount_g:'1000'},{item:'marchew',amount_g:'150'},{item:'pietruszka',amount:'1 szt'},{item:'cebula',amount:'1 szt'},{item:'makaron nitki',amount_g:'250'},{item:'masło',amount_g:'30'}],'Kości zalej zimną wodą, gotuj 1.5h zbierając szum. Dodaj warzywa po 30 min. Przecedź, podaj z makaronem.',['polish','comfort'],90],
+['shake-bialkowy-banan','Shake białkowy z bananem','sb',243,32,24,4,[{item:'białko w proszku',amount_g:'30'},{item:'mleko',amount_g:'200'},{item:'banan',amount:'0.5 szt'}],'Blenduj białko + mleko + pół banana.',['quick','high_protein'],5],
+['bulki-maslo-szynka','Białe bułki z masłem i szynką','b',380,18,40,16,[{item:'białe bułki',amount:'2 szt'},{item:'masło',amount_g:'15'},{item:'wędlina',amount_g:'60'}],'Dieta ubogo-resztkowa. Białe pieczywo + masło + szynka drobiowa.',['polish','quick'],5],
+['bulki-szynka-kisiel','Białe bułki z szynką + kisiel','b',400,15,55,14,[{item:'białe bułki',amount:'2 szt'},{item:'masło',amount_g:'15'},{item:'wędlina',amount_g:'60'},{item:'kisiel',amount:'1 szt'}],'Ostatni posiłek stały przed Fortransem.',['polish','quick'],5]
 ];
 
 export const RECIPES_INSP=[

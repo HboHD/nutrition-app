@@ -27,7 +27,9 @@ export const NUT = {
   'makaron ryżowy': [360, 4, 83, 0], 'gruszka': [57, 0, 15, 0],
   'frytki mrożone': [170, 2, 25, 7],
   'soczewica': [350, 25, 60, 1], 'kapusta kiszona': [19, 1, 4, 0], 'pomarańcza': [47, 1, 12, 0],
-  'por': [61, 2, 14, 0], 'warzywa mrożone': [50, 3, 8, 0]
+  'por': [61, 2, 14, 0], 'warzywa mrożone': [50, 3, 8, 0],
+  'kości kurczaka': [120, 15, 0, 7], 'pietruszka': [36, 3, 8, 0], 'makaron nitki': [350, 12, 72, 2],
+  'białe bułki': [280, 8, 52, 3], 'kisiel': [350, 0, 87, 0]
 };
 
 // Ingredient → store department index
@@ -50,7 +52,8 @@ export const DEPT = {
   'maliny':8,'frytki mrożone':8,
   'oliwa':9,'olej rzepakowy':9,'białko w proszku':9,'orzechy włoskie':9,'sos sojowy':9,'miód':9,
   'mleko kokosowe':9,'pasta curry':9,'tofu':9,'buraki gotowane':9,'majonez':9,
-  'soczewica':3,'kapusta kiszona':2,'pomarańcza':1,'por':1,'warzywa mrożone':8
+  'soczewica':3,'kapusta kiszona':2,'pomarańcza':1,'por':1,'warzywa mrożone':8,
+  'kości kurczaka':5,'pietruszka':1,'makaron nitki':3,'białe bułki':0,'kisiel':3
 };
 export const DEPT_NAMES = ['🥖 Pieczywo','🍌 Owoce / warzywa','🥫 Puszki','🌾 Suche / kasze','🥚 Jajka / mleko / mąka','🥩 Mięso','🧀 Nabiał','🐟 Ryby','❄️ Mrożonki','📦 Inne'];
 
@@ -80,7 +83,9 @@ export const PKG = {
   'mleko kokosowe':[400,'ml','400ml'],'pasta curry':[70,'g','70g'],
   'miód':[350,'g','350g'],'hummus':[200,'g','200g'],'pasztet':[130,'g','130g'],
   'bułka tarta':[200,'g','200g'],'frytki mrożone':[1000,'g','1kg'],
-  'maliny':[300,'g','300g'],'tofu':[400,'g','400g']
+  'maliny':[300,'g','300g'],'tofu':[400,'g','400g'],
+  'kości kurczaka':[1000,'g','1kg'],'pietruszka':[1,'szt','1 szt'],'makaron nitki':[250,'g','250g'],
+  'białe bułki':[6,'szt','6 szt'],'kisiel':[3,'szt','3 szt']
 };
 
 // Recipe servings (total portions per recipe, e.g. 4 = 2 people × 2 batch days)
@@ -102,5 +107,5 @@ export const SERVINGS={
 'tosty-awokado-jajko':1,'jaglanka-orzechy':1,'smoothie-bowl':1,
 'zapiekanka-brokul-kurczak':4,'leczo-ryz':4,'zupa-krem-por':2,'kurczak-teriyaki':4,
 'pasta-buraczkowa':2,'pasta-pieczone-warzywa':2,'pasta-buraczkowa-b':2,'pasta-pieczone-warzywa-b':2,
-'salatka-tunczyk-jajko':1,'placki-cukiniowe':2,'marchewki-hummus':1
+'salatka-tunczyk-jajko':1,'placki-cukiniowe':2,'marchewki-hummus':1,'rosol-domowy':6,'shake-bialkowy-banan':1,'bulki-maslo-szynka':1,'bulki-szynka-kisiel':1
 };
